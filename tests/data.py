@@ -31,11 +31,11 @@ SMALL_BOOK = Book(
     chapters=1,
 )
 
-BOOK_2 = Book(
+BOOK_1 = Book(
     id=4,
-    name="2 Book",
-    abbrev="2 Bk",
-    code="2bk",
+    name="1 Book",
+    abbrev="1 Bk",
+    code="1bk",
     depth=2,
     aliases=[],
     chapters=10,
@@ -56,7 +56,7 @@ TEST_LIBRARY = Library(
     name="Library",
     abbrev="Lib",
     code="lib",
-    books=[FIRST_BOOK, BIG_BOOK, SMALL_BOOK, BOOK_2, LAST_BOOK],
+    books=[FIRST_BOOK, BIG_BOOK, SMALL_BOOK, BOOK_1, LAST_BOOK],
 )
 
 BOOK_3 = Book(

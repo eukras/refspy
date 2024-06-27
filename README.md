@@ -54,18 +54,17 @@ Initialising `refspy` with corpus and language names will return a reference
 manager. This provides a single convenient interface for the whole library. 
 
 ```
-from refspy import refspy
+from refspy.helper import refspy
 
-__ = refspy()  # <-- Defaults to 'protestant', 'en_US'
+__ = refspy()
 
-__ = refspy('protestant', 'en_US')  
-
-__ = refspy('protestant', 'el_KO')  # <-- with koine greek 
-__ = refspy('catholic', 'es_ES')
-__ = refspy('orthodox', 'el_GR')
+__ = refspy('protestant', 'en_US')  # <-- default
+__ = refspy('catholic', 'en_US')
+__ = refspy('orthodox', 'en_US')
 ```
 
-The file `refspy/corpus.py` shows valid corpus names, and `refspy/language.py` contains valid language names.
+The file `refspy/corpus.py` shows valid corpus names, and `refspy/language.py`
+contains valid language names.
 ```
 from refspy.language.en import ENGLISH
 from refspy.libraries.en_US import NT, OT, OT_Apoc
@@ -77,11 +76,8 @@ M2 = Manager(libraries=[OT, OT_Apoc, NT], ENGLISH)   # Catholic Canon in English
 M3 = Manager(libraries=[NT_es], SPANISH)             # New Testament in Spanish
 ```
 
-
-
 The `en_US` libraries conform to the SBL Style Guide for book names and
-abbreviations. Accordingly, we use semicolons (`;`) to separate chapter-level
-references. 
+abbreviations. Other libraries can be defined in the libraries directory.
 
 
 ### Creating references 
@@ -123,16 +119,6 @@ Or `__.bcr()` to specify book, chapter and verse ranges:
 ___.bcr('rom', 2, [(2, 3), 7])    # Rom 2:2-3,7 (from range) 
 ```
 
-We could make chapter references for the whole New Testament like this:
-
-```
-nt_chapter_refs_ = [  
-  __.bcv(book.id, ch)   
-  for ch in range(1, book.chapters)   
-  for book in NT.books  
-] 
-```
-
 
 ### Comparing references
 
@@ -162,7 +148,10 @@ min([rom_4, rom_2]) == rom_2
 
 ### Contains, Overlaps, Adjoins
 
-
+We will commonly want to know if one reference `contains()`, or `overlaps()`
+another. The `adjoins()` function allows adjacent references to be combined by the
+`__.simplify() ` function, but note it is limited by not knowing the lengths of
+chapters.
 
 ```
 gen1 = __.r('Gen 1') 
@@ -241,6 +230,17 @@ for s, ref in zip(strs, refs):
    print f"{s} -> {url}{?search={__.code(ref)}&version=NRSVA"
 ```
 
+### Creating chapter references
+
+```
+from refspy.libraries.en_US import NT
+
+nt_chapter_refs_ = [  
+  __.bcv(book.name, ch)   
+  for ch in range(1, book.chapters)   
+  for book in NT.books  
+] 
+```
 
 ### Replacing references in text
 

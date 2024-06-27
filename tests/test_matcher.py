@@ -1,7 +1,6 @@
 import re
 
 import pytest
-
 from context import *
 
 from refspy.indexes import index_book_aliases, index_books
@@ -12,9 +11,9 @@ from refspy.matcher import (
     COLON,
     DASH,
     LIST,
-    RANGE_OR_NUMBER_COMPILED,
     NUMBER,
     RANGE,
+    RANGE_OR_NUMBER_COMPILED,
     SPACE,
     Matcher,
     make_chapter_range,
@@ -24,7 +23,7 @@ from refspy.matcher import (
     match_chapter_verses,
     match_number_ranges,
 )
-from refspy.range import chapter, range
+from refspy.range import range
 from refspy.reference import (
     book_reference,
     chapter_reference,
@@ -64,7 +63,14 @@ def test_number_list_regexp():
     match = re.findall(LIST, "1-3,4:5,7-9")
     assert match == ["1-3,4", "5,7-9"]
     match = re.findall(LIST, "1-3,4,5, 7-9")
-    assert match == ["1-3,4,5", "7-9"]
+    assert match == ["1-3,4,5, 7-9"]
+
+
+def test_number_list_generated_regexp():
+    number_list = matcher.build_number_list_regexp()
+    match = re.findall(number_list, "Big Book 1:1, 1, 1 Book 2")
+    assert match == ["1", "1, 1", "1", "2"]
+    #                      ^^^^ not 1, 1, 1
 
 
 def test_range_or_number_regexp():
@@ -90,12 +96,12 @@ def test_chapter_verses_regexp():
 
 def test_name_regexp():
     regexp = matcher.build_reference_regexp()
-    assert re.escape("first") in regexp
+    # assert re.escape("first") in regexp
     assert re.escape("Big") + "\\s+" + re.escape("Book") in regexp
-    assert re.escape("big") in regexp
+    # assert re.escape("big") in regexp
     assert re.escape("Small") + "\\s+" + re.escape("Book") in regexp
-    assert re.escape("small") in regexp
-    assert re.escape("last") in regexp
+    # assert re.escape("small") in regexp
+    # assert re.escape("last") in regexp
 
 
 def test_match_brackets():
@@ -111,15 +117,16 @@ def test_match_brackets():
 def test_match_names():
     assert matcher.name_regexp.findall("Big Book") == [("Big Book", "Big Book", "", "")]
     assert matcher.name_regexp.findall("Big") == [("Big", "Big", "", "")]
-    assert matcher.name_regexp.findall("big") == [("big", "big", "", "")]
+    # assert matcher.name_regexp.findall("big") == [("big", "big", "", "")]
     assert matcher.name_regexp.findall("Small Book") == [
         ("Small Book", "Small Book", "", "")
     ]
     assert matcher.name_regexp.findall("Small") == [("Small", "Small", "", "")]
-    assert matcher.name_regexp.findall("small") == [("small", "small", "", "")]
+    # assert matcher.name_regexp.findall("small") == [("small", "small", "", "")]
 
 
 def test_match_names_and_numbers():
+    print("NAME REGEXP", matcher.name_regexp)
     assert matcher.name_regexp.findall("Big Book 1") == [
         ("Big Book 1", "Big Book", " 1", "")
     ]
@@ -132,6 +139,18 @@ def test_match_names_and_numbers():
     assert matcher.name_regexp.findall("Big Book 1-2,4,6") == [
         ("Big Book 1-2,4,6", "Big Book", " 1-2,4,6", "")
     ]
+
+
+def test_commas_separation():
+    text = "Big Book 1:1, 2, 1 Bk 3, Small Book 4"
+    #                     ^^^^ Negative lookaheads should clear this up.
+    matches = matcher.name_regexp.findall(text)
+    print("MATCHES", matcher.build_number_list_regexp())
+    print("MATCHES", matches)
+    assert len(matches) == 3
+    assert matches[0] == ("Big Book 1:1, 2", "Big Book", " 1:1, 2", "")
+    assert matches[1] == ("1 Bk 3", "1 Bk", " 3", "")
+    assert matches[2] == ("Small Book 4", "Small Book", " 4", "")
 
 
 def test_match_names_in_context():
@@ -269,18 +288,18 @@ def test_single_parentheses():
 
 
 def test_number_prefixes():
-    sample_text = "2 Book 1:1, Second Book 1:1, II Book 1:1"
+    sample_text = "1 Book 1:1, First Book 1:1, I Book 1:1"
     first_reference = verse_reference(1, 4, 1, 1)
     print("HMM", matcher.name_regexp)
     __ = matcher.generate_references(sample_text)
     text, ref = next(__)
-    assert text == "2 Book 1:1"
+    assert text == "1 Book 1:1"
     assert ref == first_reference
     text, ref = next(__)
-    assert text == "Second Book 1:1"
+    assert text == "First Book 1:1"
     assert ref == first_reference
     text, ref = next(__)
-    assert text == "II Book 1:1"
+    assert text == "I Book 1:1"
     assert ref == first_reference
     with pytest.raises(StopIteration):
         assert next(__) is None
@@ -288,7 +307,7 @@ def test_number_prefixes():
 
 def test_line_wrapping():
     text = """
-        This is a wrapped reference to 2 
+        This is a wrapped reference to 1 
         Book 5.
         """
     print("REGEXP", matcher.build_book_name_regexp())
@@ -296,7 +315,7 @@ def test_line_wrapping():
     text, ref = next(__)
     assert (
         text
-        == """2 
+        == """1 
         Book 5"""
     )
     assert ref == chapter_reference(1, 4, 5)

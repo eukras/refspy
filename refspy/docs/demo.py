@@ -1,7 +1,7 @@
 from context import *
 
+from refspy.helper import refspy
 from refspy.reference import is_book_reference
-from refspy.refspy import refspy
 from refspy.utils import sequential_replace
 
 URL = "https://github.com/eukras/refspy/refspy/docs/demo.py"
@@ -9,13 +9,13 @@ URL = "https://github.com/eukras/refspy/refspy/docs/demo.py"
 __ = refspy()
 
 text = """
-Bible references look like Rom 1:1,6-7, 1 Cor 2-3, or Phlm 2-3, with no spaces
-in the number part. Whereas '2-3' indicates verses in Philemon it indicates
-whole chapters in 1 Corinthians. If we've already mentioned a book like Second
-Corinthians or II Cor (allowing line wrapping), we'll want to identify
-subsequent references, like 5:21 or vv.25,37-38, by the last mentioned book or
-reference, like a human reader. If we refer to say Hebrews (but then Revelation
-in parentheses), subsequent references like 10:10 will still be to Hebrews. 
+Bible references look like Rom 1:1, 6-7, 1 Cor 2-3, or Phlm 2-3, allowing
+spaces in the number part and commas between references. Whereas '2-3' indicates
+verses in Philemon it indicates chapters in 1 Corinthians. A reference to Second
+Corinthians or II Cor (which allows line wrapping), provides context for any
+references that follow, e.g. 5:21 or vv.25,37-38. If we refer to say Romans (but
+then add a reference to Gal 4:4 in parentheses), a subsequent reference like
+12:16 will still be to Romans. 
 """
 
 matches = __.find_references(text, include_books=True)
@@ -50,11 +50,12 @@ print("""
         </style>
     </head>
     <body>
-        <p><b>REFSPY</b>. <i>A Python library for biblical referencing.</i></p>
-        <p>In the text below, references are highlighted in green, while book
-        names that aren't themselves references, but are used for context, are
-        highlighted in yellow. The identified references are noted in
-        superscript, and an index is compiled at the end.
+        <p><b>REFSPY</b>. <i>A Python library for working with biblical
+        references in ordinary text.</i></p>
+        <p>In the demonstration text below, references are highlighted in
+        green, while book names that aren't themselves references but are used
+        for context are highlighted in yellow. The identified references are
+        noted in superscript, and an index is compiled at the end.</p>
 
 """)
 print(f"""

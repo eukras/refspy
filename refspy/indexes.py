@@ -57,7 +57,7 @@ def index_book_aliases(libraries: List[Library]):
         for book in library.books:
             add_unique_book_alias(index, book.name, library.id, book.id)
             add_unique_book_alias(index, book.abbrev, library.id, book.id, strict=False)
-            add_unique_book_alias(index, book.code, library.id, book.id)
+            # add_unique_book_alias(index, book.code, library.id, book.id)
             for alias in book.aliases:
                 add_unique_book_alias(index, alias, library.id, book.id)
     return index

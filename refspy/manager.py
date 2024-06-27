@@ -17,7 +17,6 @@ from refspy.reference import (
     Reference,
     book_reference,
     chapter_reference,
-    is_book_reference,
     reference,
     verse_reference,
 )

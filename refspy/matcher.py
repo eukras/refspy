@@ -21,7 +21,7 @@ END = r"\b"
 NUMBER = r"\d{1,3}"
 SPACE = r"[\s]+"
 RANGE = f"{NUMBER}{DASH}{NUMBER}"
-LIST = f"(?:{RANGE}|{NUMBER})(?:\\,(?:{RANGE}|{NUMBER}))*"
+LIST = f"(?:{RANGE}|{NUMBER})(?:\\,\\s*(?:{RANGE}|{NUMBER}))*"
 
 RANGE_OR_NUMBER_COMPILED = re.compile(f"({RANGE}|{NUMBER})")
 
@@ -46,13 +46,14 @@ class Matcher:
           - 1:2-3:4
           - 1:1,2-3 etc
         - with a one-level range (no ":" chars; depth 1 or 2)
-          - 1,2-4  (can be verses or chapters, based on book)
+          - 1,2-4  (can be verses or chapters, based on book; must not end with
+            a number that starts a book name)
       - Stand-alone number references: always have colons or verse markers.
         They rely on context being provided by a previous reference or book
         name.
         - v.1, vv.1-2
         - 1:2-3:4
-        - 1:1,2-3 etc
+        - 1:1,2-3 etc (must not end with a number that starts a book name)
     Yield:
       - a (match_str, reference) tuple for each match.
     """
@@ -88,6 +89,7 @@ class Matcher:
         """
         NAME_PATTERN = self.build_book_name_regexp()
         VERSE_MARKER = self.build_verse_marker_regexp()
+        NUMBER_LIST = self.build_number_list_regexp()
         REGEXP = "".join(
             [
                 "(",
@@ -97,9 +99,9 @@ class Matcher:
                     [
                         f"{SPACE}{NUMBER}{COLON}{NUMBER}{DASH}{NUMBER}{COLON}{NUMBER}",  # Rom 1:2-3:4
                         "|",
-                        f"{SPACE}{NUMBER}{COLON}{LIST}",  # Rom 3:4,6-9
+                        f"{SPACE}{NUMBER}{COLON}{NUMBER_LIST}",  # Rom 3:4,6-9
                         "|",
-                        f"{SPACE}{LIST}",  # Phlm 3-4 (verse), Rom 3-4 (chapter)
+                        f"{SPACE}{NUMBER_LIST}",  # Phlm 3-4 (verse), Rom 3-4 (chapter)
                     ]
                 ),
                 ")?",
@@ -109,9 +111,9 @@ class Matcher:
                     [
                         f"{NUMBER}{COLON}{NUMBER}{DASH}{NUMBER}{COLON}{NUMBER}",  # 1:2-3:4
                         "|",
-                        f"{NUMBER}{COLON}{LIST}",  # 3:4,6-9
+                        f"{NUMBER}{COLON}{NUMBER_LIST}",  # 3:4,6-9
                         "|",
-                        f"(?:{VERSE_MARKER}){LIST}",  # vv.3-4
+                        f"(?:{VERSE_MARKER}){NUMBER_LIST}",  # vv.3-4
                     ]
                 ),
                 ")",
@@ -150,6 +152,42 @@ class Matcher:
 
     def build_verse_marker_regexp(self):
         return "|".join([re.escape(key) for key in self.language.verse_markers])
+
+    def build_number_list_regexp(self):
+        """
+        Match a comma-(and-space?)-separated list of numbers and ranges. A number
+        must not be the start of a book name, which complicates matching.
+
+        Ranges are just {1-999}{DASH}{1-999}, but other numbers need to be:
+        (1(?!\\s+(Cor|Thess|etc)))|2...|3 (Jn)|4-999), based on the number
+        prefixes that exist in the current book aliases.
+        """
+        # TODO: Edge case: What if 4 exists but not 3?
+        regexp_parts = []
+        for number in self.numerical_book_prefixes():
+            aliases = [
+                alias[len(number + " ") :]
+                for alias in self.book_aliases.keys()
+                if alias.startswith(number + " ")
+            ]
+            regexp_parts.append(
+                number
+                + r"(?!\s+(?:"
+                + "|".join([re.escape(key) for key in sorted(set(aliases))])
+                + "))"
+            )
+        regexp_parts.append(f"[{len(regexp_parts) + 1}-999]")
+        SAFE_NUMBER = r"|".join(regexp_parts)
+        REGEXP = f"(?:{RANGE}|{NUMBER})(?:\\,\\s*(?:{RANGE}|(?:{SAFE_NUMBER})))*"
+        return REGEXP
+
+    def numerical_book_prefixes(self) -> List[str]:
+        prefixes = set()
+        for key in self.book_aliases.keys():
+            part_1 = key.split(" ")[0]
+            if part_1.isdigit():
+                prefixes.add(part_1)
+        return sorted(prefixes)
 
     def build_brackets_regexp(self) -> str:
         return r"[\(\)]"
