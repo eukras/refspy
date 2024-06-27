@@ -1,10 +1,10 @@
 from refspy.types.book import Book
 from refspy.types.library import Library
 
+# See LIBRARIES.md for ID numbers
 # en_US:
 # - English language libraries follows SBL style guide for books and abbreviations.
-# See LIBRARIES.md for ID numbers
-#
+
 OT = Library(
     id=200,
     name="Old Testament",
@@ -791,7 +791,7 @@ NT = Library(
             abbrev="3 John",
             code="3john",
             depth=1,
-            aliases=[],
+            aliases=["3 Jn"],
             chapters=1,
         ),
         Book(
