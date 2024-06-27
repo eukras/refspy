@@ -4,22 +4,14 @@
 
 
 [![python](https://img.shields.io/badge/Python-3.11-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
-[![License: GPLv3](https://img.shields.io/badge/License-MIT-blue.svg)](https://www.gnu.org/licenses/MIT)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 
-See [docs/INTERNALS.md](docs/INTERNALS.md) for implementation.
 
 ## Introduction
 
-Refspy is a biblical referencing library in Python. We use context
-to interpret shorthand references, like a human reader would. We match number
-patterns that represent references, and match book names as context for
-interpreting them: 
-
-```
-In Romans we want 1:3-4, 7 and, in 1 Corinthians, we want 2:5.
-   >>>>>>         ^^^^^^^^         >>>>>>>>>>>>>          ^^^
-```
+Refspy is a biblical referencing library in Python. See
+[docs/INTERNALS.md](docs/INTERNALS.md) for implementation.
 
 In isolation, a number or a range (`1` or `2-3`) could refer to either verses
 or chapters, or to chapter numbers for a publication, or other regular numbers
@@ -28,22 +20,9 @@ that are preceded by a book name, a chapter number and colon (`4:`), or a verse
 marker (`v.`, `vv.`). The book name lets us say whether the reference will be
 to chapters or verses, and the others are unambiguous.
 
-```
-Romans 1:3-4, 7 (but not 1 Cor 4:2 or v.5!) and vv.9-10.
-^^^^^^^^^^^^^^^          ^^^^^^^^^    ^^^       ^^^^^^^
-```
-
-We also accommodate some natural language conventions. Here, the final
-reference is still matched as Romans 1:9-10, ignoring the aside that was given
-in parentheses. SBL conventions require that '1 Corinthians' also match 'First
-Corinthians' at the start of a sentence, so we match that everywhere.
-
-Apart from this we try to offer every feature that other referencing tools
-provide, such as comparisons and indexing methods. The library's internals are
-described below. 
-
-
 ## Demo
+
+See [refspy/docs/](refspy/docs/).
 
 ![RefSpy Demo](refspy-demo.png)
 
@@ -51,14 +30,11 @@ described below.
 
 * Find biblical references in strings, using normal shorthands
 * Construct and manipulate verses, ranges, and references
-* Format references as names, abbreviations, or URL parameters
+* Format references as names, abbreviated names, and URL parameters
 * Store verses as `UNSIGNED INT(12)` for database indexing
 * Compare and sort verses, ranges, and references (`<`, `==`, `>=`)
 * Test if a range contains, overlaps, or adjoins another range
-* Combine and simplify ranges.
 * Collate references by library and book for iteration
-* Merge and split references
-* Generate links to online bibles
 * Sequentially replace matched references in strings, e.g. with HTML links
 * In English, we follow SBL conventions, including matching 'First Corinthians'
   for '1 Corinthians'.
@@ -176,13 +152,17 @@ rom_2 >= rom_4   # False
 rom_4 == rom_4a  # True
 ```
 
-Because references can be compared with `<`, they can also be sorted. 
+Because references can be compared with `<`, they can also be sorted, or used
+in `min()` and `max()`. 
 
 ```
 sorted([rom_4, rom_2]) == [rom_2, rom_4]  # True
+min([rom_4, rom_2]) == rom_2
 ```
 
-We can also check several kinds of comparisons between references:
+### Contains, Overlaps, Adjoins
+
+
 
 ```
 gen1 = __.r('Gen 1') 
@@ -193,14 +173,13 @@ gen1_24_28 = __.r('Gen 1:24-28')
 gen = __.b('Gen')
 ex = __.b('Ex')
 
-# Check ranges...
 gen1.contains(gen1_22_23)       # True
 gen1_22_23.overlaps(gen1)       # True
 gen1_22_23.adjoins(gen1_24_28)  # True
 gen1.adjoins(gen2)              # True
 gen1.overlaps(gen2)             # False
 gen.adjoins(ex)                 # True
-gen.overlaps(ex)                # False```
+gen.overlaps(ex)                # False
 ```
 
 
@@ -244,6 +223,7 @@ __.numbers(ref)        # '2:3-4,7'
 ```
 assert next_chapter(rom_2) == rom_3
 assert prev_chapter(rom_2) == rom_1
+assert prev_chapter(rom_1) == acts_28
 ```
 
 
@@ -264,63 +244,39 @@ for s, ref in zip(strs, refs):
 
 ### Replacing references in text
 
-### Collating and traversing
+To produce the demo image above, we use the `sequential_replace` function from `refspy/utils`:
 
-Because a reference can contain ranges that span multiple libraries, it can
-make more sense to collate them than to sort them. 
+```
+from refspy.utils import sequential_replace
 
-References lists can be created for strings using __.find_references(), and
+matches = __.find_references(text, include_books=True)
+strs, tags = [], []
+for match_str, ref in matches:
+    strs.append(match_str)
+    if is_book_reference(ref):
+        tags.append(f'<span class="yellow">{match_str}</span>')
+    else:
+        tags.append(
+            f'<span class="green">{match_str}</span><sup>{__.abbrev(ref)}</sup>'
+        )
+html = sequential_replace(text, strs, tags)}
+```
+
+### Collating and Indexing
+
+References lists can be created for text using __.find_references(), and
 grouped into libraries and books using __.collate(). 
 
-In this example, we find references in a text and print them as an formatted
-reference index:
+To produce the index for the demo image above, we used:
 
 ```
-matches, references = __.find_references(text):
-library_collation = __.collate(references) 
-for library, book_collation in library_collation:
-  print(library.name)
-  for book, book_references in book_collation:
-    print('  ' + book.name)
-    for reference in book_references:
-      print('    ' + __.name(reference) + '. ' + __.url(reference))
+index = []
+for library, book_collation in __.collate(
+    sorted([ref for _, ref in matches if not is_book_reference(ref)])
+):
+    for book, reference_list in book_collation:
+        new_reference = __.merge(reference_list)
+        index.append(__.abbrev(new_reference))
+
+html_list = "; ".join(index)
 ```
-
-The `examples/create_index.py` file processes the following text in this way:
-
-```
-The major theme of Romans is how Jewish Christians relate to Hellenistic
-Christians and vice-versa. Or rather, in light of apparent difficulties, how
-they should relate. Paul’s headline statements present “the gospel” as God’s
-promise, in Jewish scripture, to make gentiles his people, just as much as Jews
-(1:1–4; 1:16–17; 15:7–13; 16:25–27, cf. 10:15; Isa 52:7; 61:1), whether they
-were the ‘wise’ Hellenists of Rome and Athens or mere ‘foolish’ barbarians
-(1:14). God is not the God of Jews only, but the God of gentiles too (3:29),
-and he shows no partiality in judging or saving either (2:11), thus showing
-himself to be just. Good and evil will be recompensed, and those with faith and
-faithfulness (pistis, same word) will be saved, “the Jew first and also the
-Greek” (1:16; 2:9–10, and ch.2–3 generally). But gentile Christians are like
-branches grafted into a Jewish olive tree (11:17-24). This raises many
-questions for Christians of gentile or Jewish identities, which the letter then
-pursues. Is there any advantage in being Jewish (3:1–4); where is this ‘faith’
-in the Old Testament (ch.4); what things may we “boast” or take pride in, if
-not our identities as Jews or gentiles (2:17, 23; 3:27; 4:2; 5:1–11; 11:18;
-15:17; cf. 1 Cor 1:26–31; 2 Cor 5:11–12; and 2 Cor 10–12 generally); was the
-Jewish law a bad thing (5:12–21); how is God’s grace related to it (6:1–14);
-does God’s grace mean sin doesn’t really matter (6:15–23); how do we overcome
-that same tendency to sin that made the law ineffective (7–8); did God’s
-promise to Israel fail and why aren’t more Jews Christians and is Israel
-finished (ch.9–11); how do people who respect food laws and religious holidays
-get on with people who don’t, without quarreling? (13:11–15:6; cf.
-16:17–20). How Jewish and gentile Christians should relate is the thread of
-the letter from start to end. It is the conflicted state of these
-relations that calls forth the exhortations to love one another, live
-peaceably, and not think of ourselves more highly than we should (11:25,
-12:3; 12:11–13:10, 15:7–13). Paul emphasises all the way through that the
-gospel reconciles both Jews and gentiles to God and each other in Christ.  
-```
-
-It produces the output:
-
-CONTINUE
-
