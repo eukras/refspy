@@ -5,6 +5,8 @@
 
 [![python](https://img.shields.io/badge/Python-3.11-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+![Static Badge](https://img.shields.io/badge/Release-0.9_BETA-red)
+
 
 
 
