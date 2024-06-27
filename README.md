@@ -15,13 +15,6 @@
 Refspy is a biblical referencing library in Python. See
 [docs/INTERNALS.md](docs/INTERNALS.md) for implementation.
 
-In isolation, a number or a range (`1` or `2-3`) could refer to either verses
-or chapters, or to chapter numbers for a publication, or other regular numbers
-that have nothing to do with biblical referencing. So, we only match numbers
-that are preceded by a book name, a chapter number and colon (`4:`), or a verse
-marker (`v.`, `vv.`). The book name lets us say whether the reference will be
-to chapters or verses, and the others are unambiguous.
-
 ## Demo
 
 See [refspy/docs/](refspy/docs/).
