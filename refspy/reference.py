@@ -34,6 +34,43 @@ class Reference(BaseModel):
     def equals(self, other: Self) -> bool:
         return self.ranges == other.ranges
 
+    def overlaps(self, other: Self) -> bool:
+        """
+        Two references overlap if ANY of their ranges overlap.
+        """
+        return any(
+            [
+                self_range.overlaps(other_range)
+                for other_range in other.ranges
+                for self_range in self.ranges
+            ]
+        )
+
+    def contains(self, other: Self) -> bool:
+        """
+        A reference contains another if ALL the other's ranges are contained by
+        at least one of it's own ranges.
+        """
+        return all(
+            [
+                any([self_range.contains(other_range) for self_range in self.ranges])
+                for other_range in other.ranges
+            ]
+        )
+
+    def adjoins(self, other: Self) -> bool:
+        """
+        A reference adjoins another if its maximum range adjoins the other's
+        minimum or vice-versa. This usually only makes sense for simple
+        references with a small number of ranges.
+        """
+        return any(
+            [
+                max(self.ranges).adjoins(min(other.ranges)),
+                min(self.ranges).adjoins(max(other.ranges)),
+            ]
+        )
+
     def count_books(self) -> int:
         book_ids = set()
         for _ in self.ranges:
@@ -119,13 +156,17 @@ def chapter_reference(
 
 
 def verse_reference(
-    library_id: Number, book_id: Number, chapter_id: Number, verse_id: Number
+    library_id: Number,
+    book_id: Number,
+    chapter_id: Number,
+    verse_id: Number,
+    verse_end_id: Number | None = None,
 ) -> Reference:
     return reference(
         [
             range(
                 verse(library_id, book_id, chapter_id, verse_id),
-                verse(library_id, book_id, chapter_id, verse_id),
+                verse(library_id, book_id, chapter_id, verse_end_id or verse_id),
             )
         ]
     )

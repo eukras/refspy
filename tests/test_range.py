@@ -37,6 +37,37 @@ def test_wrong_verse_order():
         _ = Range(start=v2, end=v1)
 
 
+def test_overlaps():
+    r1 = range(verse(1, 2, 3, 4), verse(1, 2, 3, 8))
+    r2 = range(verse(1, 2, 3, 6), verse(1, 2, 3, 8))
+    r3 = range(verse(1, 2, 3, 9), verse(1, 2, 3, 12))
+    assert r1.overlaps(r2)
+    assert not r1.overlaps(r3)
+    assert not r2.overlaps(r3)
+
+
+def test_contains():
+    r1 = range(verse(1, 2, 3, 4), verse(1, 2, 3, 8))
+    r2 = range(verse(1, 2, 3, 6), verse(1, 2, 3, 8))
+    r3 = range(verse(1, 2, 3, 9), verse(1, 2, 3, 12))
+    assert r1.contains(r2)
+    assert not r2.contains(r1)
+    assert not r3.contains(r1)
+
+
+def test_adjoins():
+    vr1 = range(verse(1, 2, 3, 3), verse(1, 2, 3, 4))
+    vr2 = range(verse(1, 2, 3, 5), verse(1, 2, 3, 6))
+    cr1 = range(verse(1, 2, 3, 1), verse(1, 2, 4, 999))
+    cr2 = range(verse(1, 2, 5, 1), verse(1, 2, 6, 999))
+    assert vr1.adjoins(vr2)
+    assert vr2.adjoins(vr1)
+    assert cr1.adjoins(cr2)
+    assert cr2.adjoins(cr1)
+    assert not cr1.adjoins(vr1)
+    assert not cr2.adjoins(vr2)
+
+
 def test_is_book_range():
     assert range(verse(1, 1, 1, 1), verse(1, 2, 999, 999)).is_book_range()
 
@@ -69,24 +100,6 @@ def test_is_verse_range():
 
 def test_is_verse():
     assert range(verse(1, 1, 1, 1), verse(1, 1, 1, 1)).is_verse()
-
-
-def test_overlaps():
-    r1 = range(verse(1, 2, 3, 4), verse(1, 2, 3, 8))
-    r2 = range(verse(1, 2, 3, 6), verse(1, 2, 3, 8))
-    r3 = range(verse(1, 2, 3, 9), verse(1, 2, 3, 12))
-    assert r1.overlaps(r2)
-    assert not r1.overlaps(r3)
-    assert not r2.overlaps(r3)
-
-
-def test_contains():
-    r1 = range(verse(1, 2, 3, 4), verse(1, 2, 3, 8))
-    r2 = range(verse(1, 2, 3, 6), verse(1, 2, 3, 8))
-    r3 = range(verse(1, 2, 3, 9), verse(1, 2, 3, 12))
-    assert r1.contains(r2)
-    assert not r2.contains(r1)
-    assert not r3.contains(r1)
 
 
 def test_chapter_range():

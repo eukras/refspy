@@ -2,6 +2,7 @@ from typing import List, Self, Tuple
 from pydantic import BaseModel, model_validator
 
 from refspy.verse import Number, verse, Verse
+from refspy.utils import string_together
 
 RangeTuple = Tuple[Verse, Verse]
 RangeList = List[RangeTuple]
@@ -26,21 +27,67 @@ class Range(BaseModel):
         return (self.start.library, self.start.book)
 
     def overlaps(self, other: Self) -> bool:
-        return (self.start <= other.start and self.end >= other.start) or (
-            self.start <= other.end and self.end >= other.end
+        return any(
+            [
+                other.start <= self.start <= other.end,
+                other.start <= self.end <= other.end,
+                self.start <= other.start <= self.end,
+                self.start <= other.end <= self.end,
+            ]
         )
 
     def contains(self, other: Self) -> bool:
         return self.start <= other.start and self.end >= other.end
 
+    def adjoins(self, other: Self) -> bool:
+        """
+        To keep things simple, a range adjoins another if:
+        - It is a verse or range in the same chapter, and is located one verse away
+        - It is a chapter in the same book, and is located one chapter away
+        """
+        if self.same_chapter_as(other):
+            return (
+                other.start.verse == self.end.verse + 1
+                or self.start.verse == other.end.verse + 1
+            )
+        elif self.same_book_as(other):
+            return (
+                other.start.chapter == self.end.chapter + 1
+                or self.start.chapter == other.end.chapter + 1
+            )
+        else:
+            return False
+
+    def same_library_as(self, other: Self) -> bool:
+        ids = {
+            self.start.library,
+            self.end.library,
+            other.start.library,
+            other.end.library,
+        }
+        return len(ids) == 1
+
+    def same_book_as(self, other: Self) -> bool:
+        ids = {self.start.book, self.end.book, other.start.book, other.end.book}
+        return self.same_library_as(other) and len(ids) == 1
+
+    def same_chapter_as(self, other: Self) -> bool:
+        ids = {
+            self.start.chapter,
+            self.end.chapter,
+            other.start.chapter,
+            other.end.chapter,
+        }
+        return self.same_book_as(other) and len(ids) == 1
+
+    def single_library(self) -> bool:
+        return self.start.library == self.end.library
+
+    def single_book(self) -> bool:
+        return self.single_library() and self.start.book == self.end.book
+
     def single_chapter(self) -> bool:
-        return all(
-            [
-                len(set([self.start.library, self.end.library])) == 1,
-                len(set([self.start.book, self.end.book])) == 1,
-                len(set([self.start.chapter, self.end.chapter])) == 1,
-            ]
-        )
+        return self.single_book() and self.start.chapter == self.end.chapter
 
     def is_book_range(self) -> bool:
         return all(
@@ -136,9 +183,6 @@ class Range(BaseModel):
                 self.start.verse == self.end.verse,
             ]
         )
-
-    def adjoins(self, other: Self) -> bool:
-        return False
 
 
 class ChapterRange(Range):
