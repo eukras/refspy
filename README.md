@@ -1,25 +1,24 @@
 # README 
 
-![RefSpy Logo](refspy-logo.svg)
+![RefSpy Logo](https://github.com/eukras/refspy/raw/master/refspy-logo.svg)
 
 
 [![python](https://img.shields.io/badge/Python-3.11-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-![Static Badge](https://img.shields.io/badge/Release-0.9_BETA-red)
+![Version: 0.9 BETA](https://img.shields.io/badge/Version-0.9_BETA-red)
 
 
 
 
 ## Introduction
 
-Refspy is a biblical referencing library in Python. See
-[docs/INTERNALS.md](docs/INTERNALS.md) for implementation.
+Refspy is a Python package for biblical referencing in ordinary text.
 
 ## Demo
 
-See [refspy/docs/](refspy/docs/).
+![RefSpy Demo](https://github.com/eukras/refspy/raw/master/refspy-demo.png)
 
-![RefSpy Demo](refspy-demo.png)
+(See `refspy/docs`)
 
 ## Features
 
