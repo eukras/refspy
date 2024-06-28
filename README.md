@@ -150,9 +150,6 @@ gen2 = __.r('Gen 2')
 gen1_23_23 = __.r('Gen 1:22-23') 
 gen1_24_28 = __.r('Gen 1:24-28')
   
-gen = __.b('Gen')
-ex = __.b('Ex')
-
 assert gen1.contains(gen1_22_23)
 assert gen1_22_23.overlaps(gen1)
 assert gen1_22_23.adjoins(gen1_24_28)
