@@ -42,29 +42,35 @@ Refspy is a Python package for working with biblical references in ordinary text
 
 Initialising `refspy` with corpus and language names will return a reference
 manager. This provides a single convenient interface for the whole library. 
+By default, Refspy provides a Protestant canon in English.
 
 ```
 from refspy.helper import refspy
-
 __ = refspy()
+```
 
-__ = refspy('protestant', 'en_US')  # <-- default
+Or, to create specific canons:
+
+```
+from refspy.language.en import ENGLISH
+from refspy.libraries.en_US import DC, DC_ORTHODOX, NT, OT
+from refspy.manager import Manager 
+
+# Protestant
+__ = refspy('protestant', 'en_US')
+__ = Manager(libraries=[OT, NT], ENGLISH)
+
+# Catholic
 __ = refspy('catholic', 'en_US')
+__ = Manager(libraries=[OT, DC, NT], ENGLISH)
+
+# Orthodox
 __ = refspy('orthodox', 'en_US')
+__ = Manager(libraries=[OT, DC, DC_ORTHODOX, NT], ENGLISH)
 ```
 
 The file `refspy/corpus.py` shows valid corpus names, and `refspy/language.py`
-contains valid language names.
-```
-from refspy.language.en import ENGLISH
-from refspy.libraries.en_US import NT, OT, OT_Apoc
-from refspy.libraries.es_ES import NT as NT_es
-from refspy.manager import Manager 
-
-M1 = Manager(libraries=[OT, NT], ENGLISH)            # Protestant Canon in English
-M2 = Manager(libraries=[OT, OT_Apoc, NT], ENGLISH)   # Catholic Canon in English
-M3 = Manager(libraries=[NT_es], SPANISH)             # New Testament in Spanish
-```
+contains valid language names. (Only English at present.)
 
 The `en_US` libraries conform to the SBL Style Guide for book names and
 abbreviations. Other libraries can be defined in the libraries directory.
@@ -115,17 +121,17 @@ rom_2 = __.r('Rom 2')
 rom_4 = __.r('Rom 4')
 rom_4a = __.bc('rom', 4)
 
-rom_2 < rom_4    # True
-rom_2 >= rom_4   # False
-rom_4 == rom_4a  # True
+assert rom_2 < rom_4
+assert not rom_2 >= rom_4
+assert rom_4 == rom_4a
 ```
 
 Because references can be compared with `<`, they can also be sorted, or used
 in `min()` and `max()`. 
 
 ```
-sorted([rom_4, rom_2]) == [rom_2, rom_4]  # True
-min([rom_4, rom_2]) == rom_2
+assert sorted([rom_4, rom_2]) == [rom_2, rom_4]
+assert min([rom_4, rom_2]) == rom_2
 ```
 
 ### Contains, Overlaps, Adjoins
@@ -144,11 +150,11 @@ gen1_24_28 = __.r('Gen 1:24-28')
 gen = __.b('Gen')
 ex = __.b('Ex')
 
-gen1.contains(gen1_22_23)       # True
-gen1_22_23.overlaps(gen1)       # True
-gen1_22_23.adjoins(gen1_24_28)  # True
-gen1.adjoins(gen2)              # True
-gen1.overlaps(gen2)             # False
+assert gen1.contains(gen1_22_23)
+assert gen1_22_23.overlaps(gen1)
+assert gen1_22_23.adjoins(gen1_24_28)
+assert gen1.adjoins(gen2)
+assert not gen1.overlaps(gen2)
 ```
 
 
@@ -195,22 +201,7 @@ assert prev_chapter(rom_2) == rom_1
 assert prev_chapter(rom_1) == acts_28
 ```
 
-
-### Matching references in text
-
-Here's how we might find references in text and print HTML links for them:
-
-```
-url = 'https://www.biblegateway.com/passage/'
-
-text = "Rom 1; 1 Cor 8:3,4; Rev 22:3-4"
-   
-strs, refs = __.find_references(text)
-for s, ref in zip(strs, refs):
-   print f"{s} -> {url}{?search={__.code(ref)}&version=NRSVA"
-```
-
-### Creating chapter references
+Or to create chapter references:
 
 ```
 from refspy.libraries.en_US import NT
@@ -220,6 +211,21 @@ nt_chapter_refs_ = [
   for ch in range(1, book.chapters)   
   for book in NT.books  
 ] 
+```
+
+
+### Matching references in text
+
+Here's how we might find references in text and print HTML links for them:
+
+```
+url = 'https://www.biblegateway.com/passage/?search=%s&version=NRSVA"
+
+text = "Rom 1; 1 Cor 8:3,4; Rev 22:3-4"
+   
+strs, refs = __.find_references(text)
+for s, ref in zip(strs, refs):
+   print f"{s} -> {url % __.code(ref)}"
 ```
 
 ### Replacing references in text
