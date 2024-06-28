@@ -83,31 +83,34 @@ abbreviation, code, or alias in the libraries list. Firstly, we can create
 references from strings:
 
 ```
-___.r('Rom 2:3-4,7')
-```
-
-A reference contains a list of ranges. We can use the `__.name` and `__.abbrev`
-functions to get back string references again:
-
-```
 ref = __.r('Rom 2:6,9,1,2')
-assert __.name(ref) == 'Romans 2:1-2,6,9'
-assert __.abbrev(ref) == 'Rom 2:1-2,6,9'
 ```
 
 We can construct references more programmatically with `__.bcv()`:
 
 ```
-___.bcv('rom')                # Rom (whole book)  
-___.bcv('rom', 2)             # Rom 2 (whole chapter)
-___.bcv('rom', 2, 2)          # Rom 2:2
-___.bcv('rom', 2, 2, 3)       # Rom 2:2-3 (optional end verse)
+ref = ___.bcv('Rom')                # Rom (whole book)  
+ref = ___.bcv('Rom', 2)             # Rom 2 (whole chapter)
+ref = ___.bcv('Rom', 2, 2)          # Rom 2:2
+ref = ___.bcv('Rom', 2, 2, 3)       # Rom 2:2-3 (optional end verse)
 ```
 
 Or `__.bcr()` to specify book, chapter and verse ranges:
 
 ```
-___.bcr('rom', 2, [(2, 3), 7])    # Rom 2:2-3,7 (from range) 
+ref = ___.bcr('Rom', 2, [(2, 3), 7])    # Rom 2:2-3,7 (from range) 
+```
+
+
+### Formatting references
+
+```
+ref = ___.r('Rom 2:3-4, 7')
+
+__.name(ref)           # 'Romans 2:3-4,7'
+__.abbrev(ref)         # 'Rom 2:3-4,7'
+__.code(ref)           # 'rom+2.3-4,7'
+__.numbers(ref)        # '2:3-4,7'
 ```
 
 
@@ -157,41 +160,18 @@ assert gen1.adjoins(gen2)
 assert not gen1.overlaps(gen2)
 ```
 
+## Manipulating references
 
-### Manipulating references
-
-References can be turned into their first book object, a list of books, or a
-reference to just their book or chapter ranges.
+Among other transformations, references can be turned into their (first) book
+objects or references to just their books or chapters.
 
 ```
 ref1 = __.ref('Rom 2:3-4,7')
 
-__.book(ref1).name      # Romans
-__.book(ref1).abbrev    # Rom
-__.book(ref1).code      # rom
-
-ref2 = __.ref('Rom 2, Php 4')
-
-", ".join(__.book().name for _ in __.books(ref2, unique=True, sorted=True))  
-  
-^ Romans, Philippians
-
-__.name(__.book_reference(ref1))       # Romans
-__.name(__.chapter_reference(ref1))    # Romans 2
+assert __.book(ref1).chapters == 16
+assert __.name(ref1.book_reference()) == 'Romans'
+assert __.name(ref1.chapter_reference(ref1)) == 'Romans 2'
 ```
-
-
-### Formatting references
-
-```
-ref = ___.r('Rom 2:3-4, 7')
-
-__.name(ref)           # 'Romans 2:3-4,7'
-__.abbrev(ref)         # 'Rom 2:3-4,7'
-__.code(ref)           # 'rom+2.3-4,7'
-__.numbers(ref)        # '2:3-4,7'
-```
-
 
 ### Navigating references
 
@@ -199,9 +179,10 @@ __.numbers(ref)        # '2:3-4,7'
 assert next_chapter(rom_2) == rom_3
 assert prev_chapter(rom_2) == rom_1
 assert prev_chapter(rom_1) == acts_28
+assert prev_chapter(matt_1) == None
 ```
 
-Or to create chapter references:
+To create chapter references:
 
 ```
 from refspy.libraries.en_US import NT
@@ -224,8 +205,8 @@ url = 'https://www.biblegateway.com/passage/?search=%s&version=NRSVA"
 text = "Rom 1; 1 Cor 8:3,4; Rev 22:3-4"
    
 strs, refs = __.find_references(text)
-for s, ref in zip(strs, refs):
-   print f"{s} -> {url % __.code(ref)}"
+for match_str, ref in zip(strs, refs):
+   print(f"{match_str} -> {url % __.code(ref)}")
 ```
 
 ### Replacing references in text
@@ -250,12 +231,11 @@ html = sequential_replace(text, strs, tags)}
 
 ### Collating and Indexing
 
-References lists can be created for text using __.find_references(), and
-grouped into libraries and books using __.collate(). 
-
 To produce the index for the demo image above, we used:
 
 ```
+matches = __.find_references(text, include_books=True)
+
 index = []
 for library, book_collation in __.collate(
     sorted([ref for _, ref in matches if not ref.is_book()])
