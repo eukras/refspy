@@ -8,7 +8,7 @@ version = "0.9.1"
 authors = [
   { name="Nigel Chapman", email="nigel@chapman.id.au" },
 ]
-description = "A Python library for biblical referencing and indexing"
+description = "A Python package for working with biblical references in ordinary text."
 readme = "README.md"
 requires-python = ">=3.11"
 classifiers = [
