@@ -93,6 +93,16 @@ class Reference(BaseModel):
                 new_ranges.append(new_range)
         self.ranges = new_ranges
 
+    def is_book(self: Self) -> bool:
+        if len(self.ranges) == 1:
+            return self.ranges[0].is_book()
+        return False
+
+    def is_chapter(self: Self) -> bool:
+        if len(self.ranges) == 1:
+            return self.ranges[0].is_chapter()
+        return False
+
 
 def reference(points: List[Verse | Range | Tuple[Verse, Verse]]) -> Reference:
     """
@@ -125,21 +135,6 @@ def book_reference(library_id: Number, book_id: Number) -> Reference:
             )
         ]
     )
-
-
-def is_book_reference(reference: Reference) -> bool:
-    if len(reference.ranges) == 1:
-        _ = reference.ranges[0]
-        if all(
-            [
-                _.start.library == _.end.library,
-                _.start.book == _.end.book,
-                (_.start.chapter, _.end.chapter) == (1, 999),
-                (_.start.verse, _.end.verse) == (1, 999),
-            ]
-        ):
-            return True
-    return False
 
 
 def chapter_reference(

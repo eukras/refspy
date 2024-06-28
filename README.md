@@ -80,18 +80,13 @@ references from strings:
 ___.r('Rom 2:3-4,7')
 ```
 
-A reference contains a list of ranges (see below). It can sort and combine
-these to keep the references as compact as possible. We can use the `__.name`
-and `__.abbrev` functions to get back string references again:
-
-TODO: Combinations
+A reference contains a list of ranges. We can use the `__.name` and `__.abbrev`
+functions to get back string references again:
 
 ```
 ref = __.r('Rom 2:6,9,1,2')
 assert __.name(ref) == 'Romans 2:1-2,6,9'
-
-ref = __.r('Rom 2:6,9,1,2', sort=False, combine=False)
-assert __.abbrev(ref) == 'Rom 2:6,9,1,2'
+assert __.abbrev(ref) == 'Rom 2:1-2,6,9'
 ```
 
 We can construct references more programmatically with `__.bcv()`:
@@ -113,10 +108,7 @@ ___.bcr('rom', 2, [(2, 3), 7])    # Rom 2:2-3,7 (from range)
 ### Comparing references
 
 A reference can be a set of any verses and verse ranges spread across multiple
-libraries. Comparing references A and B means checking that all ranges in A are
-less than all ranges in B. For large or complex references this is not
-intuitive and not recommended. Comparing simple references is reasonable,
-however, as it just involves comparing simple ranges: 
+libraries. Comparing references A and B just means comparing their first verse. 
 
 ```
 rom_2 = __.r('Rom 2')
@@ -139,9 +131,9 @@ min([rom_4, rom_2]) == rom_2
 ### Contains, Overlaps, Adjoins
 
 We will commonly want to know if one reference `contains()`, or `overlaps()`
-another. The `adjoins()` function allows adjacent references to be combined by the
-`__.simplify() ` function, but note it is limited by not knowing the lengths of
-chapters.
+another. The `adjoins()` function works out adjacency for chapters and verses,
+but note it is limited by not knowing the lengths of chapters. (Adjacency may
+be used in future to combine and simplify references.)
 
 ```
 gen1 = __.r('Gen 1') 
@@ -157,8 +149,6 @@ gen1_22_23.overlaps(gen1)       # True
 gen1_22_23.adjoins(gen1_24_28)  # True
 gen1.adjoins(gen2)              # True
 gen1.overlaps(gen2)             # False
-gen.adjoins(ex)                 # True
-gen.overlaps(ex)                # False
 ```
 
 
@@ -243,7 +233,7 @@ matches = __.find_references(text, include_books=True)
 strs, tags = [], []
 for match_str, ref in matches:
     strs.append(match_str)
-    if is_book_reference(ref):
+    if ref.is_book():
         tags.append(f'<span class="yellow">{match_str}</span>')
     else:
         tags.append(
@@ -262,7 +252,7 @@ To produce the index for the demo image above, we used:
 ```
 index = []
 for library, book_collation in __.collate(
-    sorted([ref for _, ref in matches if not is_book_reference(ref)])
+    sorted([ref for _, ref in matches if not ref.is_book()])
 ):
     for book, reference_list in book_collation:
         new_reference = __.merge(reference_list)

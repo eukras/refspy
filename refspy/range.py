@@ -94,10 +94,8 @@ class Range(BaseModel):
             [
                 self.start.library == self.end.library,
                 self.start.book != self.end.book,
-                self.start.chapter == 1,
-                self.end.chapter == 999,
-                self.start.verse == 1,
-                self.end.verse == 999,
+                (self.start.chapter, self.end.chapter) == (1, 999),
+                (self.start.verse, self.end.verse) == (1, 999),
             ]
         )
 
@@ -120,10 +118,8 @@ class Range(BaseModel):
             [
                 self.start.library == self.end.library,
                 self.start.book == self.end.book,
-                self.start.chapter == 1,
-                self.end.chapter == 999,
-                self.start.verse == 1,
-                self.end.verse == 999,
+                (self.start.chapter, self.end.chapter) == (1, 999),
+                (self.start.verse, self.end.verse) == (1, 999),
             ]
         )
 
@@ -133,8 +129,7 @@ class Range(BaseModel):
                 self.start.library == self.end.library,
                 self.start.book == self.end.book,
                 self.start.chapter != self.end.chapter,
-                self.start.verse == 1,
-                self.end.verse == 999,
+                (self.start.verse, self.end.verse) == (1, 999),
             ]
         )
 
@@ -144,12 +139,7 @@ class Range(BaseModel):
                 self.start.library == self.end.library,
                 self.start.book == self.end.book,
                 self.start.chapter != self.end.chapter,
-                any(
-                    [
-                        self.start.verse != 1,
-                        self.end.verse != 999,
-                    ]
-                ),
+                (self.start.verse, self.end.verse) != (1, 999),
             ]
         )
 
@@ -159,8 +149,7 @@ class Range(BaseModel):
                 self.start.library == self.end.library,
                 self.start.book == self.end.book,
                 self.start.chapter == self.end.chapter,
-                self.start.verse == 1,
-                self.end.verse == 999,
+                (self.start.verse, self.end.verse) == (1, 999),
             ]
         )
 
