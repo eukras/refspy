@@ -1,9 +1,9 @@
 from refspy.types.book import Book
 from refspy.types.library import Library
 
-# See LIBRARIES.md for ID numbers
-# en_US:
-# - English language libraries follows SBL style guide for books and abbreviations.
+# See README.md for ID numbers
+# English language libraries follow SBL style guide for books and
+# abbreviations.
 
 OT = Library(
     id=200,
@@ -701,7 +701,7 @@ NT = Library(
             abbrev="1 Tim",
             code="1tim",
             depth=2,
-            aliases=["1 Ti"],
+            aliases=[],
             chapters=6,
         ),
         Book(
@@ -710,7 +710,7 @@ NT = Library(
             abbrev="2 Tim",
             code="2tim",
             depth=2,
-            aliases=["2 Ti"],
+            aliases=[],
             chapters=4,
         ),
         Book(
@@ -771,7 +771,7 @@ NT = Library(
             id=23,
             name="1 John",
             abbrev="1 John",
-            code="1john",
+            code="1jn",
             depth=2,
             aliases=["1 Jn"],
             chapters=5,
@@ -789,7 +789,7 @@ NT = Library(
             id=25,
             name="3 John",
             abbrev="3 John",
-            code="3john",
+            code="3jn",
             depth=1,
             aliases=["3 Jn"],
             chapters=1,
