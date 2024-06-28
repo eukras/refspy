@@ -107,10 +107,10 @@ ref = ___.bcr('Rom', 2, [(2, 3), 7])    # Rom 2:2-3,7 (from range)
 ```
 ref = ___.r('Rom 2:3-4, 7')
 
-__.name(ref)           # 'Romans 2:3-4,7'
-__.abbrev(ref)         # 'Rom 2:3-4,7'
-__.code(ref)           # 'rom+2.3-4,7'
-__.numbers(ref)        # '2:3-4,7'
+assert __.name(ref) == 'Romans 2:3-4,7'
+assert __.abbrev(ref) == 'Rom 2:3-4,7'
+assert __.code(ref) == 'rom+2.3-4,7'
+assert __.numbers(ref) == '2:3-4,7'
 ```
 
 
