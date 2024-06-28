@@ -12,7 +12,10 @@
 
 ## Introduction
 
-Refspy is a Python package for biblical referencing in ordinary text.
+Refspy is a Python package for working with biblical references in ordinary text.
+
+* [eukras/refspy on Github](https://github.com/eukras/refspy)
+* [refspy on PyPI](https://pypi.org/project/refspy/)  --> `pip install refspy`
 
 ## Demo
 
@@ -32,13 +35,6 @@ Refspy is a Python package for biblical referencing in ordinary text.
 * Sequentially replace matched references in strings, e.g. with HTML links
 * In English, we follow SBL conventions, including matching 'First Corinthians'
   for '1 Corinthians'.
-
-
-## Installation
-
-```
-pip install refspy
-```
 
 
 ## The Reference Manager
