@@ -1,10 +1,1 @@
-annotated-types==0.6.0
-build==1.2.1
-iniconfig==2.0.0
-packaging==24.0
-pluggy==1.5.0
-pydantic==2.7.1
-pydantic_core==2.18.2
-pyproject_hooks==1.1.0
-pytest==8.2.0
-typing_extensions==4.11.0
+pydantic>=2.7.1
