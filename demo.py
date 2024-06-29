@@ -57,7 +57,7 @@ print("""
 print(f"""
         <pre>{text}</pre>
         <blockquote>{sequential_replace(text, strs, tags)}</blockquote>
-        <p><b>Index</b>. {"; ".join(index)}</p>
+        <blockquote><b>Index</b>. {"; ".join(index)}.</blockquote>
         <p> Because a number or a range (1 or 2-3) could refer to either verses or
         chapters, or other regular numbers that have nothing to do with biblical
         referencing, we only match references that are preceded by a book name, a
