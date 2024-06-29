@@ -9,8 +9,8 @@ from refspy.indexes import (
     index_libraries,
     index_library_aliases,
 )
-from refspy.types.book import Book
-from refspy.types.library import Library
+from refspy.book import Book
+from refspy.library import Library
 
 bk_1 = Book(
     id=1, name="Book", abbrev="Bk", code="bk", depth=2, aliases=["vol"], chapters=10

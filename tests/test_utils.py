@@ -1,6 +1,6 @@
 from context import *
 
-from refspy.helper import refspy
+from refspy import refspy
 from refspy.utils import normalize_spacing, sequential_replace
 
 

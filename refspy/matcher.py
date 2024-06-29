@@ -2,6 +2,7 @@ import math
 import re
 from typing import Dict, Generator, List, Match, Tuple
 
+from refspy.book import Book
 from refspy.language import Language
 from refspy.logger import logger
 from refspy.range import range
@@ -11,7 +12,6 @@ from refspy.reference import (
     last_start_verse,
     reference,
 )
-from refspy.types.book import Book
 from refspy.utils import normalize_spacing
 from refspy.verse import Number, Verse, verse
 

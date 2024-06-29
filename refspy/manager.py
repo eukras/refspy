@@ -1,6 +1,7 @@
 from typing import Dict, Generator, List, Tuple
 from weakref import ref
 
+from refspy.book import Book
 from refspy.format import ABBREV_FORMAT, CODE_FORMAT, NAME_FORMAT, NUMBER_FORMAT
 from refspy.formatter import Formatter
 from refspy.indexes import (
@@ -10,6 +11,7 @@ from refspy.indexes import (
     index_library_aliases,
 )
 from refspy.language import Language
+from refspy.library import Library
 from refspy.matcher import Matcher
 from refspy.navigator import Navigator
 from refspy.range import range
@@ -20,8 +22,6 @@ from refspy.reference import (
     reference,
     verse_reference,
 )
-from refspy.types.book import Book
-from refspy.types.library import Library
 from refspy.verse import Number, verse
 
 

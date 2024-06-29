@@ -27,9 +27,6 @@ __ = Manager(libraries=[OT, NT], language=ENGLISH)
 
 def test_example():
     result = __.find_references(text)
-
-    # print("RESULT", result)
-
     assert result[0] == (
         "Romans 1:1–4",
         reference([range(verse(400, 6, 1, 1), verse(400, 6, 1, 4))]),

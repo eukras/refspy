@@ -1,4 +1,13 @@
-from refspy.types.format import Format
+from pydantic import BaseModel
+
+
+class Format(BaseModel):
+    colon: str
+    comma: str
+    dash: str
+    property: str | None
+    semicolon: str
+    space: str
 
 
 ABBREV_FORMAT = Format(

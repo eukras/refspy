@@ -1,4 +1,5 @@
-from refspy.types.language import Language
+from refspy.language import Language
+
 
 ENGLISH = Language(
     verse_markers=["v.", "vv."],

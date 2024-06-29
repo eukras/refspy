@@ -1,9 +1,9 @@
 from typing import Dict, Tuple
 
+from refspy.book import Book
 from refspy.format import Format
 from refspy.range import Range
 from refspy.reference import Reference
-from refspy.types.book import Book
 from refspy.utils import string_together
 from refspy.verse import Number, Verse
 

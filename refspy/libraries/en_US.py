@@ -1,7 +1,7 @@
-from refspy.types.book import Book
-from refspy.types.library import Library
+from refspy.book import Book
+from refspy.library import Library
 
-# See README.md for ID numbers
+# See README.md for Library ID numbers
 # English language libraries follow SBL style guide for books and
 # abbreviations.
 

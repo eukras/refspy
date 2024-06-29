@@ -12,8 +12,8 @@ from refspy.languages.english import ENGLISH
 from refspy.manager import Manager
 from refspy.range import range
 from refspy.reference import reference
-from refspy.types.book import Book
-from refspy.types.library import Library
+from refspy.book import Book
+from refspy.library import Library
 from refspy.verse import verse
 
 BOOK = Book(

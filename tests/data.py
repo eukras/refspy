@@ -1,4 +1,4 @@
-from refspy.types.book import Book
+from refspy.book import Book
 from refspy.library import Library
 
 FIRST_BOOK = Book(

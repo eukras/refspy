@@ -1,6 +1,6 @@
 from typing import Dict, Tuple
 
-from refspy.types.book import Book
+from refspy.book import Book
 from refspy.range import range
 from refspy.reference import Reference, reference
 from refspy.verse import Number, verse
