@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "refspy"
-version = "0.9.1"
+version = "0.9.3"
 authors = [
   { name="Nigel Chapman", email="nigel@chapman.id.au" },
 ]
@@ -12,10 +12,20 @@ description = "A Python package for working with biblical references in ordinary
 readme = "README.md"
 requires-python = ">=3.11"
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-    "Operating System :: OS Independent",
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Topic :: Religion",
+  "Topic :: Text Processing :: Indexing",
 ]
+
+
+[tool.setuptools]
+packages = ["refspy"]
+py-modules=["refspy", 'refspy.Languages', 'refspy.libraries']
+
 
 [project.urls]
 Homepage = "https://github.com/eukras/refspy"
