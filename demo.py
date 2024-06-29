@@ -1,7 +1,7 @@
 from refspy import refspy
 from refspy.utils import sequential_replace
 
-URL = "https://github.com/eukras/refspy/refspy/docs/demo.py"
+URL = "https://github.com/eukras/refspy/demo.py"
 
 __ = refspy()
 
@@ -56,7 +56,7 @@ print("""
 """)
 print(f"""
         <pre>{text}</pre>
-        <p>{sequential_replace(text, strs, tags)}</p>
+        <blockquote>{sequential_replace(text, strs, tags)}</blockquote>
         <p><b>Index</b>. {"; ".join(index)}</p>
         <p> Because a number or a range (1 or 2-3) could refer to either verses or
         chapters, or other regular numbers that have nothing to do with biblical

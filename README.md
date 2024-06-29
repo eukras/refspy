@@ -1,4 +1,4 @@
-![RefSpy Logo](https://github.com/eukras/refspy/raw/master/refspy-logo.svg)
+![RefSpy Logo](https://github.com/eukras/refspy/raw/master/media/refspy-logo.svg)
 
 
 Refspy is a Python package for working with biblical references in ordinary text.
@@ -19,7 +19,7 @@ Refspy is a Python package for working with biblical references in ordinary text
 
 ## Demo
 
-![RefSpy Demo](https://github.com/eukras/refspy/raw/master/refspy-demo.png)
+![RefSpy Demo](https://github.com/eukras/refspy/raw/master/media/refspy-demo.png)
 
 (See `demo.py`)
 
@@ -340,7 +340,7 @@ sql_clause = " OR ".join([
 A range contains start and end verses.
 
 Verses and ranges convert to tuples e.g. ((1, 2, 3, 4), (1, 2, 3, 5)) which can
-be sorted as they are.
+be sorte:qd as they are.
 
 A whole chapter is referenced as range(verse(1, 1, 1, 1), verse(1, 1, 1, 999)).
 
