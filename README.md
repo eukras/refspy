@@ -195,7 +195,7 @@ nt_chapter_refs_ = [
 
 ### Matching references in text
 
-Here's how we might find references in text and print HTML links for them:
+To find references in text and print HTML links for them:
 
 ```
 url = 'https://www.biblegateway.com/passage/?search=%s&version=NRSVA"
@@ -229,14 +229,14 @@ html = sequential_replace(text, strs, tags)}
 
 ### Collating and Indexing
 
-To produce the index for the demo image above, we used:
+To produce the index for the demo image above:
 
 ```
-matches = __.find_references(text, include_books=True)
+matches = __.find_references(text)
 
 index = []
 for library, book_collation in __.collate(
-    sorted([ref for _, ref in matches if not ref.is_book()])
+    sorted([ref for _, ref in matches])
 ):
     for book, reference_list in book_collation:
         new_reference = __.merge(reference_list)
@@ -251,18 +251,18 @@ html_list = "; ".join(index)
 
 `Book`, `Format`, `Language`, `Library`, `Number`, `Range`, `Reference`, and
 `Verse` are Pydantic types that will raise ValueErrors if initialised with bad
-data, say if a verse has Numbers outside the range `0..999`, or if a range has
+data, say if a verse has Numbers outside the range `0..999`, or if a Range has
 a start verse that is greater than its end verse.
 
 - **Book**. A book has id, name, abbrev, code, depth, aliases, and chapters. No verse counts.
-- **Depth**. Any book has 'reference depth' of 1 or 2. A single-chapter book like Philemon has reference depth 1 and doesn't show chapter numbers. In theory a reference depth of three might in future be needed by publications with section numbers.
-- **Format**. References are formatted in different ways for different purposes. The Format objects define what properties and characters to use.
+- **Depth**. Any book has 'reference depth' of 1 or 2. A single-chapter book like Philemon has reference depth 1 and doesn't show chapter numbers. In theory a reference depth of three might in future be needed by texts with section numbers (3.4.5).
+- **Format**. The Format objects define what properties and characters to use when formatting references for various purposes.
 - **Index**. An integer which results from expanding a verse by powers of 1000; `verse(1, 7, 16, 1)` becomes the integer `1007016001`
-- **Library**. A library has id, name, abbrev, code, and a list of Books. See e.g. `libraries/en_US.py`.
+- **Library**. A library has id, name, abbrev, code, and a list of Books. See e.g. `libraries/en_US.py`. Library IDs are spaced out in a roughly historical order: OT is 200, NT is 400.
 - **Number**. An integer `1..999`. We assume verses/chapters/books/libraries are limited to this size. This may need modifying to accommodate, say, _zero verses_ in the Septuagint.
-- **Range**. A pair of `(start, end)` verses; `1 Cor 16:1-2` becomes `range(verse(1, 7, 16, 1), verse(1, 7, 16, 2))`.
-- **Reference**. A list of ranges; `1 Cor 16:1-2,6` becomes `[range(verse(1, 7, 16, 1), verse(1, 7, 16, 2)), range(verse(1, 7, 16, 6), verse(1, 7, 16, 6))]`.
-- **Verse**. A quadruple of `(library, book, chapter, verse)` numbers; `1 Cor 16:1` becomes `verse(1, 7, 16, 1)`
+- **Range**. A pair of `(start, end)` verses; `1 Cor 16:1-2` becomes `range(verse(400, 7, 16, 1), verse(400, 7, 16, 2))`.
+- **Reference**. A list of ranges; `1 Cor 16:1-2,6` becomes `reference([range(verse(400, 7, 16, 1), verse(400, 7, 16, 2)), range(verse(400, 7, 16, 6), verse(400, 7, 16, 6))])`. They do not automatically sort or simplify the ranges.
+- **Verse**. A quadruple of `(library, book, chapter, verse)` numbers; `1 Cor 16:1` becomes `verse(400, 7, 16, 1)`
 
 
 ## Data Structures
