@@ -21,7 +21,7 @@ Refspy is a Python package for working with biblical references in ordinary text
 
 ![RefSpy Demo](https://github.com/eukras/refspy/raw/master/refspy-demo.png)
 
-(See `refspy/docs`)
+(See `demo.py`)
 
 ## Features
 
@@ -42,10 +42,10 @@ Refspy is a Python package for working with biblical references in ordinary text
 
 Initialising `refspy` with corpus and language names will return a reference
 manager. This provides a single convenient interface for the whole library. 
-By default, Refspy provides a Protestant canon in English.
+By default, refspy provides a Protestant canon in English.
 
 ```
-from refspy.helper import refspy
+from refspy import refspy
 __ = refspy()
 ```
 
@@ -69,11 +69,12 @@ __ = refspy('orthodox', 'en_US')
 __ = Manager(libraries=[OT, DC, DC_ORTHODOX, NT], ENGLISH)
 ```
 
-The file `refspy/corpus.py` shows valid corpus names, and `refspy/language.py`
-contains valid language names. (Only English at present.)
-
-The `en_US` libraries conform to the SBL Style Guide for book names and
-abbreviations. Other libraries can be defined in the libraries directory.
+The file `refspy/setup.py` shows valid names for libraries and languages.
+There's only English initially. The `en_US` libraries conform to the SBL Style
+Guide for book names and abbreviations. Other libraries can be defined and
+added locally following the structure in `refspy.libraries.en_US`. If they 
+follow established academic usage where possible, please contribute them to 
+the project.
 
 
 ### Creating references 
@@ -248,11 +249,14 @@ html_list = "; ".join(index)
 
 ## Glossary
 
-`Book`, `Library`, `Number`, `Range`, `Reference`, and `Verse` are Pydantic
-types that will raise ValueErrors if initialised wrongly.
+`Book`, `Format`, `Language`, `Library`, `Number`, `Range`, `Reference`, and
+`Verse` are Pydantic types that will raise ValueErrors if initialised with bad
+data, say if a verse has Numbers outside the range `0..999`, or if a range has
+a start verse that is greater than its end verse.
 
 - **Book**. A book has id, name, abbrev, code, depth, aliases, and chapters. No verse counts.
-- **Depth**. Any book has 'reference depth', of 1 or 2. A single-chapter book like Philemon has reference depth 1 and doesn't show chapter numbers. In theory a reference depth of three might in future be needed by publications with section numbers.
+- **Depth**. Any book has 'reference depth' of 1 or 2. A single-chapter book like Philemon has reference depth 1 and doesn't show chapter numbers. In theory a reference depth of three might in future be needed by publications with section numbers.
+- **Format**. References are formatted in different ways for different purposes. The Format objects define what properties and characters to use.
 - **Index**. An integer which results from expanding a verse by powers of 1000; `verse(1, 7, 16, 1)` becomes the integer `1007016001`
 - **Library**. A library has id, name, abbrev, code, and a list of Books. See e.g. `libraries/en_US.py`.
 - **Number**. An integer `1..999`. We assume verses/chapters/books/libraries are limited to this size. This may need modifying to accommodate, say, _zero verses_ in the Septuagint.
