@@ -43,12 +43,6 @@
                                 <a class="variable" href="#Book.abbrev">abbrev</a>
                         </li>
                         <li>
-                                <a class="variable" href="#Book.code">code</a>
-                        </li>
-                        <li>
-                                <a class="variable" href="#Book.depth">depth</a>
-                        </li>
-                        <li>
                                 <a class="variable" href="#Book.aliases">aliases</a>
                         </li>
                         <li>
@@ -84,8 +78,7 @@
 
                         <div class="docstring"><p>Data object for a book.</p>
 
-<p>Books have names, abbrevs (short names), and codes (suited to URL params), plus
-any aliases it is known by.</p>
+<p>Books are referenced by their names, abbrevs (short names), and aliases.</p>
 
 <h6 id="attributes">Attributes:</h6>
 
@@ -93,20 +86,21 @@ any aliases it is known by.</p>
 <li><strong>id:</strong>  13</li>
 <li><strong>name:</strong>  '1 Thesslonians'</li>
 <li><strong>abbrev:</strong>  '1 Thess'</li>
-<li><strong>code:</strong>  '1thess'</li>
-<li><strong>depth:</strong>  2</li>
 <li><strong>aliases:</strong>  ['1 Th'],</li>
 <li><strong>chapters:</strong>  5</li>
 </ul>
+
+<h6 id="note">Note:</h6>
+
+<blockquote>
+  <p>Aliases should be capitalised.</p>
+</blockquote>
 
 <p>If the book has a number (e.g. '1' Corinthians), then the
 <code><a href="language.html#Language">refspy.language.Language</a></code> object's <code>number_prefixes</code> property defines any
 substitute prefixes like 'I' or 'First'.</p>
 
-<p>A book with only one chapter has a reference depth of 1, meaning only verse
-numbers are used in its references. Depth may in future be used to support
-books with sections (<code>depth=3</code>), otherwise we would just check if
-<code>book.chapters == 1</code>.</p>
+<p>A book with only one chapter will be formatted without chapter numbers.</p>
 </div>
 
                         <input id="mod-book-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
@@ -115,42 +109,37 @@ books with sections (<code>depth=3</code>), otherwise we would just check if
 
                         <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos"> 1</span></a><span class="sd">&quot;&quot;&quot;Data object for a book.</span>
 </span><span id="L-2"><a href="#L-2"><span class="linenos"> 2</span></a>
-</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="sd">Books have names, abbrevs (short names), and codes (suited to URL params), plus</span>
-</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="sd">any aliases it is known by.</span>
-</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a>
-</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="sd">Attributes:</span>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="sd">    id: 13</span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="sd">    name: &#39;1 Thesslonians&#39;</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="sd">    abbrev: &#39;1 Thess&#39;</span>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="sd">    code: &#39;1thess&#39;</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="sd">    depth: 2</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="sd">    aliases: [&#39;1 Th&#39;],</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="sd">    chapters: 5</span>
+</span><span id="L-3"><a href="#L-3"><span class="linenos"> 3</span></a><span class="sd">Books are referenced by their names, abbrevs (short names), and aliases.</span>
+</span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a>
+</span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="sd">Attributes:</span>
+</span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="sd">    id: 13</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="sd">    name: &#39;1 Thesslonians&#39;</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="sd">    abbrev: &#39;1 Thess&#39;</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="sd">    aliases: [&#39;1 Th&#39;],</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="sd">    chapters: 5</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="sd">Note:</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="sd">    Aliases should be capitalised.</span>
 </span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>
 </span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="sd">If the book has a number (e.g. &#39;1&#39; Corinthians), then the</span>
 </span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">`refspy.language.Language` object&#39;s `number_prefixes` property defines any</span>
 </span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="sd">substitute prefixes like &#39;I&#39; or &#39;First&#39;.</span>
 </span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="sd">A book with only one chapter has a reference depth of 1, meaning only verse</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="sd">numbers are used in its references. Depth may in future be used to support</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="sd">books with sections (`depth=3`), otherwise we would just check if</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="sd">`book.chapters == 1`.</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="sd">A book with only one chapter will be formatted without chapter numbers.</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
 </span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="kn">from</span> <span class="nn">refspy.number</span> <span class="kn">import</span> <span class="n">Number</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>
 </span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a><span class="kn">from</span> <span class="nn">refspy.number</span> <span class="kn">import</span> <span class="n">Number</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a><span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>    <span class="nb">id</span><span class="p">:</span> <span class="n">Number</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>    <span class="n">abbrev</span><span class="p">:</span> <span class="nb">str</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>    <span class="n">code</span><span class="p">:</span> <span class="nb">str</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>    <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>    <span class="n">aliases</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>    <span class="n">chapters</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a><span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>    <span class="nb">id</span><span class="p">:</span> <span class="n">Number</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>    <span class="n">abbrev</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>    <span class="n">aliases</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>    <span class="n">chapters</span><span class="p">:</span> <span class="nb">int</span>
 </span></pre></div>
 
 
@@ -166,14 +155,12 @@ books with sections (<code>depth=3</code>), otherwise we would just check if
 
     </div>
     <a class="headerlink" href="#Book"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Book-32"><a href="#Book-32"><span class="linenos">32</span></a><span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-</span><span id="Book-33"><a href="#Book-33"><span class="linenos">33</span></a>    <span class="nb">id</span><span class="p">:</span> <span class="n">Number</span>
-</span><span id="Book-34"><a href="#Book-34"><span class="linenos">34</span></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-</span><span id="Book-35"><a href="#Book-35"><span class="linenos">35</span></a>    <span class="n">abbrev</span><span class="p">:</span> <span class="nb">str</span>
-</span><span id="Book-36"><a href="#Book-36"><span class="linenos">36</span></a>    <span class="n">code</span><span class="p">:</span> <span class="nb">str</span>
-</span><span id="Book-37"><a href="#Book-37"><span class="linenos">37</span></a>    <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span>
-</span><span id="Book-38"><a href="#Book-38"><span class="linenos">38</span></a>    <span class="n">aliases</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-</span><span id="Book-39"><a href="#Book-39"><span class="linenos">39</span></a>    <span class="n">chapters</span><span class="p">:</span> <span class="nb">int</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Book-29"><a href="#Book-29"><span class="linenos">29</span></a><span class="k">class</span> <span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="Book-30"><a href="#Book-30"><span class="linenos">30</span></a>    <span class="nb">id</span><span class="p">:</span> <span class="n">Number</span>
+</span><span id="Book-31"><a href="#Book-31"><span class="linenos">31</span></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="Book-32"><a href="#Book-32"><span class="linenos">32</span></a>    <span class="n">abbrev</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="Book-33"><a href="#Book-33"><span class="linenos">33</span></a>    <span class="n">aliases</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+</span><span id="Book-34"><a href="#Book-34"><span class="linenos">34</span></a>    <span class="n">chapters</span><span class="p">:</span> <span class="nb">int</span>
 </span></pre></div>
 
 
@@ -240,28 +227,6 @@ __args__, __origin__, __parameters__ in typing-module generics. May eventually b
     
 
                             </div>
-                            <div id="Book.code" class="classattr">
-                                <div class="attr variable">
-            <span class="name">code</span><span class="annotation">: str</span>
-
-        
-    </div>
-    <a class="headerlink" href="#Book.code"></a>
-    
-    
-
-                            </div>
-                            <div id="Book.depth" class="classattr">
-                                <div class="attr variable">
-            <span class="name">depth</span><span class="annotation">: int</span>
-
-        
-    </div>
-    <a class="headerlink" href="#Book.depth"></a>
-    
-    
-
-                            </div>
                             <div id="Book.aliases" class="classattr">
                                 <div class="attr variable">
             <span class="name">aliases</span><span class="annotation">: List[str]</span>
@@ -300,7 +265,7 @@ __args__, __origin__, __parameters__ in typing-module generics. May eventually b
                                 <div class="attr variable">
             <span class="name">model_fields</span>        =
 <input id="Book.model_fields-view-value" class="view-value-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-            <label class="view-value-button pdoc-button" for="Book.model_fields-view-value"></label><span class="default_value">{&#39;id&#39;: FieldInfo(annotation=int, required=True, metadata=[Ge(ge=1), Le(le=999)]), &#39;name&#39;: FieldInfo(annotation=str, required=True), &#39;abbrev&#39;: FieldInfo(annotation=str, required=True), &#39;code&#39;: FieldInfo(annotation=str, required=True), &#39;depth&#39;: FieldInfo(annotation=int, required=True), &#39;aliases&#39;: FieldInfo(annotation=List[str], required=True), &#39;chapters&#39;: FieldInfo(annotation=int, required=True)}</span>
+            <label class="view-value-button pdoc-button" for="Book.model_fields-view-value"></label><span class="default_value">{&#39;id&#39;: FieldInfo(annotation=int, required=True, metadata=[Ge(ge=1), Le(le=999)]), &#39;name&#39;: FieldInfo(annotation=str, required=True), &#39;abbrev&#39;: FieldInfo(annotation=str, required=True), &#39;aliases&#39;: FieldInfo(annotation=List[str], required=True), &#39;chapters&#39;: FieldInfo(annotation=int, required=True)}</span>
 
         
     </div>

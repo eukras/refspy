@@ -131,10 +131,10 @@
 </span><span id="L-55"><a href="#L-55"><span class="linenos"> 55</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="L-56"><a href="#L-56"><span class="linenos"> 56</span></a>
 </span><span id="L-57"><a href="#L-57"><span class="linenos"> 57</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">books</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Number</span><span class="p">],</span> <span class="n">Book</span><span class="p">]</span> <span class="o">=</span> <span class="n">books</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Lookup `refspy.book.Book` by (library.id, book.id).&quot;&quot;&quot;</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos"> 58</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Lookup `refspy.book.Book` by `(library.id, book.id)`.&quot;&quot;&quot;</span>
 </span><span id="L-59"><a href="#L-59"><span class="linenos"> 59</span></a>
 </span><span id="L-60"><a href="#L-60"><span class="linenos"> 60</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">book_aliases</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Number</span><span class="p">]]</span> <span class="o">=</span> <span class="n">book_aliases</span>
-</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Lookup (library.id, book.is) by book alias.&quot;&quot;&quot;</span>
+</span><span id="L-61"><a href="#L-61"><span class="linenos"> 61</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Lookup `(library.id, book.id)` by book alias.&quot;&quot;&quot;</span>
 </span><span id="L-62"><a href="#L-62"><span class="linenos"> 62</span></a>
 </span><span id="L-63"><a href="#L-63"><span class="linenos"> 63</span></a>    <span class="k">def</span> <span class="nf">prev_chapter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="n">Reference</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Reference</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="L-64"><a href="#L-64"><span class="linenos"> 64</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Find a reference to the previous chapter.</span>
@@ -253,10 +253,10 @@
 </span><span id="Navigator-56"><a href="#Navigator-56"><span class="linenos"> 56</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="Navigator-57"><a href="#Navigator-57"><span class="linenos"> 57</span></a>
 </span><span id="Navigator-58"><a href="#Navigator-58"><span class="linenos"> 58</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">books</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Number</span><span class="p">],</span> <span class="n">Book</span><span class="p">]</span> <span class="o">=</span> <span class="n">books</span>
-</span><span id="Navigator-59"><a href="#Navigator-59"><span class="linenos"> 59</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Lookup `refspy.book.Book` by (library.id, book.id).&quot;&quot;&quot;</span>
+</span><span id="Navigator-59"><a href="#Navigator-59"><span class="linenos"> 59</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Lookup `refspy.book.Book` by `(library.id, book.id)`.&quot;&quot;&quot;</span>
 </span><span id="Navigator-60"><a href="#Navigator-60"><span class="linenos"> 60</span></a>
 </span><span id="Navigator-61"><a href="#Navigator-61"><span class="linenos"> 61</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">book_aliases</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Number</span><span class="p">]]</span> <span class="o">=</span> <span class="n">book_aliases</span>
-</span><span id="Navigator-62"><a href="#Navigator-62"><span class="linenos"> 62</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Lookup (library.id, book.is) by book alias.&quot;&quot;&quot;</span>
+</span><span id="Navigator-62"><a href="#Navigator-62"><span class="linenos"> 62</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Lookup `(library.id, book.id)` by book alias.&quot;&quot;&quot;</span>
 </span><span id="Navigator-63"><a href="#Navigator-63"><span class="linenos"> 63</span></a>
 </span><span id="Navigator-64"><a href="#Navigator-64"><span class="linenos"> 64</span></a>    <span class="k">def</span> <span class="nf">prev_chapter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="n">Reference</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Reference</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="Navigator-65"><a href="#Navigator-65"><span class="linenos"> 65</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Find a reference to the previous chapter.</span>
@@ -374,10 +374,10 @@
 </span><span id="Navigator.__init__-56"><a href="#Navigator.__init__-56"><span class="linenos">56</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="Navigator.__init__-57"><a href="#Navigator.__init__-57"><span class="linenos">57</span></a>
 </span><span id="Navigator.__init__-58"><a href="#Navigator.__init__-58"><span class="linenos">58</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">books</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Number</span><span class="p">],</span> <span class="n">Book</span><span class="p">]</span> <span class="o">=</span> <span class="n">books</span>
-</span><span id="Navigator.__init__-59"><a href="#Navigator.__init__-59"><span class="linenos">59</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Lookup `refspy.book.Book` by (library.id, book.id).&quot;&quot;&quot;</span>
+</span><span id="Navigator.__init__-59"><a href="#Navigator.__init__-59"><span class="linenos">59</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Lookup `refspy.book.Book` by `(library.id, book.id)`.&quot;&quot;&quot;</span>
 </span><span id="Navigator.__init__-60"><a href="#Navigator.__init__-60"><span class="linenos">60</span></a>
 </span><span id="Navigator.__init__-61"><a href="#Navigator.__init__-61"><span class="linenos">61</span></a>        <span class="bp">self</span><span class="o">.</span><span class="n">book_aliases</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Number</span><span class="p">]]</span> <span class="o">=</span> <span class="n">book_aliases</span>
-</span><span id="Navigator.__init__-62"><a href="#Navigator.__init__-62"><span class="linenos">62</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Lookup (library.id, book.is) by book alias.&quot;&quot;&quot;</span>
+</span><span id="Navigator.__init__-62"><a href="#Navigator.__init__-62"><span class="linenos">62</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Lookup `(library.id, book.id)` by book alias.&quot;&quot;&quot;</span>
 </span></pre></div>
 
 
@@ -436,7 +436,7 @@ assert __.prev_chapter(matt_1) is None
     </div>
     <a class="headerlink" href="#Navigator.books"></a>
     
-            <div class="docstring"><p>Lookup <code><a href="book.html#Book">refspy.book.Book</a></code> by (library.id, book.id).</p>
+            <div class="docstring"><p>Lookup <code><a href="book.html#Book">refspy.book.Book</a></code> by <code>(library.id, book.id)</code>.</p>
 </div>
 
 
@@ -449,7 +449,7 @@ assert __.prev_chapter(matt_1) is None
     </div>
     <a class="headerlink" href="#Navigator.book_aliases"></a>
     
-            <div class="docstring"><p>Lookup (library.id, book.is) by book alias.</p>
+            <div class="docstring"><p>Lookup <code>(library.id, book.id)</code> by book alias.</p>
 </div>
 
 
