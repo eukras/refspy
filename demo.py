@@ -6,19 +6,24 @@ URL = "https://github.com/eukras/refspy/demo.py"
 __ = refspy()
 
 text = """
-Human-written Bible references look like Rom 1:1, 6-7, 1 Cor 2-3, or Phlm 2-3.
-They can use spaces in the number part and commas between references. A
-reference to a book, say Second Corinthians, will provide context for
-references that follow, say, 5:21 or vv.25,37-38. If we refer to say Romans
-(but then add a reference to Gal 4:4 in parentheses), a subsequent reference
-like 12:16 will still be to Romans.
+Human-written Bible references look like Rom 2:1, 6-7, 1 Cor 1:2-3:4, or Phlm
+2-3. They wrap lines, use spaces in the number part, and have commas both
+between and within references. They are sometimes malformed, like Matt 1:10000
+or 1:3-2, but might also use abbreviations like Ps 119:122-24. A book name,
+such as Second Corinthians, provides context for references that follow, such
+as 5:21 or vv.25,37-38. If we refer to Romans (but then add a reference to Gal
+4:4 in parentheses), a subsequent reference like 12:16 will still be to Romans.
+Using letters as partial verses, as in II Thess 3:2b-4a, has no consistent
+meaning and must be read as whole verses.
 """
 
-matches = __.find_references(text, include_books=True)
+matches = __.find_references(text, include_books=True, include_nones=True)
 strs, tags = [], []
 for match_str, ref in matches:
     strs.append(match_str)
-    if ref.is_book():
+    if ref is None:
+        tags.append(f'<span class="purple">{match_str}</span>')
+    elif ref.is_book():
         tags.append(f'<span class="yellow">{match_str}</span>')
     else:
         tags.append(
@@ -26,10 +31,10 @@ for match_str, ref in matches:
         )
 index = []
 for library, book_collation in __.collate(
-    sorted([ref for _, ref in matches if not ref.is_book()])
+    sorted([ref for _, ref in matches if ref and not ref.is_book()])
 ):
     for book, reference_list in book_collation:
-        new_reference = __.merge(reference_list)
+        new_reference = __.sort_references(reference_list)
         index.append(__.abbrev(new_reference))
 
 
@@ -42,20 +47,24 @@ print("""
                   color: purple; padding: 1px 3px; border: 1px solid purple;
                   border-radius: 3px; margin-left: 2px; }
             .green { background-color: #aaffaa; }
+            .purple { background-color: #ffaaff; }
             .yellow { background-color: #ffffaa; }
         </style>
     </head>
     <body>
         <p><b>REFSPY</b>. <i>A Python library for working with biblical
         references in ordinary text.</i></p>
-        <p>In the demonstration text below, references are highlighted in
-        green, while book names that aren't themselves references but are used
-        for context are highlighted in yellow. The identified references are
-        noted in superscript, and an index is compiled at the end.</p>
+        <p>In the demonstration text below, references are highlighted in <span
+        class="green">green</span>, and identified in superscript<sup>Like
+        This</sup>. Book names that aren't themselves references but provide
+        context are highlighted in <span class="yellow">yellow</span>.
+        Malformed references are highlighted in <span
+        class="purple">purple</span>. An index of references is compiled at the
+        end.</p>
 
 """)
 print(f"""
-        <pre>{text}</pre>
+        <blockquote><pre>{text}</pre></blockquote>
         <blockquote>{sequential_replace(text, strs, tags)}</blockquote>
         <blockquote><b>Index</b>. {"; ".join(index)}.</blockquote>
         <p> Because a number or a range (1 or 2-3) could refer to either verses or
