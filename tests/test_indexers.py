@@ -1,13 +1,11 @@
 import pytest
 from context import *
 
-from refspy.indexes import (
+from refspy.indexers import (
     add_unique_book_alias,
-    add_unique_library_alias,
     index_book_aliases,
     index_books,
     index_libraries,
-    index_library_aliases,
 )
 from refspy.book import Book
 from refspy.library import Library
@@ -41,26 +39,9 @@ def test_index_book_aliases():
     assert len(index) == 3
     assert index["Book"] == (1, 1)
     assert index["Bk"] == (1, 1)
-    # assert index["bk"] == (1, 1)
-    # assert index["vol"] == (1, 1)
-
-
-def test_library_uniqueness():
-    index = dict()
-    add_unique_library_alias(index, "Book", 1)
-    add_unique_library_alias(index, "Other Book", 2)
-    with pytest.raises(ValueError):
-        add_unique_library_alias(index, "Book", 3)
 
 
 def test_index_libraries():
     index = index_libraries([lib_1])
     assert len(index) == 1
     assert index[1] == lib_1
-
-
-def test_index_library_aliases():
-    index = index_library_aliases([lib_1])
-    assert index["Library"] == 1
-    assert index["Lib"] == 1
-    # assert index["lib"] == 1

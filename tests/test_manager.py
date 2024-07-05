@@ -22,11 +22,9 @@ BOOK = Book(
 
 LIBRARY = Library(id=1, name="Library", abbrev="Lib", code="lib", books=[BOOK])
 
-# 'Book 1:1–2' in Library
 REFERENCES = [
-    reference(
-        [range(verse(LIBRARY.id, BOOK.id, 1, 1), verse(LIBRARY.id, BOOK.id, 1, 2))]
-    )
+    # 'Book 1:1–2' in Library
+    reference(range(verse(LIBRARY.id, BOOK.id, 1, 1), verse(LIBRARY.id, BOOK.id, 1, 2)))
 ]
 
 __ = Manager([LIBRARY], ENGLISH)
@@ -37,13 +35,8 @@ def test_init():
     Initialising a reference manager should create indexes for all the aliases.
     """
     assert __.libraries[LIBRARY.id] == LIBRARY
-    assert __.library_aliases["Library"] == LIBRARY.id
-    assert __.library_aliases["Lib"] == LIBRARY.id
-    # assert __.library_aliases["lib"] == LIBRARY.id
     assert __.book_aliases["Book"] == (LIBRARY.id, BOOK.id)
     assert __.book_aliases["Bk"] == (LIBRARY.id, BOOK.id)
-    # assert __.book_aliases["bk"] == (LIBRARY.id, BOOK.id)
-    # assert __.book_aliases["vol"] == (LIBRARY.id, BOOK.id)
 
 
 def test_non_unique():
@@ -54,18 +47,16 @@ def test_non_unique():
         _ = Manager([LIBRARY, LIBRARY], ENGLISH)
 
 
-def collate_by_id():
-    __ = Manager([LIBRARY], ENGLISH)
-    collation = __.collate(REFERENCES)
-    for library_id, book_collation in collation:
+def test_collate_by_id():
+    collation = __.collate_by_id(REFERENCES)
+    for library_id, book_collation in collation.items():
         assert library_id == LIBRARY.id
-        for book_id, book_references in book_collation:
+        for book_id, book_references in book_collation.items():
             assert book_id == BOOK.id
             assert book_references == REFERENCES
 
 
 def test_collate():
-    __ = Manager([LIBRARY], ENGLISH)
     collation = __.collate(REFERENCES)
     for library, book_collation in collation:
         assert library == LIBRARY

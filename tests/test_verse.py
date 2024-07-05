@@ -20,13 +20,6 @@ def test_from_index():
     assert _.verse == 4
 
 
-def test_wrong_number_of_args():
-    with pytest.raises(TypeError):
-        _ = verse(1, 2, 3)
-    with pytest.raises(TypeError):
-        _ = verse(1, 2, 3, 4, 5)
-
-
 def test_keyword_args():
     _ = Verse(library=1, book=2, chapter=3, verse=4)
     assert _.library == 1

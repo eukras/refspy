@@ -1,3 +1,22 @@
+"""
+Data object for reference formatting options.
+
+The Format objects are used by the `refspy.formatter.Formatter` to turn
+references into different kinds of strings. Properties are named by their
+characters in normal English formatting.
+
+Attributes:
+    colon: ':'
+    comma: ','
+    dash: '-'
+    property: 'name'
+    semicolon: '; '
+    space: ' '
+
+Note:
+    This may need to move into the language files.
+"""
+
 from pydantic import BaseModel
 
 

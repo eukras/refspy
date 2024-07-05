@@ -3,7 +3,7 @@ from context import *
 from pydantic import ValidationError
 import pytest
 
-from refspy.range import book, chapter, Range, range
+from refspy.range import Range, range
 from refspy.verse import verse
 
 
@@ -21,13 +21,6 @@ def test_construction():
     _ = Range(start=v1, end=v2)
     assert _.start == v1
     assert _.end == v2
-
-
-def test_wrong_number_of_args():
-    with pytest.raises(TypeError):
-        _ = range(verse(1, 2, 3, 4))
-    with pytest.raises(TypeError):
-        _ = range(verse(1, 2, 3, 4), verse(1, 2, 3, 4), verse(1, 2, 3, 4))
 
 
 def test_wrong_verse_order():
@@ -78,7 +71,6 @@ def test_is_inter_book_range():
 
 def test_is_book():
     assert range(verse(1, 1, 1, 1), verse(1, 1, 999, 999)).is_book()
-    assert book(1, 1).is_book()
 
 
 def test_is_chapter_range():
@@ -91,7 +83,6 @@ def test_is_inter_chapter_range():
 
 def test_is_chapter():
     assert range(verse(1, 1, 1, 1), verse(1, 1, 1, 999)).is_chapter()
-    assert chapter(1, 1, 1).is_chapter()
 
 
 def test_is_verse_range():
@@ -100,15 +91,3 @@ def test_is_verse_range():
 
 def test_is_verse():
     assert range(verse(1, 1, 1, 1), verse(1, 1, 1, 1)).is_verse()
-
-
-def test_chapter_range():
-    _ = chapter(1, 2, 3)
-    assert _.start == verse(1, 2, 3, 1)
-    assert _.end == verse(1, 2, 3, 999)
-
-
-def test_book_range():
-    _ = book(1, 2)
-    assert _.start == verse(1, 2, 1, 1)
-    assert _.end == verse(1, 2, 999, 999)

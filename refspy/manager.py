@@ -1,20 +1,25 @@
-from typing import Dict, Generator, List, Tuple
-from weakref import ref
+"""A facade for all major interface functions.
+
+See `refspy.refspy()` for a useful helper function.
+"""
+
+from typing import Dict, Generator, List, Optional, Tuple
+
+from pydantic import TypeAdapter
 
 from refspy.book import Book
 from refspy.format import ABBREV_FORMAT, CODE_FORMAT, NAME_FORMAT, NUMBER_FORMAT
 from refspy.formatter import Formatter
-from refspy.indexes import (
+from refspy.indexers import (
     index_book_aliases,
     index_books,
     index_libraries,
-    index_library_aliases,
 )
 from refspy.language import Language
 from refspy.library import Library
 from refspy.matcher import Matcher
 from refspy.navigator import Navigator
-from refspy.range import range
+from refspy.range import merge, range, sort
 from refspy.reference import (
     Reference,
     book_reference,
@@ -32,30 +37,56 @@ class Manager:
     """
 
     def __init__(self, libraries: List[Library], language: Language):
-        self.libraries = index_libraries(libraries)
-        self.books = index_books(libraries)
-        self.library_aliases = index_library_aliases(libraries)
-        self.book_aliases = index_book_aliases(libraries)
-        self.language = language
-        self.matcher = Matcher(self.books, self.book_aliases, self.language)
-        self.formatter = Formatter(self.books, self.book_aliases)
-        self.navigator = Navigator(self.books, self.book_aliases)
+        self.libraries: Dict[Number, Library] = index_libraries(libraries)
+        """A lookup dictionary for Libraries by library.id """
+
+        self.books: Dict[Tuple[Number, Number], Book] = index_books(libraries)
+        """A lookup dictionary for Books by (library.id, book.id)"""
+
+        self.book_aliases: Dict[str, Tuple[Number, Number]] = index_book_aliases(
+            libraries
+        )
+        """A lookup dictionary for (library.id, book.id) by book alias strings."""
+
+        self.language: Language = language
+        self.matcher: Matcher = Matcher(self.books, self.book_aliases, self.language)
+        self.formatter: Formatter = Formatter(self.books, self.book_aliases)
+        self.navigator: Navigator = Navigator(self.books, self.book_aliases)
 
     # -----------------------------------
-    # Merge functions
+    # Merging functions
     # -----------------------------------
 
-    def merge(self, references: List[Reference]) -> Reference:
-        if references:
-            if len(references) == 1:
-                return references[0]
-            else:
-                sum = references[0]
-                for ref in references[1:]:
-                    sum += ref
-                return sum
-        else:
-            raise ValueError("Reference list for merge must not be empty")
+    def sort_references(self, references: List[Reference]) -> Reference:
+        """For a list of references, sort their ranges into a new reference."""
+        ranges = []
+        for ref in references:
+            ranges.extend(ref.ranges)
+        new_ref = reference(*sort(ranges))
+        return new_ref
+
+    def merge_references(self, references: List[Reference]) -> Reference:
+        """For a list of references, merge their ranges into a new reference.
+
+        Merging means combining ranges that overlap.
+        """
+        ranges = []
+        for ref in references:
+            ranges.extend(ref.ranges)
+        new_ref = reference(*merge(ranges))
+        return new_ref
+
+    def combine_references(self, references: List[Reference]) -> Reference:
+        """For a list of references, combine their ranges into a new reference.
+
+        Combining means sorting ranges, merging overlaps, and joining adjacent
+        records.
+        """
+        ranges = []
+        for ref in references:
+            ranges.extend(ref.ranges)
+        new_ref = reference(*merge(ranges))
+        return new_ref
 
     # -----------------------------------
     # Iteration functions
@@ -100,54 +131,103 @@ class Manager:
 
     def first_reference(self, text: str) -> Tuple[str | None, Reference | None]:
         """
-        Because we match book names and reference numbers separately, finding
-        the first reference in "Book 1:2" means "1:2" to refspy. So we return
-        the first reference with verse numbers if there is one, otherwise just
-        the first reference.
-
-        - Book -> Return first match
-          ^^^^
-        - Book 2 -> Return first match
-          ^^^^^^
-        - Book 2:2 -> Return second match
-          ^^^^ ^^^
+        Return the first tuple of (match_str, reference) found by
+        `refspy.manager.Manager.generate_references()`
         """
         generator = self.matcher.generate_references(text)
         return next(generator, (None, None))
 
     def find_references(
-        self, text: str, include_books=False
-    ) -> List[Tuple[str, Reference]]:
-        generator = self.matcher.generate_references(text, include_books)
+        self, text: str, include_books: bool = False, include_nones: bool = False
+    ) -> List[Tuple[str, Reference | None]]:
+        """
+        Return a list of tuples of (match_str, reference) found by
+        `refspy.manager.Manager.generate_references()`
+        """
+        generator = self.matcher.generate_references(text, include_books, include_nones)
         return list(generator)
 
     def generate_references(
-        self, text: str, include_books: bool = False
-    ) -> Generator[Tuple[str, Reference], None, None]:
-        yield from self.matcher.generate_references(text, include_books)
+        self, text: str, include_books: bool = False, include_nones: bool = False
+    ) -> Generator[Tuple[str, Reference | None], None, None]:
+        """
+        Generate tuples of (match_str, reference) for provided text.
+
+        Task delegated to `refspy.matcher.Matcher.generate_references()`.
+
+        Args:
+            text: a string to search for references
+            include_books: Whether to yield book names without reference numbers
+            include_nones: Whether to yield (match_str, None) for malformed
+                references.
+
+        Yield:
+            A tuple of `(match_str, reference)` for each valid reference.
+        """
+        yield from self.matcher.generate_references(text, include_books, include_nones)
 
     # -----------------------------------
     # Reference creator functions
     # -----------------------------------
 
-    def bcv(self, alias: str, c=None, v=None, v_end=None) -> Reference:
+    def bcv(
+        self,
+        alias: str,
+        c: Number | None = None,
+        v: Number | None = None,
+        v_end: Number | None = None,
+    ) -> Reference:
+        """Construct a reference from a book alias and chapter/verse numbers.
+
+        Omitting optional arguments will construct a reference to a whole book
+        or chapter.
+
+        Args:
+            v_end: constructs a verse range from `v` to `v_end`.
+
+        Raises:
+            ValueError: If the book_alias is missing, or the number values are
+                out of range.
+        """
         if alias not in self.book_aliases:
             raise ValueError(f'Book alias "{alias}" not found.')
         library_id, book_id = self.book_aliases[alias]
+        ta = TypeAdapter(Number)
         if c is None:
             return book_reference(library_id, book_id)
         if v is None:
-            return chapter_reference(library_id, book_id, c)
-        if v_end is None:
-            return verse_reference(library_id, book_id, c, v)
-        return reference(
-            [
-                range(
-                    verse(library_id, book_id, c, v),
-                    verse(library_id, book_id, c, v_end),
-                )
-            ]
+            return chapter_reference(library_id, book_id, ta.validate_python(c))
+
+        print("VAL 1", c, v)
+        print(
+            "VAL 2",
+            ta.validate_python(c),
+            ta.validate_python(v),
         )
+        if not v_end:
+            return verse_reference(
+                library_id,
+                book_id,
+                ta.validate_python(c),
+                ta.validate_python(v),
+            )
+        else:
+            return reference(
+                range(
+                    verse(
+                        library_id,
+                        book_id,
+                        ta.validate_python(c),
+                        ta.validate_python(v),
+                    ),
+                    verse(
+                        library_id,
+                        book_id,
+                        ta.validate_python(c),
+                        ta.validate_python(v_end),
+                    ),
+                )
+            )
 
     def bcr(
         self, alias: str, c: Number, v_ranges: List[Number | Tuple[Number, Number]]
@@ -157,7 +237,6 @@ class Manager:
         library_id, book_id = self.book_aliases[alias]
         ranges = []
         for val in v_ranges:
-            print("V_RANGES", v_ranges)
             if isinstance(val, tuple):
                 v_start, v_end = val
                 ranges.append(
@@ -174,7 +253,7 @@ class Manager:
                         verse(library_id, book_id, c, v_end),
                     )
                 )
-        return reference(ranges)
+        return reference(*ranges)
 
     def r(self, text: str) -> Reference | None:
         """
@@ -189,9 +268,19 @@ class Manager:
     # -----------------------------------
 
     def next_chapter(self, ref: Reference) -> Reference | None:
+        """Get the next chapter to the one containing this reference.
+
+        This loops over the end of books using `refspy.book.Book.chapters`.
+        This does not loop beyond the end of libraries.
+        """
         return self.navigator.next_chapter(ref)
 
     def prev_chapter(self, ref: Reference) -> Reference | None:
+        """Get the previous chapter to the one containing this reference.
+
+        This loops over the end of books using `refspy.book.Book.chapters`, but
+        not beyond the end of libraries.
+        """
         return self.navigator.prev_chapter(ref)
 
     # -----------------------------------
@@ -199,29 +288,30 @@ class Manager:
     # -----------------------------------
 
     def book(self, ref: Reference) -> Book:
+        """Get the book object for this reference's first range."""
         v1 = ref.ranges[0].start
         return self.books[v1.library, v1.book]
 
     def book_reference(self, ref: Reference) -> Reference:
+        """Create a reference to the book containing this reference's first
+        range."""
         v1 = ref.ranges[0].start
         return reference(
-            [
-                range(
-                    verse(v1.library, v1.book, 1, 1),
-                    verse(v1.library, v1.book, 999, 999),
-                )
-            ]
+            range(
+                verse(v1.library, v1.book, 1, 1),
+                verse(v1.library, v1.book, 999, 999),
+            )
         )
 
     def chapter_reference(self, ref: Reference) -> Reference:
+        """Create a reference to the chapter containing this reference's first
+        range."""
         v1 = ref.ranges[0].start
         return reference(
-            [
-                range(
-                    verse(v1.library, v1.book, v1.chapter, 1),
-                    verse(v1.library, v1.book, v1.chapter, 999),
-                )
-            ]
+            range(
+                verse(v1.library, v1.book, v1.chapter, 1),
+                verse(v1.library, v1.book, v1.chapter, 999),
+            )
         )
 
     # -----------------------------------
@@ -229,13 +319,17 @@ class Manager:
     # -----------------------------------
 
     def numbers(self, ref: Reference) -> str:
+        """Format a reference with only the reference number."""
         return self.formatter.format(ref, NUMBER_FORMAT)
 
     def name(self, ref: Reference) -> str:
+        """Format a reference using its full name."""
         return self.formatter.format(ref, NAME_FORMAT)
 
     def abbrev(self, ref: Reference) -> str:
+        """Format a reference using its abbreviated name."""
         return self.formatter.format(ref, ABBREV_FORMAT)
 
     def code(self, ref: Reference) -> str:
+        """Format a reference using its code."""
         return self.formatter.format(ref, CODE_FORMAT)

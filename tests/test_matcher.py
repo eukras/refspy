@@ -3,7 +3,7 @@ import re
 import pytest
 from context import *
 
-from refspy.indexes import index_book_aliases, index_books
+from refspy.indexers import index_book_aliases, index_books
 from refspy.languages.english import ENGLISH
 from refspy.matcher import (
     CHAPTER_RANGE_CAPTURE,
@@ -16,6 +16,7 @@ from refspy.matcher import (
     RANGE_OR_NUMBER_COMPILED,
     SPACE,
     Matcher,
+    infer_abbreviated_number,
     make_chapter_range,
     make_chapter_verses,
     make_number_ranges,
@@ -46,7 +47,7 @@ def test_regexp_building_blocks():
 
     assert re.findall(NUMBER, "0") == ["0"]
     assert re.findall(NUMBER, "1") == ["1"]
-    assert re.findall(NUMBER, "1000") == ["100", "0"]
+    assert re.findall(NUMBER, "1000") == ["1000"]  # <-- numbers of any length
 
     assert re.findall(SPACE, " ") == [" "]
     assert re.findall(SPACE, "\n") == ["\n"]
@@ -55,7 +56,7 @@ def test_regexp_building_blocks():
 
     assert re.findall(RANGE, "1-2") == ["1-2"]
     assert re.findall(RANGE, "0-999") == ["0-999"]
-    assert re.findall(RANGE, "1-1000") == ["1-100"]
+    assert re.findall(RANGE, "1-1000") == ["1-1000"]
     assert re.findall(RANGE, "1-999") == ["1-999"]
 
 
@@ -141,12 +142,17 @@ def test_match_names_and_numbers():
     ]
 
 
+def test_malformed_refs():
+    last_verse = verse(1, 1, 1, 1)
+    matches = match_number_ranges("1-2,4-3")
+    assert matches[0] == "1-2"
+    assert matches[1] == "4-3"
+
+
 def test_commas_separation():
     text = "Big Book 1:1, 2, 1 Bk 3, Small Book 4"
-    #                     ^^^^ Negative lookaheads should clear this up.
+    #                     ^^^^ Negative lookaheads will prevent confusion here.
     matches = matcher.name_regexp.findall(text)
-    print("MATCHES", matcher.build_number_list_regexp())
-    print("MATCHES", matches)
     assert len(matches) == 3
     assert matches[0] == ("Big Book 1:1, 2", "Big Book", " 1:1, 2", "")
     assert matches[1] == ("1 Bk 3", "1 Bk", " 3", "")
@@ -224,18 +230,18 @@ def test_find_references():
     __ = matcher.generate_references(sample_text)
     text, ref = next(__)
     assert text == "Big Book 1:2-5"
-    assert ref == reference([range(verse(1, 2, 1, 2), verse(1, 2, 1, 5))])
+    assert ref == reference(range(verse(1, 2, 1, 2), verse(1, 2, 1, 5)))
     text, ref = next(__)
     assert text == "34:6,7"
     assert ref == reference(
-        [
-            range(verse(1, 2, 34, 6), verse(1, 2, 34, 6)),
-            range(verse(1, 2, 34, 7), verse(1, 2, 34, 7)),
-        ]
+        range(verse(1, 2, 34, 6), verse(1, 2, 34, 6)),
+        range(verse(1, 2, 34, 7), verse(1, 2, 34, 7)),
     )
     text, ref = next(__)
+    print(matcher.book_aliases)
     assert text == "Small Book 3-6"
-    assert ref == reference([range(verse(1, 3, 1, 3), verse(1, 3, 1, 6))])
+    print(ref.ranges[0])
+    assert ref == reference(range(verse(1, 3, 1, 3), verse(1, 3, 1, 6)))
     with pytest.raises(StopIteration):
         assert next(__) is None
 
@@ -245,13 +251,13 @@ def test_vv_references():
     __ = matcher.generate_references(sample_text)
     text, ref = next(__)
     assert text == "Big Book 5"
-    assert ref == reference([range(verse(1, 2, 5, 1), verse(1, 2, 5, 999))])
+    assert ref == reference(range(verse(1, 2, 5, 1), verse(1, 2, 5, 999)))
     text, ref = next(__)
     assert text == "vv.3-4"
-    assert ref == reference([range(verse(1, 2, 5, 3), verse(1, 2, 5, 4))])
+    assert ref == reference(range(verse(1, 2, 5, 3), verse(1, 2, 5, 4)))
     text, ref = next(__)
     assert text == "v.8"
-    assert ref == reference([range(verse(1, 2, 5, 8), verse(1, 2, 5, 8))])
+    assert ref == reference(range(verse(1, 2, 5, 8), verse(1, 2, 5, 8)))
     with pytest.raises(StopIteration):
         assert next(__) is None
 
@@ -276,13 +282,13 @@ def test_single_parentheses():
     __ = matcher.generate_references(sample_text)
     text, ref = next(__)
     assert text == "Big Book 1:2-5"
-    assert ref == reference([range(verse(1, 2, 1, 2), verse(1, 2, 1, 5))])
+    assert ref == reference(range(verse(1, 2, 1, 2), verse(1, 2, 1, 5)))
     text, ref = next(__)
     assert text == "Small Book 34"
-    assert ref == reference([range(verse(1, 3, 1, 34), verse(1, 3, 1, 34))])
+    assert ref == reference(range(verse(1, 3, 1, 34), verse(1, 3, 1, 34)))
     text, ref = next(__)
     assert text == "vv.3-6"
-    assert ref == reference([range(verse(1, 2, 1, 3), verse(1, 2, 1, 6))])
+    assert ref == reference(range(verse(1, 2, 1, 3), verse(1, 2, 1, 6)))
     with pytest.raises(StopIteration):
         assert next(__) is None
 
@@ -319,3 +325,10 @@ def test_line_wrapping():
         Book 5"""
     )
     assert ref == chapter_reference(1, 4, 5)
+
+
+def test_infer_abbreviated_number():
+    assert infer_abbreviated_number("124", "24") == "124"
+    assert infer_abbreviated_number("12", "4") == "14"
+    assert infer_abbreviated_number("24", "23") is None
+    assert infer_abbreviated_number("4", "3") is None

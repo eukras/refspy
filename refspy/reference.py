@@ -1,37 +1,73 @@
-from typing import List, Self, Tuple
+"""Data object for references.
 
-from pydantic import BaseModel, Field
+References consist of lists of ranges and are entirely numerical objects.
 
-from refspy.range import Range, range
+They can be set to sort, merge, and join references when added together.
+"""
+
+from typing import Any, List, Self
+
+from pydantic import BaseModel, Field, model_validator
+
+from refspy.range import Range, combine, merge, range, sort
 from refspy.verse import Number, Verse, verse
 
 
 class Reference(BaseModel):
-    """
-    A reference is a sorted, non-empty list of range objects.
+    """A reference object represents a list of verse ranges.
 
-    For unsorted, just use a list of references.
+    References are entirely numeric entities. Matchers are used to find them in
+    text, and formatters are used to turn them in to canonical links.
+
+    It is common to want references to be sorted and combined. Combining means
+    merging overlapping ranges and joining adjacent ones. This is done by creating
+    references with the `sort()`, `merge`, and `combine` functions in
+    `refspy.range.Range`, or calling the methods of the same name on references.
+
+    Example:
+        ```
+        assert reference(sort(ranges)) == reference(ranges).sort()
+        assert reference(merge(ranges)) == reference(ranges).merge()
+        assert reference(combine(ranges)) == reference(ranges).combine()
+        ```
     """
 
     ranges: List[Range] = Field(min_length=1)
+    """
+    A reference must contain at least one `refspy.range.Range`.
 
-    def __add__(self, other: Self):
-        return reference([*self.ranges, *other.ranges])
+    Raises:
+        ValueError: If ranges is empty
+    """
 
-    def __lt__(self, other: Self):
+    def __add__(self, other: Self) -> Self:
+        """Overload the addition operator to combine reference ranges into a new object.
+
+        The most aggressive sort/merge/join settings from the two References will
+        be used in the new Reference.
+        """
+        return self.__class__(ranges=[*self.ranges, *other.ranges])
+
+    def __lt__(self, other: Self) -> bool:
+        """
+        A simple implementation of '<' allows sorting and min/max.
+
+        Note:
+            Consider sorting first verse ASC and last verse DESC.
+        """
         return self.ranges[0].start < other.ranges[0].start
 
-    def insert(self, range: Range):
-        position = 0
-        while position < len(self.ranges):
-            current = self.ranges[position]
-            if current.start > range.start and current.end > range.end:
-                self.ranges.insert(position, range)
-                return  # <-- Done
-            position += 1
-        self.ranges.append(range)
-
     def equals(self, other: Self) -> bool:
+        """
+        Reference equality means that two references have identical ranges.
+
+        Note:
+            Consider comparing after any differences in sort/merge/join have
+            been reconciled.
+
+        Note:
+            We don't use __eq__, as that is already defined in BaseModel.
+        """
         return self.ranges == other.ranges
 
     def overlaps(self, other: Self) -> bool:
@@ -49,7 +85,7 @@ class Reference(BaseModel):
     def contains(self, other: Self) -> bool:
         """
         A reference contains another if ALL the other's ranges are contained by
-        at least one of it's own ranges.
+        ANY of it's own ranges.
         """
         return all(
             [
@@ -59,10 +95,13 @@ class Reference(BaseModel):
         )
 
     def adjoins(self, other: Self) -> bool:
-        """
+        """Determine adjacency for ranges.
+
         A reference adjoins another if its maximum range adjoins the other's
         minimum or vice-versa. This usually only makes sense for simple
         references with a small number of ranges.
+
+        See `refspy.reference.Reference.adjoins`.
         """
         return any(
             [
@@ -72,81 +111,103 @@ class Reference(BaseModel):
         )
 
     def count_books(self) -> int:
-        book_ids = set()
-        for _ in self.ranges:
-            book_ids.add(_.start.book)
-            book_ids.add(_.end.book)
-        return len(book_ids)
+        """Return the total unique books contained in this reference.
 
-    def merge_ranges(self) -> None:
+        Allow that the same book ID could appear in multiple libraries.
         """
-        for each sorted range:
-            if adjacent or overlapping to next, combine them
-        """
-        new_ranges = []
-        for new_range in self.ranges:
-            if len(new_ranges) > 0 and (
-                new_ranges[-1].overlaps(new_range) or new_ranges[-1].adjoins(new_range)
-            ):
-                new_ranges[-1].merge(new_range)
-            else:
-                new_ranges.append(new_range)
-        self.ranges = new_ranges
+        library_books = set()
+        for _ in self.ranges:
+            library_books.add(tuple([_.start.library, _.start.book]))
+            library_books.add(tuple([_.end.library, _.end.book]))
+        return len(library_books)
 
     def is_book(self: Self) -> bool:
-        if len(self.ranges) == 1:
-            return self.ranges[0].is_book()
-        return False
+        """Determine if reference is a whole book."""
+        return self.ranges[0].is_book()
 
     def is_chapter(self: Self) -> bool:
-        if len(self.ranges) == 1:
-            return self.ranges[0].is_chapter()
-        return False
+        """Determine if reference is a whole chapter."""
+        return self.ranges[0].is_chapter()
+
+    def first_verse(self) -> Verse:
+        """Find the first verse.
+
+        Only sensible if sorted=True
+
+        Note:
+            Consider sorting on the fly if sorted=False
+        """
+        return self.ranges[0].start
+
+    def last_verse(self) -> Verse:
+        """Find the last verse.
+
+        Only sensible if sorted=True
+
+        Note:
+            Consider sorting on the fly if sorted=False
+        """
+        return self.ranges[-1].end
+
+    def sort(self) -> Self:
+        """Return a sorted reference."""
+        return self.__class__(ranges=sort(self.ranges))
+
+    def merge(self) -> Self:
+        """Return a merged reference.
+
+        A merged reference is sorted, and has any overlapping ranges merged.
+        """
+        return self.__class__(ranges=merge(self.ranges))
+
+    def combine(self) -> Self:
+        """Return a combined reference.
+
+        A combined reference is sorted, merged, and has any adjacent ranges combined.
+        """
+        return self.__class__(ranges=combine(self.ranges))
 
 
-def reference(points: List[Verse | Range | Tuple[Verse, Verse]]) -> Reference:
+def reference(*args: Range, **kwargs: Any) -> Reference:
     """
-    Construct a Reference object from a list of arguments which can be a Verse
-    or a Tuple of Verses, representing a Range.
+    Construct a Reference object from `refspy.range.Range` arguments.
 
-    ref = reference([
-        verse(1, 2, 3, 4),
-        range(verse(1, 2, 3, 6), verse(1, 2, 3, 7))
-        verse(1,2,3,11)
-    ])
+    Example:
+        ```
+        ref = reference(
+            range(verse(1, 2, 3, 3), verse(1, 2, 3, 4)),
+            range(verse(1, 2, 3, 6), verse(1, 2, 3, 7))
+        )
+        ```
     """
-    ranges: List[Range] = []
-    for _ in points:
-        if isinstance(_, tuple):
-            ranges.append(Range(start=_[0], end=_[1]))
-        if isinstance(_, Range):
-            ranges.append(_)
-        if isinstance(_, Verse):
-            ranges.append(Range(start=_, end=_))
-    return Reference(ranges=sorted(ranges))
+    return Reference(ranges=list(args), **kwargs)
 
 
 def book_reference(library_id: Number, book_id: Number) -> Reference:
+    """
+    Shorthand function for creating book references from `refspy.number.Number`
+    values.
+    """
     return reference(
-        [
-            range(
-                verse(library_id, book_id, 1, 1),
-                verse(library_id, book_id, 999, 999),
-            )
-        ]
+        range(
+            verse(library_id, book_id, 1, 1),
+            verse(library_id, book_id, 999, 999),
+        )
     )
 
 
 def chapter_reference(
     library_id: Number, book_id: Number, chapter_id: Number
 ) -> Reference:
+    """
+    Shorthand function for creating chapter references from
+    `refspy.number.Number` values.
+    """
     return reference(
-        [
-            range(
-                verse(library_id, book_id, chapter_id, 1),
-                verse(library_id, book_id, chapter_id, 999),
-            )
-        ]
+        range(
+            verse(library_id, book_id, chapter_id, 1),
+            verse(library_id, book_id, chapter_id, 999),
+        )
     )
 
 
@@ -157,17 +218,15 @@ def verse_reference(
     verse_id: Number,
     verse_end_id: Number | None = None,
 ) -> Reference:
+    """
+    Shorthand function for creating verse or range references from
+    `refspy.number.Number` values.
+
+    See `refspy.manager.Manager.bcv`
+    """
     return reference(
-        [
-            range(
-                verse(library_id, book_id, chapter_id, verse_id),
-                verse(library_id, book_id, chapter_id, verse_end_id or verse_id),
-            )
-        ]
+        range(
+            verse(library_id, book_id, chapter_id, verse_id),
+            verse(library_id, book_id, chapter_id, verse_end_id or verse_id),
+        )
     )
-
-
-def last_start_verse(reference: Reference) -> Verse:
-    if not reference.ranges:
-        raise ValueError("No verse ranges in reference")
-    return reference.ranges[-1].start

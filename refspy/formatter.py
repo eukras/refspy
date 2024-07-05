@@ -1,3 +1,5 @@
+"""Format Reference objects using Format objects."""
+
 from typing import Dict, Tuple
 
 from refspy.book import Book
@@ -11,6 +13,11 @@ from refspy.verse import Number, Verse
 class Formatter:
     """
     Format an arbitrary reference, using supplied formatting options.
+
+    References contain lists of `refspy.range.Range` objects. These can span
+    arbitrary verses across multiple libraries, and can be arranged in any
+    order. The formatter formats the individual ranges correctly and also
+    indicates any changes between books and chapters.
     """
 
     def __init__(
@@ -56,6 +63,10 @@ class Formatter:
         return out
 
     def make_divider(self, _: Range, last: Verse | None, options: Format) -> str:
+        """Provide a separator between ranges.
+
+        This will be a semicolon or comma.
+        """
         if last is None:
             return ""
         if any(
@@ -70,6 +81,13 @@ class Formatter:
             return options.comma
 
     def make_book_range(self, _: Range, last: Verse | None, options: Format) -> str:
+        """Format a range between two whole books.
+
+        See `refspy.range.Range.is_book_range` .
+
+        Example:
+            `Matthew-John`
+        """
         start_book = self.books[_.start.library, _.start.book]
         start_book_name = getattr(start_book, options.property or "", "")
         end_book = self.books[_.end.library, _.end.book]
@@ -79,6 +97,13 @@ class Formatter:
     def make_inter_book_range(
         self, _: Range, last: Verse | None, options: Format
     ) -> str:
+        """Format a range that spans multiple books (or libraries).
+
+        See `refspy.range.Range.is_inter_book_range` .
+
+        Example:
+            `Matt 15:15-John 15:15`
+        """
         start_book = self.books[_.start.library, _.start.book]
         start_book_name = getattr(start_book, options.property or "", "")
         if _.start.verse == 1 and _.end.verse == 999:
@@ -99,6 +124,13 @@ class Formatter:
         )
 
     def make_book(self, _: Range, last: Verse | None, options: Format) -> str:
+        """Format a range that spans multiple books (or libraries).
+
+        See `refspy.range.Range.is_book` .
+
+        Example:
+            `Matthew`
+        """
         start_book = self.books[_.start.library, _.start.book]
         start_book_name = getattr(start_book, options.property or "", "")
         return start_book_name
@@ -106,6 +138,11 @@ class Formatter:
     def book_name_if_required(
         self, _: Range, last: Verse | None, options: Format
     ) -> str:
+        """Format the book name if the next range is in a different book.
+
+        Example:
+            `Matthew`
+        """
         book_name = ""
         if last is None:
             book_name = self.make_book(_, last, options)
@@ -116,6 +153,15 @@ class Formatter:
         return ""
 
     def make_chapter_range(self, _: Range, last: Verse | None, options: Format) -> str:
+        """Format a range that spans whole chapters.
+
+        Add the book name, if required.
+
+        See `refspy.range.Range.is_chapter_range` .
+
+        Example:
+            `1-2` or `Matthew 1-2`
+        """
         return string_together(
             self.book_name_if_required(_, last, options),
             _.start.chapter,
@@ -126,6 +172,15 @@ class Formatter:
     def make_inter_chapter_range(
         self, _: Range, last: Verse | None, options: Format
     ) -> str:
+        """Format a range that spans different chapters.
+
+        Add the book name, if required.
+
+        See `refspy.range.Range.is_inter_chapter_range` .
+
+        Example:
+            `1:1-2:2` or `Matthew 1:1-2:2`
+        """
         return string_together(
             self.book_name_if_required(_, last, options),
             _.start.chapter,
@@ -138,6 +193,15 @@ class Formatter:
         )
 
     def make_chapter(self, _: Range, last: Verse | None, options: Format) -> str:
+        """Format a range that spans different chapters.
+
+        Add the book name, if required.
+
+        See `refspy.range.Range.is_chapter`.
+
+        Example:
+            `1` or `Matthew 1`
+        """
         return string_together(
             self.book_name_if_required(_, last, options), _.start.chapter
         )
@@ -145,6 +209,12 @@ class Formatter:
     def chapter_number_if_required(
         self, _: Range, last: Verse | None, options: Format
     ) -> str:
+        """Format the chapter number and colon if the next range is in a
+        different book.
+
+        Example:
+            `1:`
+        """
         book = self.books[_.start.library, _.start.book]
         if last is None:
             if book.depth == 2:
@@ -159,6 +229,16 @@ class Formatter:
         return ""
 
     def make_verse_range(self, _: Range, last: Verse | None, options: Format) -> str:
+        """Format a range of different verses within a single chapter.
+
+        Add the chapter number and book name, if required.
+
+        See `refspy.range.Range.is_verse_range` .
+
+        Example:
+            `2-3` or `1:2-3` or `Matthew 1:2-3`
+
+        """
         return string_together(
             self.book_name_if_required(_, last, options),
             self.chapter_number_if_required(_, last, options),
@@ -168,6 +248,15 @@ class Formatter:
         )
 
     def make_verse(self, _: Range, last: Verse | None, options: Format) -> str:
+        """Format a single verse number.
+
+        Add the chapter number and book name, if required.
+
+        See `refspy.range.Range.is_verse` .
+
+        Example:
+            `2` or `1:2` or `Matthew 1:2`
+        """
         return string_together(
             self.book_name_if_required(_, last, options),
             self.chapter_number_if_required(_, last, options),

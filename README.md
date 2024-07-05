@@ -1,10 +1,7 @@
-![RefSpy Logo](https://github.com/eukras/refspy/raw/master/media/refspy-logo.svg)
+![RefSpy Logo](https://github.com/eukras/refspy/raw/master/media/refspy-logo.png)
 
 
 Refspy is a Python package for working with biblical references in ordinary text.
-
-
-
 
 [![python](https://img.shields.io/badge/Python-3.11-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
@@ -15,6 +12,7 @@ Refspy is a Python package for working with biblical references in ordinary text
 
 * [eukras/refspy on Github](https://github.com/eukras/refspy) | [Report Issue](https://github.com/eukras/refspy/issues) | [Contact Author](mailto:nigel@chapman.id.au)
 * [refspy on PyPI](https://pypi.org/project/refspy/) --> `pip install refspy`
+* [refspy on ReadTheDocs](https://readthedocs.io/) (or see [docs/html/](docs/html/) dir)
 
 
 ## Demo
@@ -325,8 +323,8 @@ verse(1, 2, 3, 1004)  # <-- ValueError
 
 ### Index Numbers
 
-Verses convert to an index value, `verse(1, 2, 3, 4).index() == 1002003004`,
-which allows efficient indexing in databases:
+Verses convert to an index value, `verse(1, 2, 3, 4).index() == 1002003004`
+(`UNSIGNED INT(12)`), which allows efficient indexing in databases:
 
 ```
 sql_clause = " OR ".join([
@@ -339,17 +337,18 @@ sql_clause = " OR ".join([
 
 A range contains start and end verses.
 
-Verses and ranges convert to tuples e.g. ((1, 2, 3, 4), (1, 2, 3, 5)) which can
-be sorte:qd as they are.
+A whole chapter is referenced as `range(verse(1, 1, 1, 1), verse(1, 1, 1, 999))`.
 
-A whole chapter is referenced as range(verse(1, 1, 1, 1), verse(1, 1, 1, 999)).
-
-A whole book is referenced as range(verse(1, 1, 1, 1), verse(1, 1, 999, 999)).
+A whole book is referenced as `range(verse(1, 1, 1, 1), verse(1, 1, 999, 999))`.
 
 So, a chapter or book contains every range and verse within that chapter or
 book, however long the chapter or book are.
 
-Ranges can be tested for containment, overlap, or adjacency. Note that this does not take account of which verse numbers actually exist in any given text.
+Verses and ranges convert to tuples e.g. `((1, 2, 3, 4), (1, 2, 3, 5))` which can
+be sorted and compared. 
+
+Ranges can be tested for containment, overlap, or adjacency. Note that this
+does not take account of which verse numbers actually exist in any given text.
 
 ```
 # Make ranges...
@@ -390,18 +389,18 @@ assert min([gen2, gen1]) == gen1
 References are lists of verse ranges. These are entirely numerical objects.
 
 References, ranges, and verses have shorter constructor functions for
-programming convenience. 
+programming convenience. Note `reference()` does not require list brackets.
 
 ```
 Range(start=verse_1, end=verse_2)
 range(verse_1, verse_2)
 
 Reference(ranges=[range_1, range_2])
-reference([range_1, range_2])
+reference(range_1, range_2)
 
-ref_1 = reference([
+ref_1 = reference(
   range(verse(1, 1, 1, 1), verse(1, 1, 1, 3))
-])
+)
 
 book_reference(1, 2)
 chapter_reference(1, 2, 3)
