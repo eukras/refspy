@@ -1,7 +1,7 @@
 from context import *
 
 from refspy.formatter import Formatter
-from refspy.format import NAME_FORMAT, CODE_FORMAT, NUMBER_FORMAT, ABBREV_FORMAT
+from refspy.format import NAME_FORMAT, NUMBER_FORMAT, ABBREV_FORMAT
 from refspy.indexers import index_book_aliases, index_books
 from refspy.range import range
 from refspy.reference import reference
@@ -43,7 +43,6 @@ def test_single_range():
 
     assert fmt.format(ref, NAME_FORMAT) == "Big Book 1:1–2"
     assert fmt.format(ref, ABBREV_FORMAT) == "Big 1:1–2"
-    assert fmt.format(ref, CODE_FORMAT) == "big+1.1-2"
     assert fmt.format(ref, NUMBER_FORMAT) == "1:1–2"
 
 
@@ -91,7 +90,7 @@ def test_multiple_library_range():
     assert fmt.format(ref, NAME_FORMAT) == "Big Book 1:1–2; 3 Book 2:1–2"
 
 
-def test_book_depth_2():
+def test_book_chapters_greater_than_1():
     """
     Book ID 2 is Big Book; references should show chapter numbers.
     """
@@ -101,7 +100,7 @@ def test_book_depth_2():
     assert fmt.format(ref, NAME_FORMAT) == "Big Book 1:1–2"
 
 
-def test_book_depth_1():
+def test_book_chapter_equal_1():
     """
     Book ID 3 is Small Book; references should not show chapter numbers.
     """

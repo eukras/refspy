@@ -32,8 +32,8 @@ class Format(BaseModel):
 ABBREV_FORMAT = Format(
     colon=":", comma=",", dash="–", property="abbrev", semicolon="; ", space=" "
 )
-CODE_FORMAT = Format(
-    colon=".", comma=",", dash="-", property="code", semicolon="/", space="+"
+PARAM_FORMAT = Format(
+    colon=".", comma=",", dash="-", property="abbrev", semicolon="/", space="+"
 )
 NAME_FORMAT = Format(
     colon=":", comma=",", dash="–", property="name", semicolon="; ", space=" "

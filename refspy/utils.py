@@ -30,6 +30,14 @@ def parse_number(number_str: str) -> Number:
     raise ValueError(f"Invalid number string for parse_number: '{number_str}'")
 
 
+def url_param(name: str) -> str:
+    """Turn a library or book name into a URL-friendly string.
+
+    Lowercase and no spaces: '1 Cor' -> '1+cor'
+    """
+    return name.lower().replace(" ", "+").replace(":", ".")
+
+
 def normalize_spacing(text: str) -> str:
     """Replace multiple spaces with single spaces.
 

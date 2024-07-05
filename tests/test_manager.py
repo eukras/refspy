@@ -16,11 +16,9 @@ from refspy.book import Book
 from refspy.library import Library
 from refspy.verse import verse
 
-BOOK = Book(
-    id=2, name="Book", abbrev="Bk", code="bk", depth=2, aliases=["vol"], chapters=3
-)
+BOOK = Book(id=2, name="Book", abbrev="Bk", aliases=["vol"], chapters=3)
 
-LIBRARY = Library(id=1, name="Library", abbrev="Lib", code="lib", books=[BOOK])
+LIBRARY = Library(id=1, name="Library", abbrev="Lib", books=[BOOK])
 
 REFERENCES = [
     # 'Book 1:1–2' in Library
@@ -41,7 +39,7 @@ def test_init():
 
 def test_non_unique():
     """
-    Repeating any name/alias/code values raise an error.
+    Repeating any name/alias values raise an error.
     """
     with pytest.raises(ValueError):
         _ = Manager([LIBRARY, LIBRARY], ENGLISH)
@@ -164,10 +162,10 @@ def test_abbrev():
     assert __.abbrev(ref) == "Bk 1:1"
 
 
-def test_code():
+def test_param():
     ref = __.r("Book 1:1")
     assert ref is not None
-    assert __.code(ref) == "bk+1.1"
+    assert __.param(ref) == "bk+1.1"
 
 
 def test_name():

@@ -77,7 +77,7 @@ the project.
 ### Creating references 
 
 Shortcut functions can create simple references using any book name,
-abbreviation, code, or alias in the libraries list. Firstly, we can create
+abbreviation, or alias in the libraries list. Firstly, we can create
 references from strings:
 
 ```
@@ -107,7 +107,7 @@ ref = ___.r('Rom 2:3-4, 7')
 
 assert __.name(ref) == 'Romans 2:3–4,7'
 assert __.abbrev(ref) == 'Rom 2:3–4,7'
-assert __.code(ref) == 'rom+2.3-4,7'
+assert __.param(ref) == 'rom+2.3-4,7'
 assert __.numbers(ref) == '2:3–4,7'
 ```
 
@@ -201,7 +201,7 @@ text = "Rom 1; 1 Cor 8:3,4; Rev 22:3-4"
    
 strs, refs = __.find_references(text)
 for match_str, ref in zip(strs, refs):
-   print(f"{match_str} -> {url % __.code(ref)}")
+   print(f"{match_str} -> {url % __.param(ref)}")
 ```
 
 ### Replacing references in text
@@ -251,11 +251,10 @@ html_list = "; ".join(index)
 data, say if a verse has Numbers outside the range `0..999`, or if a Range has
 a start verse that is greater than its end verse.
 
-- **Book**. A book has id, name, abbrev, code, depth, aliases, and chapters. No verse counts.
-- **Depth**. Any book has 'reference depth' of 1 or 2. A single-chapter book like Philemon has reference depth 1 and doesn't show chapter numbers. In theory a reference depth of three might in future be needed by texts with section numbers (3.4.5).
+- **Book**. A book has id, name, abbrev, aliases, and chapters. No verse counts.
 - **Format**. The Format objects define what properties and characters to use when formatting references for various purposes.
 - **Index**. An integer which results from expanding a verse by powers of 1000; `verse(1, 7, 16, 1)` becomes the integer `1007016001`
-- **Library**. A library has id, name, abbrev, code, and a list of Books. See e.g. `libraries/en_US.py`. Library IDs are spaced out in a roughly historical order: OT is 200, NT is 400.
+- **Library**. A library has id, name, abbrev, and a list of Books. See e.g. `libraries/en_US.py`. Library IDs are spaced out in a roughly historical order: OT is 200, NT is 400.
 - **Number**. An integer `1..999`. We assume verses/chapters/books/libraries are limited to this size. This may need modifying to accommodate, say, _zero verses_ in the Septuagint.
 - **Range**. A pair of `(start, end)` verses; `1 Cor 16:1-2` becomes `range(verse(400, 7, 16, 1), verse(400, 7, 16, 2))`.
 - **Reference**. A list of ranges; `1 Cor 16:1-2,6` becomes `reference([range(verse(400, 7, 16, 1), verse(400, 7, 16, 2)), range(verse(400, 7, 16, 6), verse(400, 7, 16, 6))])`. They do not automatically sort or simplify the ranges.
@@ -275,14 +274,11 @@ OT = Library(
     id=200,
     name="Old Testament",
     abbrev="OT",
-    code="ot",
     books=[
         Book(
             id=1,
             name="Genesis",
             abbrev="Gen",
-            code="gen",
-            depth=2,
             aliases=[],
             chapters=50,
         ),
@@ -294,10 +290,10 @@ OT = Library(
 Any major class has its own file, so `Library` is defined in
 `refspy/library.py` and so on.
 
-Books and libraries have names, abbrevs, codes, and aliases. So, the name '1
-Corinthians' has the abbrev '1 Cor', the code '1cor'. The
-`languages/english.py` file says that numeric prefixes must also match `I` and
-`First` (etc). The codes are mainly intended as URL parameters, and are
+Books and libraries have names, abbrevs, and aliases. If URL params are needs,
+they are generated from these. So, the name '1 Corinthians' has the abbrev '1
+Cor', wand generates the param '1cor'. The `languages/english.py` file says
+that numeric prefixes must also match `I` and `First` (etc). The params are
 lowercase with no spaces.
 
 ## Verses

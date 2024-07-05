@@ -8,7 +8,7 @@ from typing import Dict, Generator, List, Optional, Tuple
 from pydantic import TypeAdapter
 
 from refspy.book import Book
-from refspy.format import ABBREV_FORMAT, CODE_FORMAT, NAME_FORMAT, NUMBER_FORMAT
+from refspy.format import ABBREV_FORMAT, NAME_FORMAT, NUMBER_FORMAT
 from refspy.formatter import Formatter
 from refspy.indexers import (
     index_book_aliases,
@@ -27,6 +27,7 @@ from refspy.reference import (
     reference,
     verse_reference,
 )
+from refspy.utils import url_param
 from refspy.verse import Number, verse
 
 
@@ -330,6 +331,6 @@ class Manager:
         """Format a reference using its abbreviated name."""
         return self.formatter.format(ref, ABBREV_FORMAT)
 
-    def code(self, ref: Reference) -> str:
+    def param(self, ref: Reference) -> str:
         """Format a reference using its code."""
-        return self.formatter.format(ref, CODE_FORMAT)
+        return url_param(self.formatter.format(ref, ABBREV_FORMAT))

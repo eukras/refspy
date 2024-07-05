@@ -217,14 +217,14 @@ class Formatter:
         """
         book = self.books[_.start.library, _.start.book]
         if last is None:
-            if book.depth == 2:
+            if book.chapters > 1:
                 return string_together(_.start.chapter, options.colon)
         elif (
             _.start.library != last.library
             or _.start.book != last.book
             or _.start.chapter != last.chapter
         ):
-            if book.depth == 2:
+            if book.chapters > 1:
                 return string_together(_.start.chapter, options.colon)
         return ""
 

@@ -42,10 +42,10 @@ class Matcher:
       - Book names (incl. substitutions like 'First' for '1':
         - with no reference: sets context; only returned as a reference if
             requested with include_books=True
-        - with a two-level range (has ":", for book depth 2)
+        - when book.chapter > 1:
           - 1:2-3:4
           - 1:1,2-3 etc
-        - with a one-level range (no ":" chars; depth 1 or 2)
+        - when book.chapter == 1:
           - 1,2-4  (can be verses or chapters, based on book; must not end with
             a number that starts a book name)
       - Stand-alone number references: always have colons or verse markers.
@@ -254,13 +254,13 @@ class Matcher:
                                 if book_ref is not None or include_nones:
                                     yield (match_str, book_ref)
                             elif matches := match_number_ranges(match_with_book):
-                                if book.depth == 1:
+                                if book.chapters == 1:
                                     # Phlm 3-4 (verse)
                                     v = verse(last_verse.library, last_verse.book, 1, 1)
                                     book_ref = make_number_ranges(v, matches)
                                     if book_ref is not None or include_nones:
                                         yield (match_str, book_ref)
-                                if book.depth == 2:
+                                if book.chapters > 1:
                                     # Rom 3-4 (chapter)
                                     book_ref = make_number_ranges(
                                         last_verse, matches, as_chapters=True

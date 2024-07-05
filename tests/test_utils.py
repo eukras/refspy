@@ -8,6 +8,7 @@ from refspy.utils import (
     parse_number,
     sequential_replace,
     sequential_replace_tuples,
+    url_param,
 )
 
 
@@ -23,6 +24,12 @@ def test_parse_number_raises_value_error():
     text = "My offer is this: nothing."
     with pytest.raises(ValueError):
         assert parse_number(text) == 50
+
+
+def test_url_param():
+    assert url_param("1 Cor") == "1+cor"
+    assert url_param("Romans") == "romans"
+    assert url_param("1 Cor 3:4-5") == "1+cor+3.4-5"
 
 
 def test_normalize_spacing():
