@@ -80,11 +80,35 @@ def test_merge_overlapping():
     assert merge([range_2, range_1]) == [range_3]
 
 
+def test_merge_overlapping_inter_chapter():
+    range_1 = range(verse(1, 2, 3, 4), verse(1, 2, 4, 18))
+    range_2 = range(verse(1, 2, 4, 11), verse(1, 2, 5, 2))
+    result_1 = range(verse(1, 2, 3, 4), verse(1, 2, 5, 2))
+    assert merge([range_1, range_2]) == [result_1]
+
+
 def test_combine_adjacent_verses():
     range_1 = range(verse(1, 2, 3, 4), verse(1, 2, 3, 6))
     range_2 = range(verse(1, 2, 3, 7), verse(1, 2, 3, 8))
     range_3 = range(verse(1, 2, 3, 4), verse(1, 2, 3, 8))
     assert combine([range_2, range_1]) == [range_3]
+
+
+def test_combine_adjacent_verses_complex():
+    range_1 = range(verse(1, 2, 3, 4), verse(1, 2, 3, 6))
+    range_2 = range(verse(1, 2, 3, 9), verse(1, 2, 3, 12))
+    range_3 = range(verse(1, 2, 3, 11), verse(1, 2, 3, 15))
+    range_4 = range(verse(1, 2, 3, 2), verse(1, 2, 3, 5))
+    result_1 = range(verse(1, 2, 3, 2), verse(1, 2, 3, 6))
+    result_2 = range(verse(1, 2, 3, 9), verse(1, 2, 3, 15))
+    assert combine([range_1, range_2, range_3, range_4]) == [result_1, result_2]
+
+
+def test_combine_adjacent_verses_inter_chapter():
+    range_1 = range(verse(1, 2, 3, 4), verse(1, 2, 4, 18))
+    range_2 = range(verse(1, 2, 4, 11), verse(1, 2, 5, 2))
+    result_1 = range(verse(1, 2, 3, 4), verse(1, 2, 5, 2))
+    assert combine([range_1, range_2]) == [result_1]
 
 
 def test_combine_adjacent_chapters():

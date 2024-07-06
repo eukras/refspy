@@ -62,6 +62,7 @@ class Range(BaseModel):
         when:
 
         * Two verse ranges are adjacent.
+        * Two inter-chapter verse ranges are adjacent.
         * Two chapter_range references are adjacent.
         * Two book_range references are adjacent.
 
@@ -69,7 +70,11 @@ class Range(BaseModel):
             We do not calculate adjacency for inter-book or inter-chapter
             references.
         """
-        if self.same_chapter_as(other):
+        if any(
+            [self.is_verse(), self.is_verse_range(), self.is_inter_chapter_range()]
+        ) and any(
+            [other.is_verse(), other.is_verse_range(), other.is_inter_chapter_range()]
+        ):
             return (
                 other.start.verse == self.end.verse + 1
                 or self.start.verse == other.end.verse + 1
@@ -97,18 +102,26 @@ class Range(BaseModel):
 
     def merge(self, other: Self) -> Self:
         """Combine two overlapping ranges."""
+        min_start_c, min_start_v = min(
+            (self.start.chapter, self.start.verse),
+            (other.start.chapter, other.start.verse),
+        )
+        max_end_c, max_end_v = max(
+            (self.end.chapter, self.end.verse),
+            (other.end.chapter, other.end.verse),
+        )
         return self.__class__(
             start=verse(
                 min(self.start.library, other.start.library),
                 min(self.start.book, other.start.book),
-                min(self.start.chapter, other.start.chapter),
-                min(self.start.verse, other.start.verse),
+                min_start_c,
+                min_start_v,
             ),
             end=verse(
                 max(self.end.library, other.end.library),
                 max(self.end.book, other.end.book),
-                max(self.end.chapter, other.end.chapter),
-                max(self.end.verse, other.end.verse),
+                max_end_c,
+                max_end_v,
             ),
         )
 
