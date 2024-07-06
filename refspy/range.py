@@ -3,6 +3,7 @@
 from typing import List, Self, Tuple
 from pydantic import BaseModel, model_validator
 
+from refspy.number import Number
 from refspy.verse import verse, Verse
 
 
@@ -127,9 +128,7 @@ class Range(BaseModel):
 
     def join(self, other: Self):
         """Combine two adjacent ranges."""
-        print("JOIN")
         if self.start < other.start:
-            print("START")
             return self.__class__(start=self.start, end=other.end)
         else:
             return self.__class__(start=other.start, end=self.end)
@@ -353,3 +352,51 @@ def combine(ranges: List[Range], skip_merge: bool = False) -> List[Range]:
                 last_range = this_range
     new_ranges.append(last_range)
     return new_ranges
+
+
+def book_range(
+    library_id: Number, book_id: Number, book_end_id: Number | None = None
+) -> Range:
+    """
+    Shorthand function for creating book references from `refspy.number.Number`
+    values.
+    """
+    return range(
+        verse(library_id, book_id, 1, 1),
+        verse(library_id, book_end_id or book_id, 999, 999),
+    )
+
+
+def chapter_range(
+    library_id: Number,
+    book_id: Number,
+    chapter_id: Number,
+    chapter_end_id: Number | None = None,
+) -> Range:
+    """
+    Shorthand function for creating chapter references from
+    `refspy.number.Number` values.
+    """
+    return range(
+        verse(library_id, book_id, chapter_id, 1),
+        verse(library_id, book_id, chapter_end_id or chapter_id, 999),
+    )
+
+
+def verse_range(
+    library_id: Number,
+    book_id: Number,
+    chapter_id: Number,
+    verse_id: Number,
+    verse_end_id: Number | None = None,
+) -> Range:
+    """
+    Shorthand function for creating verse or range references from
+    `refspy.number.Number` values.
+
+    See `refspy.manager.Manager.bcv`
+    """
+    return range(
+        verse(library_id, book_id, chapter_id, verse_id),
+        verse(library_id, book_id, chapter_id, verse_end_id or verse_id),
+    )

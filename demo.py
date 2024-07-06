@@ -1,4 +1,5 @@
 from refspy import refspy
+from refspy.reference import reference
 from refspy.utils import sequential_replace
 
 URL = "https://github.com/eukras/refspy/demo.py"
@@ -6,14 +7,14 @@ URL = "https://github.com/eukras/refspy/demo.py"
 __ = refspy()
 
 text = """
-Human-written Bible references look like Rom 2:1, 6-7, 1 Cor 1:2-3:4, or Phlm
+Human-written Bible references look like Rom 12:1, 6-17, 2 Cor 1:2-3:4, or Phlm
 2-3. They wrap lines, use spaces in the number part, and have commas both
 between and within references. They are sometimes malformed, like Matt 1:10000
 or 1:3-2, but might also use abbreviations like Ps 119:122-24. A book name,
 such as Second Corinthians, provides context for references that follow, such
-as 5:21 or vv.25,37-38. If we refer to Romans (but then add a reference to Gal
-4:4 in parentheses), a subsequent reference like 12:16 will still be to Romans.
-Using letters as partial verses, as in II Thess 3:2b-4a, has no consistent
+as 5:21 or vv.25,37-38. If we refer to Romans (but then add a reference to 2
+Cor 3:5-8 in parentheses), a subsequent reference like 12:16 will still be to Romans.
+Using letters as partial verses, as in II Cor 5:30a-40d, has no consistent
 meaning and must be read as whole verses.
 """
 
@@ -29,13 +30,14 @@ for match_str, ref in matches:
         tags.append(
             f'<span class="green">{match_str}</span><sup>{__.abbrev(ref)}</sup>'
         )
-index = []
-for library, book_collation in __.collate(
-    sorted([ref for _, ref in matches if ref and not ref.is_book()])
-):
+sorted_index, compact_index = [], []
+collation = __.collate(sorted([ref for _, ref in matches if ref and not ref.is_book()]))
+for library, book_collation in collation:
     for book, reference_list in book_collation:
-        new_reference = __.sort_references(reference_list)
-        index.append(__.abbrev(new_reference))
+        sorted_ref = __.sort_references(reference_list)
+        sorted_index.append(__.abbrev(sorted_ref))
+        compact_ref = __.combine_references(reference_list)
+        compact_index.append(__.abbrev(compact_ref))
 
 
 print("""
@@ -59,14 +61,16 @@ print("""
         This</sup>. Book names that aren't themselves references but provide
         context are highlighted in <span class="yellow">yellow</span>.
         Malformed references are highlighted in <span
-        class="purple">purple</span>. An index of references is compiled at the
-        end.</p>
+        class="purple">purple</span>. An index is compiled, sorted, and
+        collated by book. A second, compact index merges any overlapping or
+        adjacent references.</p>
 
 """)
 print(f"""
         <blockquote><pre>{text}</pre></blockquote>
         <blockquote>{sequential_replace(text, strs, tags)}</blockquote>
-        <blockquote><b>Index</b>. {"; ".join(index)}.</blockquote>
+        <blockquote><b>Sorted Index</b>. {"; ".join(sorted_index)}.</blockquote>
+        <blockquote><b>Compact Index</b>. {"; ".join(compact_index)}.</blockquote>
         <p> Because a number or a range (1 or 2-3) could refer to either verses or
         chapters, or other regular numbers that have nothing to do with biblical
         referencing, we only match references that are preceded by a book name, a

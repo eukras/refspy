@@ -44,9 +44,8 @@ def test_sort_references():
     ref_1 = verse_reference(NT.id, 1, 2, 3)
     ref_2 = verse_reference(NT.id, 1, 2, 4)
     ref_3 = verse_reference(NT.id, 1, 2, 5)
-    sorted = __.sort_references([ref_3, ref_2, ref_1])
-    assert len(sorted) == 3
-    assert sorted == [ref_1, ref_2, ref_3]
+    sorted_ref = __.sort_references([ref_3, ref_2, ref_1])
+    assert sorted_ref.ranges == [ref_1.ranges[0], ref_2.ranges[0], ref_3.ranges[0]]
 
 
 def test_merge_references():

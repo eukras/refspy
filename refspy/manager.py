@@ -65,12 +65,14 @@ class Manager:
     # Merging functions
     # -----------------------------------
 
-    def sort_references(self, references: List[Reference]) -> List[Reference]:
-        """Sort a list of references by their first range.
+    def sort_references(self, references: List[Reference]) -> Reference:
+        """For a list of references, make a single reference containing their sorted ranges."""
 
-        Works better if the reference is sorted or has only one range.
-        """
-        return sorted(references)
+        ranges = []
+        for ref in references:
+            for rng in ref.ranges:
+                ranges.append(rng)
+        return reference(*sorted(ranges))
 
     def merge_references(self, references: List[Reference]) -> Reference:
         """For a list of references, merge their ranges into a new reference.
