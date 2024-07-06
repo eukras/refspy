@@ -91,16 +91,16 @@ ref = __.r('Rom 2:6,9,1,2')
 We can construct references more programmatically with `__.bcv()`:
 
 ```python
-assert ___.bcv('Rom').name() == 'Romans' 
-assert ___.bcv('Rom', 2).name() == 'Romans 2'
-assert ___.bcv('Rom', 2, 2).name() == 'Romans 2:2'
-assert ___.bcv('Rom', 2, 2, 3).name() == 'Romans 2:2-3'
+assert __.name(___.bcv('Rom')) == 'Romans' 
+assert __.name(___.bcv('Rom', 2)) == 'Romans 2'
+assert __.name(___.bcv('Rom', 2, 2)) == 'Romans 2:2'
+assert __.name(___.bcv('Rom', 2, 2, 3)) == 'Romans 2:2-3'
 ```
 
 Or `__.bcr()` to specify book, chapter and verse ranges:
 
 ```python
-ref = ___.bcr('Rom', 2, [(2, 3), 7])    # Rom 2:2-3,7 (from range) 
+assert __.name(___.bcr('Rom', 2, [(2, 3), 7])) == "Romans 2:2-3,7"
 ```
 
 
