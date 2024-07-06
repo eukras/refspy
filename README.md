@@ -36,19 +36,18 @@ Refspy is a Python package for working with biblical references in ordinary text
 
 ## The Reference Manager
 
-
 Initialising `refspy` with corpus and language names will return a reference
 manager. This provides a single convenient interface for the whole library. 
 By default, refspy provides a Protestant canon in English.
 
-```
+```python
 from refspy import refspy
 __ = refspy()
 ```
 
 Or, to create specific canons:
 
-```
+```python
 from refspy.language.en import ENGLISH
 from refspy.libraries.en_US import DC, DC_ORTHODOX, NT, OT
 from refspy.manager import Manager 
@@ -80,13 +79,13 @@ Shortcut functions can create simple references using any book name,
 abbreviation, or alias in the libraries list. Firstly, we can create
 references from strings:
 
-```
+```python
 ref = __.r('Rom 2:6,9,1,2')
 ```
 
 We can construct references more programmatically with `__.bcv()`:
 
-```
+```python
 ref = ___.bcv('Rom')                # Rom (whole book)  
 ref = ___.bcv('Rom', 2)             # Rom 2 (whole chapter)
 ref = ___.bcv('Rom', 2, 2)          # Rom 2:2
@@ -95,14 +94,14 @@ ref = ___.bcv('Rom', 2, 2, 3)       # Rom 2:2-3 (optional end verse)
 
 Or `__.bcr()` to specify book, chapter and verse ranges:
 
-```
+```python
 ref = ___.bcr('Rom', 2, [(2, 3), 7])    # Rom 2:2-3,7 (from range) 
 ```
 
 
 ### Formatting references
 
-```
+```python
 ref = ___.r('Rom 2:3-4, 7')
 
 assert __.name(ref) == 'Romans 2:3–4,7'
@@ -115,9 +114,8 @@ assert __.numbers(ref) == '2:3–4,7'
 ### Comparing references
 
 A reference can be a set of any verses and verse ranges spread across multiple
-libraries. Comparing references A and B just means comparing their first verse. 
 
-```
+```python
 rom_2 = __.r('Rom 2')
 rom_4 = __.r('Rom 4')
 rom_4a = __.bc('rom', 4)
@@ -130,8 +128,9 @@ assert rom_4 == rom_4a
 Because references can be compared with `<`, they can also be sorted, or used
 in `min()` and `max()`. 
 
-```
-assert sorted([rom_4, rom_2]) == [rom_2, rom_4]
+```python
+assert __.sort_references([rom_4, rom_2]) == [rom_2, rom_4]
+assert sorted([rom_4, rom_2]) == [rom_2, rom_4]  # <-- Same
 assert min([rom_4, rom_2]) == rom_2
 ```
 
@@ -142,7 +141,7 @@ another. The `adjoins()` function works out adjacency for chapters and verses,
 but note it is limited by not knowing the lengths of chapters. (Adjacency may
 be used in future to combine and simplify references.)
 
-```
+```python
 gen1 = __.r('Gen 1') 
 gen2 = __.r('Gen 2') 
 gen1_23_23 = __.r('Gen 1:22-23') 
@@ -155,12 +154,34 @@ assert gen1.adjoins(gen2)
 assert not gen1.overlaps(gen2)
 ```
 
+## Sort, Merge, and Combine
+
+References can be simplified by merging overlapping ranges and combining those
+that are adjacent.
+
+```python
+assert __.merge_references([gen1_22_23, gen1]) == gen1
+assert __.combine_references([gen1, gen2]) == __.r('Gen 1-2')
+assert __.combine_references([gen1_22_23, gen1_24_28]) == __.r('Gen 1:22-28')
+```
+
+Under the hood, these methods just join the range lists together and merge or
+combine them into a new reference. (Note the `*` operator to unpack lists into
+arguments for `reference()`.)
+
+```python
+from refspy.range import sort, merge, combine
+
+assert reference(*merge(ranges)) == reference(*ranges).merge()
+assert reference(*combine(ranges)) == reference(*ranges).combine()
+```
+
 ## Manipulating references
 
 Among other transformations, references can be turned into their (first) book
 objects or references to just their books or chapters.
 
-```
+```python
 ref1 = __.ref('Rom 2:3-4,7')
 
 assert __.book(ref1).chapters == 16
@@ -170,7 +191,7 @@ assert __.name(ref1.chapter_reference(ref1)) == 'Romans 2'
 
 ### Navigating references
 
-```
+```python
 assert __.next_chapter(rom_2) == rom_3
 assert __.prev_chapter(rom_2) == rom_1
 assert __.prev_chapter(rom_1) == acts_28
@@ -179,7 +200,7 @@ assert __.prev_chapter(matt_1) == None
 
 To create chapter references:
 
-```
+```python
 from refspy.libraries.en_US import NT
 
 nt_chapter_refs_ = [  
@@ -194,7 +215,7 @@ nt_chapter_refs_ = [
 
 To find references in text and print HTML links for them:
 
-```
+```python
 url = 'https://www.biblegateway.com/passage/?search=%s&version=NRSVA"
 
 text = "Rom 1; 1 Cor 8:3,4; Rev 22:3-4"
@@ -208,7 +229,7 @@ for match_str, ref in zip(strs, refs):
 
 To produce the demo image above, we use the `sequential_replace` function from `refspy/utils`:
 
-```
+```python
 from refspy.utils import sequential_replace
 
 matches = __.find_references(text, include_books=True)
@@ -228,7 +249,7 @@ html = sequential_replace(text, strs, tags)}
 
 To produce the index for the demo image above:
 
-```
+```python
 matches = __.find_references(text)
 
 index = []
@@ -269,7 +290,7 @@ Libraries and books are Pydantic BaseModels, which apply validation checks to
 the data whenever created or modified. These are defined by in locale files,
 such as `refspy/languages/en_US.py`:
 
-```
+```python
 OT = Library(
     id=200,
     name="Old Testament",
@@ -310,7 +331,7 @@ application, especially since not all verse numbers actually exist in texts
 assigned). However, knowing the number of chapters per book allows the previous
 and next chapter to be determined, say, for navigating a library.
 
-```
+```python
 Verse(library=1, book=2, chapter=3, verse=4)
 verse(1, 2, 3, 4)
 verse(1, 2, 3, 1004)  # <-- ValueError
@@ -321,7 +342,7 @@ verse(1, 2, 3, 1004)  # <-- ValueError
 Verses convert to an index value, `verse(1, 2, 3, 4).index() == 1002003004`
 (`UNSIGNED INT(12)`), which allows efficient indexing in databases:
 
-```
+```python
 sql_clause = " OR ".join([
     f"({column_name} BETWEEN {range.start.index()} AND {range.end.index()})"
     for range in reference.ranges
@@ -345,7 +366,7 @@ be sorted and compared.
 Ranges can be tested for containment, overlap, or adjacency. Note that this
 does not take account of which verse numbers actually exist in any given text.
 
-```
+```python
 # Make ranges...
 gen1 = range(verse(1, 1, 1, 1), verse(1, 1, 1, 999))
 gen1_22_23 = range(verse(1, 1, 1, 22), verse(1, 1, 1, 23))
@@ -368,7 +389,7 @@ assert not gen.overlaps(exod)
 
 Comparison operators can also be used, as well as sorting:
 
-```
+```python
 assert gen1 < gen2
 assert not gen1 == gen2
 
@@ -386,7 +407,7 @@ References are lists of verse ranges. These are entirely numerical objects.
 References, ranges, and verses have shorter constructor functions for
 programming convenience. Note `reference()` does not require list brackets.
 
-```
+```python
 Range(start=verse_1, end=verse_2)
 range(verse_1, verse_2)
 
@@ -396,13 +417,18 @@ reference(range_1, range_2)
 ref_1 = reference(
   range(verse(1, 1, 1, 1), verse(1, 1, 1, 3))
 )
+```
 
-book_reference(1, 2)
-chapter_reference(1, 2, 3)
-verse_reference(1, 2, 3, 4) 
+The reference module contains standalone functions for reference construction
+that parallel the reference manager's `__.bcv()` method.
+
+```python
+assert book_reference(NT.id, 1) == __.bcv(NT.name, 1)
+assert chapter_reference(NT.id, 2, 3) == __.bcv(NT.name, 2, 3)
+assert verse_reference(NT.id, 2, 3, 4) == __.bcv(NT.name, 2, 3, 4)
+assert verse_reference(NT.id, 2, 3, 4, 5) == __.bcv(NT.name, 2, 3, 4, 5)
 ```
 
 The same comparison operations that work on ranges also work on references. So
-references can be `sorted()`, `min()`, or `max()`. This becomes less intuitive the
-more complex their list of ranges becomes.
-
+references can be `sorted()`, `min()`, or `max()`. This becomes less intuitive
+the more complex their list of ranges becomes.
