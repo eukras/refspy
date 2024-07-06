@@ -61,6 +61,12 @@ def test_adjoins():
     assert not cr2.adjoins(vr2)
 
 
+def test_adjoins_chapters():
+    range_1 = range(verse(1, 2, 3, 1), verse(1, 2, 3, 999))
+    range_2 = range(verse(1, 2, 4, 1), verse(1, 2, 5, 999))
+    assert range_1.adjoins(range_2)
+
+
 def test_sort_basic():
     range_1 = range(verse(1, 2, 3, 4), verse(1, 2, 3, 6))
     range_2 = range(verse(1, 2, 3, 6), verse(1, 2, 3, 8))
@@ -74,11 +80,25 @@ def test_merge_overlapping():
     assert merge([range_2, range_1]) == [range_3]
 
 
-def test_combine_adjacent():
+def test_combine_adjacent_verses():
     range_1 = range(verse(1, 2, 3, 4), verse(1, 2, 3, 6))
     range_2 = range(verse(1, 2, 3, 7), verse(1, 2, 3, 8))
     range_3 = range(verse(1, 2, 3, 4), verse(1, 2, 3, 8))
     assert combine([range_2, range_1]) == [range_3]
+
+
+def test_combine_adjacent_chapters():
+    range_1 = range(verse(1, 2, 3, 1), verse(1, 2, 3, 999))
+    range_2 = range(verse(1, 2, 4, 1), verse(1, 2, 5, 999))
+    combined = combine([range_2, range_1])
+    assert combined == [range(verse(1, 2, 3, 1), verse(1, 2, 5, 999))]
+
+
+def test_combine_adjacent_books():
+    range_1 = range(verse(1, 2, 1, 1), verse(1, 3, 999, 999))
+    range_2 = range(verse(1, 4, 1, 1), verse(1, 5, 999, 999))
+    combined = combine([range_2, range_1])
+    assert combined == [range(verse(1, 2, 1, 1), verse(1, 5, 999, 999))]
 
 
 def test_is_book_range():

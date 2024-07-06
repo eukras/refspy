@@ -76,8 +76,8 @@ class Range(BaseModel):
             )
         elif (
             self.same_book_as(other)
-            and self.is_chapter_range()
-            and other.is_chapter_range()
+            and (self.is_chapter() or self.is_chapter_range())
+            and (other.is_chapter() or other.is_chapter_range())
         ):
             return (
                 other.start.chapter == self.end.chapter + 1
@@ -85,8 +85,8 @@ class Range(BaseModel):
             )
         elif (
             self.same_library_as(other)
-            and self.is_book_range()
-            and other.is_book_range()
+            and (self.is_book() or self.is_book_range())
+            and (other.is_book() or other.is_book_range())
         ):
             return (
                 other.start.book == self.end.book + 1
@@ -114,7 +114,9 @@ class Range(BaseModel):
 
     def join(self, other: Self):
         """Combine two adjacent ranges."""
+        print("JOIN")
         if self.start < other.start:
+            print("START")
             return self.__class__(start=self.start, end=other.end)
         else:
             return self.__class__(start=other.start, end=self.end)
