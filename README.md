@@ -91,9 +91,9 @@ ref = __.r('Rom 2:6,9,1,2')
 We can construct references more programmatically with `__.bcv()`:
 
 ```python
-assert ___.bcv('Rom').name()          == 'Romans' 
-assert ___.bcv('Rom', 2).name()       == 'Romans 2'
-assert ___.bcv('Rom', 2, 2).name()    == 'Romans 2:2'
+assert ___.bcv('Rom').name() == 'Romans' 
+assert ___.bcv('Rom', 2).name() == 'Romans 2'
+assert ___.bcv('Rom', 2, 2).name() == 'Romans 2:2'
 assert ___.bcv('Rom', 2, 2, 3).name() == 'Romans 2:2-3'
 ```
 
@@ -424,8 +424,8 @@ ref_1 = reference(
 )
 ```
 
-The reference module contains standalone functions for reference construction
-that parallel the reference manager's `__.bcv()` method.
+The reference module contains standalone functions for numeric reference
+construction that parallel the reference manager's `__.bcv()` method.
 
 ```python
 assert book_reference(NT.id, 1) == __.bcv(NT.name, 1)
