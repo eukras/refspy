@@ -171,10 +171,10 @@ assert __.name(ref1.chapter_reference(ref1)) == 'Romans 2'
 ### Navigating references
 
 ```
-assert next_chapter(rom_2) == rom_3
-assert prev_chapter(rom_2) == rom_1
-assert prev_chapter(rom_1) == acts_28
-assert prev_chapter(matt_1) == None
+assert __.next_chapter(rom_2) == rom_3
+assert __.prev_chapter(rom_2) == rom_1
+assert __.prev_chapter(rom_1) == acts_28
+assert __.prev_chapter(matt_1) == None
 ```
 
 To create chapter references:
@@ -253,7 +253,7 @@ a start verse that is greater than its end verse.
 
 - **Book**. A book has id, name, abbrev, aliases, and chapters. No verse counts.
 - **Format**. The Format objects define what properties and characters to use when formatting references for various purposes.
-- **Index**. An integer which results from expanding a verse by powers of 1000; `verse(1, 7, 16, 1)` becomes the integer `1007016001`
+- **Index**. An integer which results from expanding a verse by powers of 1000; `verse(1, 7, 16, 1)` becomes the integer `1007016001`. Used for database indexing.
 - **Library**. A library has id, name, abbrev, and a list of Books. See e.g. `libraries/en_US.py`. Library IDs are spaced out in a roughly historical order: OT is 200, NT is 400.
 - **Number**. An integer `1..999`. We assume verses/chapters/books/libraries are limited to this size. This may need modifying to accommodate, say, _zero verses_ in the Septuagint.
 - **Range**. A pair of `(start, end)` verses; `1 Cor 16:1-2` becomes `range(verse(400, 7, 16, 1), verse(400, 7, 16, 2))`.

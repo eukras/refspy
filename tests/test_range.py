@@ -3,7 +3,7 @@ from context import *
 from pydantic import ValidationError
 import pytest
 
-from refspy.range import Range, range
+from refspy.range import Range, combine, merge, range, sort
 from refspy.verse import verse
 
 
@@ -59,6 +59,26 @@ def test_adjoins():
     assert cr2.adjoins(cr1)
     assert not cr1.adjoins(vr1)
     assert not cr2.adjoins(vr2)
+
+
+def test_sort_basic():
+    range_1 = range(verse(1, 2, 3, 4), verse(1, 2, 3, 6))
+    range_2 = range(verse(1, 2, 3, 6), verse(1, 2, 3, 8))
+    assert sort([range_2, range_1]) == [range_1, range_2]
+
+
+def test_merge_overlapping():
+    range_1 = range(verse(1, 2, 3, 4), verse(1, 2, 3, 6))
+    range_2 = range(verse(1, 2, 3, 6), verse(1, 2, 3, 8))
+    range_3 = range(verse(1, 2, 3, 4), verse(1, 2, 3, 8))
+    assert merge([range_2, range_1]) == [range_3]
+
+
+def test_combine_adjacent():
+    range_1 = range(verse(1, 2, 3, 4), verse(1, 2, 3, 6))
+    range_2 = range(verse(1, 2, 3, 7), verse(1, 2, 3, 8))
+    range_3 = range(verse(1, 2, 3, 4), verse(1, 2, 3, 8))
+    assert combine([range_2, range_1]) == [range_3]
 
 
 def test_is_book_range():

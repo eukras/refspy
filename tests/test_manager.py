@@ -1,17 +1,12 @@
-"""
-Basic integration tests at the Manager facade level.
-THis file doubles as an example of intended usage.
-Unit testing to occur in each supordinate file.
-"""
-
 import pytest
 
 from context import *
 
 from refspy.languages.english import ENGLISH
+from refspy.libraries.en_US import NT
 from refspy.manager import Manager
-from refspy.range import range
-from refspy.reference import reference
+from refspy.range import merge, range
+from refspy.reference import reference, verse_reference
 from refspy.book import Book
 from refspy.library import Library
 from refspy.verse import verse
@@ -43,6 +38,33 @@ def test_non_unique():
     """
     with pytest.raises(ValueError):
         _ = Manager([LIBRARY, LIBRARY], ENGLISH)
+
+
+def test_sort_references():
+    ref_1 = verse_reference(NT.id, 1, 2, 3)
+    ref_2 = verse_reference(NT.id, 1, 2, 4)
+    ref_3 = verse_reference(NT.id, 1, 2, 5)
+    sorted = __.sort_references([ref_3, ref_2, ref_1])
+    assert len(sorted) == 3
+    assert sorted == [ref_1, ref_2, ref_3]
+
+
+def test_merge_references():
+    ref_1 = verse_reference(NT.id, 1, 2, 3)
+    ref_2 = verse_reference(NT.id, 1, 2, 3, 4)
+    ref_3 = verse_reference(NT.id, 1, 2, 4, 5)
+    merged = __.merge_references([ref_3, ref_2, ref_1])
+    assert len(merged.ranges) == 1
+    assert merged == verse_reference(NT.id, 1, 2, 3, 5)
+
+
+def test_combine_references():
+    ref_1 = verse_reference(NT.id, 1, 2, 3)
+    ref_2 = verse_reference(NT.id, 1, 2, 4)
+    ref_3 = verse_reference(NT.id, 1, 2, 5, 6)
+    combined = __.combine_references([ref_3, ref_2, ref_1])
+    assert len(combined.ranges) == 1
+    assert combined == verse_reference(NT.id, 1, 2, 3, 6)
 
 
 def test_collate_by_id():

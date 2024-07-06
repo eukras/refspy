@@ -108,10 +108,10 @@ class Range(BaseModel):
                 min(self.start.verse, other.start.verse),
             ),
             end=verse(
-                min(self.end.library, other.end.library),
-                min(self.end.book, other.end.book),
-                min(self.end.chapter, other.end.chapter),
-                min(self.end.verse, other.end.verse),
+                max(self.end.library, other.end.library),
+                max(self.end.book, other.end.book),
+                max(self.end.chapter, other.end.chapter),
+                max(self.end.verse, other.end.verse),
             ),
         )
 
@@ -316,7 +316,7 @@ def merge(ranges: List[Range], skip_sort: bool = False) -> List[Range]:
     if sorted_ranges:
         for this_range in sorted_ranges[1:]:
             if last_range.overlaps(this_range):
-                last_range.merge(this_range)
+                last_range = last_range.merge(this_range)
             else:
                 new_ranges.append(last_range)
                 last_range = this_range
@@ -335,7 +335,7 @@ def combine(ranges: List[Range], skip_merge: bool = False) -> List[Range]:
     if merged_ranges:
         for this_range in merged_ranges[1:]:
             if last_range.adjoins(this_range):
-                last_range.join(this_range)
+                last_range = last_range.join(this_range)
             else:
                 new_ranges.append(last_range)
                 last_range = this_range

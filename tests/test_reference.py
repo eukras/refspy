@@ -8,7 +8,7 @@ from refspy.reference import (
     reference,
     verse_reference,
 )
-from refspy.range import range, sort
+from refspy.range import merge, range, sort
 from refspy.verse import verse
 
 
@@ -18,17 +18,6 @@ def test_empty_reference_raises_value_error():
     """
     with pytest.raises(ValidationError):
         _ = reference()
-
-
-def test_reference_sorting():
-    """
-    Check that identical range lists are identical references
-    """
-    range_1 = range(verse(1, 2, 3, 4), verse(1, 2, 3, 6))
-    range_2 = range(verse(1, 2, 3, 7), verse(1, 2, 3, 8))
-    reference_1 = reference(range_1, range_2)
-    reference_2 = reference(*sort([range_2, range_1]))
-    assert reference_1 == reference_2
 
 
 def test_reference_comparison():

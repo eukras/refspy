@@ -19,7 +19,7 @@ from refspy.language import Language
 from refspy.library import Library
 from refspy.matcher import Matcher
 from refspy.navigator import Navigator
-from refspy.range import merge, range, sort
+from refspy.range import combine, merge, range, sort
 from refspy.reference import (
     Reference,
     book_reference,
@@ -58,13 +58,9 @@ class Manager:
     # Merging functions
     # -----------------------------------
 
-    def sort_references(self, references: List[Reference]) -> Reference:
-        """For a list of references, sort their ranges into a new reference."""
-        ranges = []
-        for ref in references:
-            ranges.extend(ref.ranges)
-        new_ref = reference(*sort(ranges))
-        return new_ref
+    def sort_references(self, references: List[Reference]) -> List[Reference]:
+        """Sort references by their lowest range."""
+        return sorted(references)
 
     def merge_references(self, references: List[Reference]) -> Reference:
         """For a list of references, merge their ranges into a new reference.
@@ -86,7 +82,7 @@ class Manager:
         ranges = []
         for ref in references:
             ranges.extend(ref.ranges)
-        new_ref = reference(*merge(ranges))
+        new_ref = reference(*combine(ranges))
         return new_ref
 
     # -----------------------------------
