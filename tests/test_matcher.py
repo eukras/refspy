@@ -16,7 +16,7 @@ from refspy.matcher import (
     RANGE_OR_NUMBER_COMPILED,
     SPACE,
     Matcher,
-    infer_abbreviated_number,
+    infer_abbreviation,
     make_chapter_range,
     make_chapter_verses,
     make_number_ranges,
@@ -327,8 +327,8 @@ def test_line_wrapping():
     assert ref == chapter_reference(1, 4, 5)
 
 
-def test_infer_abbreviated_number():
-    assert infer_abbreviated_number("124", "24") == "124"
-    assert infer_abbreviated_number("12", "4") == "14"
-    assert infer_abbreviated_number("24", "23") is None
-    assert infer_abbreviated_number("4", "3") is None
+def test_infer_abbreviation():
+    assert infer_abbreviation("124", "24") == "124"
+    assert infer_abbreviation("12", "4") == "14"
+    assert infer_abbreviation("24", "23") is None
+    assert infer_abbreviation("4", "3") is None
