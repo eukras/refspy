@@ -5,15 +5,12 @@ from pydantic import BaseModel, model_validator
 
 from refspy.verse import verse, Verse
 
-RangeTuple = Tuple[Verse, Verse]
-RangeList = List[RangeTuple]
-
 
 class Range(BaseModel):
     start: Verse
     end: Verse
 
-    def tuple(self) -> RangeTuple:
+    def tuple(self) -> Tuple[Verse, Verse]:
         return (self.start, self.end)
 
     @model_validator(mode="after")
