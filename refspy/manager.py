@@ -50,16 +50,26 @@ class Manager:
         """A lookup dictionary for (library.id, book.id) by book alias strings."""
 
         self.language: Language = language
+        """Language-specific program data."""
+
         self.matcher: Matcher = Matcher(self.books, self.book_aliases, self.language)
+        """Delegate reference matching tasks."""
+
         self.formatter: Formatter = Formatter(self.books, self.book_aliases)
+        """Delegate formatting tasks."""
+
         self.navigator: Navigator = Navigator(self.books, self.book_aliases)
+        """Delegate navigation tasks."""
 
     # -----------------------------------
     # Merging functions
     # -----------------------------------
 
     def sort_references(self, references: List[Reference]) -> List[Reference]:
-        """Sort references by their lowest range."""
+        """Sort a list of references by their first range.
+
+        Works better if the reference is sorted or has only one range.
+        """
         return sorted(references)
 
     def merge_references(self, references: List[Reference]) -> Reference:
@@ -253,9 +263,9 @@ class Manager:
         return reference(*ranges)
 
     def r(self, text: str) -> Reference | None:
-        """
-        Return the first matching reference in the given text, preferring
-        references with chapter or verse numbers rather than whole books.
+        """Return the first matching reference in the given text.
+
+        Book names and malformed references are not matched.
         """
         _, reference = self.first_reference(text)
         return reference
@@ -315,10 +325,6 @@ class Manager:
     # Formatting functions
     # -----------------------------------
 
-    def numbers(self, ref: Reference) -> str:
-        """Format a reference with only the reference number."""
-        return self.formatter.format(ref, NUMBER_FORMAT)
-
     def name(self, ref: Reference) -> str:
         """Format a reference using its full name."""
         return self.formatter.format(ref, NAME_FORMAT)
@@ -328,5 +334,9 @@ class Manager:
         return self.formatter.format(ref, ABBREV_FORMAT)
 
     def param(self, ref: Reference) -> str:
-        """Format a reference using its code."""
+        """Format a reference for use as a URL parameter"""
         return url_param(self.formatter.format(ref, ABBREV_FORMAT))
+
+    def numbers(self, ref: Reference) -> str:
+        """Format a reference with only the reference number."""
+        return self.formatter.format(ref, NUMBER_FORMAT)

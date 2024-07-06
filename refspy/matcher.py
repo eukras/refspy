@@ -83,6 +83,7 @@ class Matcher:
          :                  :            Book Reference
          :                  :             :        Numeric Reference
          :                  :             :         :
+         :                  :             :         :
         ('Big Book 1:2-5', 'Big Book',   '1:2-5',  None)
         ('Small Book 34',  'Small Book', '34',     None)
         ('vv.2:3-6',        None,         None,   '2:3-6')
@@ -404,7 +405,7 @@ def make_number_ranges(
         else:
             continue
         if parse_number(end) < parse_number(start):
-            if new_end := infer_abbreviated_number(start, end):
+            if new_end := infer_abbreviation(start, end):
                 end = new_end
             else:
                 return None
@@ -428,7 +429,7 @@ def make_number_ranges(
         return None
 
 
-def infer_abbreviated_number(start: str, end: str) -> str | None:
+def infer_abbreviation(start: str, end: str) -> str | None:
     """If a number range ends with a smaller number, try to infer an abbreviation.
 
     If the end number has fewer digits the the start number then we return a
