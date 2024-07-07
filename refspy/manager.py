@@ -62,6 +62,34 @@ class Manager:
         """Delegate navigation tasks."""
 
     # -----------------------------------
+    # Index and summary functions
+    # -----------------------------------
+
+    def make_index(self, references: List[Reference]) -> str:
+        """Write a one-line index of references, sorted and grouped by book.abbrev."""
+        index = []
+        collation = self.collate(
+            sorted([ref for ref in references if ref and not ref.is_book()])
+        )
+        for _, book_collation in collation:
+            for _, reference_list in book_collation:
+                sorted_ref = self.sort_references(reference_list)
+                index.append(self.abbrev(sorted_ref))
+        return "; ".join(index)
+
+    def make_summary(self, references: List[Reference]) -> str:
+        """Write a one-line summary, like for index, but merge and join ranges."""
+        summary = []
+        collation = self.collate(
+            sorted([ref for ref in references if ref and not ref.is_book()])
+        )
+        for _, book_collation in collation:
+            for _, reference_list in book_collation:
+                compact_ref = self.combine_references(reference_list)
+                summary.append(self.abbrev(compact_ref))
+        return "; ".join(summary)
+
+    # -----------------------------------
     # Merging functions
     # -----------------------------------
 

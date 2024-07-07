@@ -30,15 +30,9 @@ for match_str, ref in matches:
         tags.append(
             f'<span class="green">{match_str}</span><sup>{__.abbrev(ref)}</sup>'
         )
-sorted_index, compact_index = [], []
-collation = __.collate(sorted([ref for _, ref in matches if ref and not ref.is_book()]))
-for library, book_collation in collation:
-    for book, reference_list in book_collation:
-        sorted_ref = __.sort_references(reference_list)
-        sorted_index.append(__.abbrev(sorted_ref))
-        compact_ref = __.combine_references(reference_list)
-        compact_index.append(__.abbrev(compact_ref))
-
+references = [ref for _, ref in matches]
+index = __.make_index(references)
+summary = __.make_summary(references)
 
 print("""
 <html>
@@ -53,6 +47,8 @@ print("""
             .yellow { background-color: #ffffaa; }
         </style>
     </head>
+""")
+print(f"""
     <body>
         <p><b>REFSPY</b>. <i>A Python library for working with biblical
         references in ordinary text.</i></p>
@@ -61,16 +57,13 @@ print("""
         This</sup>. Book names that aren't themselves references but provide
         context are highlighted in <span class="yellow">yellow</span>.
         Malformed references are highlighted in <span
-        class="purple">purple</span>. An index is compiled, sorted, and
-        collated by book. A second, compact index merges any overlapping or
-        adjacent references.</p>
-
-""")
-print(f"""
+        class="purple">purple</span>.</p>
         <blockquote><pre>{text}</pre></blockquote>
         <blockquote>{sequential_replace(text, strs, tags)}</blockquote>
-        <blockquote><b>Sorted Index</b>. {"; ".join(sorted_index)}.</blockquote>
-        <blockquote><b>Compact Index</b>. {"; ".join(compact_index)}.</blockquote>
+        <p>An index sorts and collates these references by book. A summary does
+        the same but merges overlapping and adjacent references.</p>
+        <blockquote><b>Index</b>. {index}.</blockquote>
+        <blockquote><b>Summary</b>. {summary}.</blockquote>
         <p> Because a number or a range (1 or 2-3) could refer to either verses or
         chapters, or other regular numbers that have nothing to do with biblical
         referencing, we only match references that are preceded by a book name, a
