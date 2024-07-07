@@ -1,6 +1,6 @@
 from context import *
 
-from refspy.formatter import Formatter
+from refspy.formatter import Formatter, abbreviate_range
 from refspy.format import NAME_FORMAT, NUMBER_FORMAT, ABBREV_FORMAT
 from refspy.indexers import index_book_aliases, index_books
 from refspy.range import range
@@ -108,3 +108,8 @@ def test_book_chapter_equal_1():
         range(verse(1, 3, 1, 1), verse(1, 3, 1, 2)),
     )
     assert fmt.format(ref, NAME_FORMAT) == "Small Book 1–2"
+
+
+def test_abbreviate_range():
+    assert abbreviate_range(23, 24) == (23, 24)
+    assert abbreviate_range(123, 124) == (123, 24)

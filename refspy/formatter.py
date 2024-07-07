@@ -162,11 +162,9 @@ class Formatter:
         Example:
             `1-2` or `Matthew 1-2`
         """
+        start, end = abbreviate_range(_.start.chapter, _.end.chapter)
         return string_together(
-            self.book_name_if_required(_, last, options),
-            _.start.chapter,
-            options.dash,
-            _.end.chapter,
+            self.book_name_if_required(_, last, options), start, options.dash, end
         )
 
     def make_inter_chapter_range(
@@ -238,13 +236,16 @@ class Formatter:
         Example:
             `2-3` or `1:2-3` or `Matthew 1:2-3`
 
+        Note:
+            We abbreviate the second number if possible. See `abbreviate_range()`.
         """
+        start, end = abbreviate_range(_.start.verse, _.end.verse)
         return string_together(
             self.book_name_if_required(_, last, options),
             self.chapter_number_if_required(_, last, options),
-            _.start.verse,
+            start,
             options.dash,
-            _.end.verse,
+            end,
         )
 
     def make_verse(self, _: Range, last: Verse | None, options: Format) -> str:
@@ -262,3 +263,22 @@ class Formatter:
             self.chapter_number_if_required(_, last, options),
             _.start.verse,
         )
+
+
+def abbreviate_range(start: Number, end: Number) -> Tuple[Number, Number]:
+    """Abbreviate the end numbver of a range where sensible.
+
+    If a range is e.g. 123-124, display 123-24 instead. Numbers can't be
+    more than three digits, and we dont' worry about showing `23-24` as
+    `23-4`.
+
+    Note:
+        See `refspy.matcher.Matcher.infer_abbreviation()` for the
+        function that reads abbreviated references.
+    """
+    start_str = str(start)
+    end_str = str(end)
+    if len(start_str) == 3 and len(end_str) == 3:
+        if start_str[0] == end_str[0]:
+            return start, int(end_str[1:])
+    return start, end
