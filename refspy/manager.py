@@ -75,7 +75,16 @@ class Manager:
     def make_index(
         self, references: List[Reference], pattern: str | None = None
     ) -> str:
-        """Write a one-line index of references, sorted and grouped by book.abbrev."""
+        """Write a one-line index of references.
+
+        Args:
+            pattern: a formatting string suitable for links, see
+                `refspy.manager.Manager.template()`.
+
+        Note:
+            If no template pattern is provided, reference formatting
+            will default to `refspy.manager.Manager.abbrev_name()`
+        """
         index = []
         collation = self.collate(
             sorted([ref for ref in references if ref and not ref.is_book()])
@@ -92,7 +101,16 @@ class Manager:
     def make_summary(
         self, references: List[Reference], pattern: str | None = None
     ) -> str:
-        """Write a one-line summary, like for index, but merge and join ranges."""
+        """Write a one-line summary, like for index, but merge and join ranges.
+
+        Args:
+            pattern: a formatting string suitable for links, see
+                `refspy.manager.Manager.template()`.
+
+        Note:
+            If no template pattern is provided, reference formatting
+            will default to `refspy.manager.Manager.abbrev_name()`.
+        """
         summary = []
         collation = self.collate(
             sorted([ref for ref in references if ref and not ref.is_book()])
