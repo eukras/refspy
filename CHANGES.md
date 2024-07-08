@@ -1,34 +1,37 @@
-# Changes
+# CHANGES
 
-## 0.9.* -- BETA DEVELOPMENT
+## 1.0
 
-* Initial release 
+(Future)
 
-### 0.9.1-4 -- GAMMA
+## 0.9.* -- INITIAL RELEASE
 
-* Initial release; features and implementation may change before 1.0.0; the
-  manager facade should provide a consistent and backwards-compatible interface.
+### 0.9.7 -- BETA
+
+* Add __.make_index() and __.make_summary(), incl. for demo.
+* `url_param()` and `url_escape()` replace `__.param()`.
+* Add __.template() to Manager, integrate with summary example.
+* More compact and efficient book names in regexp (group by prefixes).
+
+### 0.9.6 -- BETA
+
+* Remove unused functions and types.
+* Infer abbreviations in number ranges: 123-24 becomes 123-124.
+* Added merge_ranges() and combine_ranges() + tests.
+* Add range constructor functions for verses.
 
 ### 0.9.5 -- BETA
 
 * Removed 'depth' from books; determined by book.chapters == 1.
-* Removed 'code' from books and library; __.param() is calculated from book.abbrev.
+* Removed 'code' from books and library; __.param() is calculated 
+    from book.abbrev.
 * Detects malformed references.
 * Matches partial and abbreviated number ranges.
 * Added pdoc for readthedocs.io.
 * Added sort_references(), merge_references(), combine_references().
 
-### 0.9.6 -- BETA
+### 0.9.1-4 -- INITIAL CHECK-IN
 
-* Remove unused functions and types.
-* Infer abbreviations in number ranges.
-* Added merge_ranges() and combine_ranges() + tests
-* Add range constructor functions for verses.
-
-### 0.9.7 -- BETA
-
-* Add make_index() and make_summary(); add to demo.
-
-### 1.0.0 -- ALPHA
-
-(Future)
+* Initial release; features and implementation may change before 1.0.0; the
+  manager facade should provide a consistent and backwards-compatible
+  interface.

@@ -1,11 +1,16 @@
 # To Do List
 
-* Test against human writing styles (use Article Wiki).
-* Have matcher use name, abbrev, code, aliases, as needed. Thus limit test parsing and URL parsing to sensible regexps. 
-* Generate links to online bibles (with decorators and ad hoc aliases?)
+## Status
 
-## Things requiring other people's knowledge:
+* `0.9.7` is feature-complete. 
 
-* Other languages and knowledge of language conventions.
-* Other corpuses (Septuagint, Apostolic Father, ANF).
-* Special cases like zero verses in LXX Psalms, etc.
+## NOW: July 2024
+
+* Test against human writing styles (use Article Wiki as a live demo and playground).
+* Expand test suites to reflect special cases. 
+
+## Possibilities
+
+* Other languages and language conventions?
+* Other corpuses (Septuagint, Apostolic Father, ANF)?
+* Special cases like zero verses in LXX Psalms, etc?
