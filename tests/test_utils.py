@@ -9,6 +9,7 @@ from refspy.utils import (
     sequential_replace,
     sequential_replace_tuples,
     url_param,
+    url_escape,
 )
 
 
@@ -27,9 +28,11 @@ def test_parse_number_raises_value_error():
 
 
 def test_url_param():
-    assert url_param("1 Cor") == "1+cor"
-    assert url_param("Romans") == "romans"
-    assert url_param("1 Cor 3:4-5") == "1+cor+3.4-5"
+    assert url_param("1 Cor 3:4–5") == "1+cor+3.4-5"
+
+
+def test_url_escape():
+    assert url_escape("1 Cor 3:4–5") == "1%20Cor%203%3A4-5"
 
 
 def test_normalize_spacing():

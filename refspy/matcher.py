@@ -66,6 +66,7 @@ class Matcher:
     ):
         self.books = books
         self.language = language
+        self.book_alias_keys = book_aliases.keys()
         self.book_aliases = self.expand_book_aliases(book_aliases)
         self.brackets_regexp = re.compile(self.build_brackets_regexp())
         self.name_regexp = re.compile(self.build_reference_regexp())
@@ -127,8 +128,11 @@ class Matcher:
     ) -> Dict[str, Tuple[int, int]]:
         """
         SBL style requires e.g. "1 Corinthians" be recognized as "First
-        Corinthians" at the start of a sentence. We'll just match this pattern
-        everywhere. Number prefixes are set in the Language class.
+        Corinthians" at the start of a sentence. Add these as keys to
+        the aliases.
+
+        Note:
+            Number prefixes are set in the Language class.
         """
         out = {}
         for alias, library_book in aliases.items():
@@ -143,13 +147,33 @@ class Matcher:
         """
         Return escaped aliases, pipe-separated, without group brackets.
         Replace spaces in aliases with space patterns
+
+        ((1|First|etc)\\s+(Corinthians|etc)|(2|Second|etc)\\s+(Corinthians|etc)|...
         """
-        out = []
-        for alias in self.book_aliases:
-            escaped_parts = [re.escape(_) for _ in alias.split(" ")]
-            spaced_escaped_alias = "\\s+".join(escaped_parts)
-            out.append(spaced_escaped_alias)
-        return "|".join(out)
+        regexp_parts = []
+        for number in self.numerical_book_prefixes():
+            aliases = [
+                alias[len(number + " ") :]
+                for alias in self.book_alias_keys
+                if alias.startswith(number + " ")
+            ]
+            regexp_parts.append(
+                r"(?:"
+                + "|".join([number] + self.language.number_prefixes[number])
+                + r")\s+(?:"
+                + "|".join([escape_book_name(_) for _ in long_names_first(aliases)])
+                + ")"
+            )
+        leading_digits = re.compile(r"^\d+\s")
+        aliases = [
+            alias for alias in self.book_alias_keys if not leading_digits.match(alias)
+        ]
+        regexp_parts.append(
+            r"(?:"
+            + "|".join([escape_book_name(_) for _ in long_names_first(aliases)])
+            + ")"
+        )
+        return r"|".join(regexp_parts)
 
     def build_verse_marker_regexp(self):
         return "|".join([re.escape(key) for key in self.language.verse_markers])
@@ -181,7 +205,7 @@ class Matcher:
             )
         regexp_parts.append(f"[{len(regexp_parts) + 1}-999]")
         SAFE_NUMBER = r"|".join(regexp_parts)
-        REGEXP = f"(?:{RANGE}|{NUMBER})(?:\\,\\s*(?:{RANGE}|(?:{SAFE_NUMBER})))*"
+        REGEXP = f"(?:{RANGE}|{NUMBER})(?:\\,\\s*(?:{RANGE}|(?:{SAFE_NUMBER}){END}))*"
         return REGEXP
 
     def numerical_book_prefixes(self) -> List[str]:
@@ -427,6 +451,20 @@ def make_number_ranges(
         return reference(*ranges)
     else:
         return None
+
+
+def escape_book_name(name: str) -> str:
+    """Regexp escape a name, but match multiple spaces.
+
+    This covers line wrapping, indentation, and so on, in the middle of a book
+    name.
+    """
+    return r"\s+".join([re.escape(_) for _ in name.split(" ")])
+
+
+def long_names_first(names: List[str]) -> List[str]:
+    """Remove duplicates and sort descending."""
+    return sorted(set(names), key=len)[::-1]
 
 
 def infer_abbreviation(start: str, end: str) -> str | None:

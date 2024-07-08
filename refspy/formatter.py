@@ -29,7 +29,10 @@ class Formatter:
         self.book_aliases = book_aliases
 
     def format(
-        self, reference: Reference, options: Format, if_invalid="[INVALID]"
+        self,
+        reference: Reference,
+        options: Format,
+        if_invalid="[INVALID]",
     ) -> str:
         """
         Compare each range with the one before and decide whether we need to add
@@ -138,18 +141,24 @@ class Formatter:
     def book_name_if_required(
         self, _: Range, last: Verse | None, options: Format
     ) -> str:
-        """Format the book name if the next range is in a different book.
+        """Format the book name (and a space) if the next range is in a
+        different book.
 
         Example:
-            `Matthew`
+            `Matthew `
         """
+        if options.number_only:
+            return ""
         book_name = ""
         if last is None:
             book_name = self.make_book(_, last, options)
         elif _.start.library != last.library or _.start.book != last.book:
             book_name = self.make_book(_, last, options)
         if book_name != "":
-            return book_name + options.space
+            if options.book_only:
+                return book_name
+            else:
+                return book_name + options.space
         return ""
 
     def make_chapter_range(self, _: Range, last: Verse | None, options: Format) -> str:
@@ -162,9 +171,11 @@ class Formatter:
         Example:
             `1-2` or `Matthew 1-2`
         """
-        start, end = abbreviate_range(_.start.chapter, _.end.chapter)
         return string_together(
-            self.book_name_if_required(_, last, options), start, options.dash, end
+            self.book_name_if_required(_, last, options),
+            _.start.chapter,
+            options.dash,
+            _.end.chapter,
         )
 
     def make_inter_chapter_range(
@@ -213,6 +224,8 @@ class Formatter:
         Example:
             `1:`
         """
+        if options.book_only:
+            return ""
         book = self.books[_.start.library, _.start.book]
         if last is None:
             if book.chapters > 1:
@@ -239,13 +252,14 @@ class Formatter:
         Note:
             We abbreviate the second number if possible. See `abbreviate_range()`.
         """
-        start, end = abbreviate_range(_.start.verse, _.end.verse)
+        if options.book_only:
+            return ""
         return string_together(
             self.book_name_if_required(_, last, options),
             self.chapter_number_if_required(_, last, options),
-            start,
-            options.dash,
-            end,
+            "" if options.book_only else _.start.verse,
+            "" if options.book_only else options.dash,
+            "" if options.book_only else _.end.verse,
         )
 
     def make_verse(self, _: Range, last: Verse | None, options: Format) -> str:
@@ -261,24 +275,5 @@ class Formatter:
         return string_together(
             self.book_name_if_required(_, last, options),
             self.chapter_number_if_required(_, last, options),
-            _.start.verse,
+            "" if options.book_only else _.start.verse,
         )
-
-
-def abbreviate_range(start: Number, end: Number) -> Tuple[Number, Number]:
-    """Abbreviate the end numbver of a range where sensible.
-
-    If a range is e.g. 123-124, display 123-24 instead. Numbers can't be
-    more than three digits, and we dont' worry about showing `23-24` as
-    `23-4`.
-
-    Note:
-        See `refspy.matcher.Matcher.infer_abbreviation()` for the
-        function that reads abbreviated references.
-    """
-    start_str = str(start)
-    end_str = str(end)
-    if len(start_str) == 3 and len(end_str) == 3:
-        if start_str[0] == end_str[0]:
-            return start, int(end_str[1:])
-    return start, end

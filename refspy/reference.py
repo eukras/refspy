@@ -7,9 +7,9 @@ They can be set to sort, merge, and join references when added together.
 
 from typing import Any, List, Self
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field
 
-from refspy.range import Range, combine, merge, range, sort
+from refspy.range import Range, combine, merge, range
 from refspy.verse import Number, Verse, verse
 
 
@@ -21,14 +21,16 @@ class Reference(BaseModel):
 
     It is common to want references to be sorted and combined. Combining means
     merging overlapping ranges and joining adjacent ones. This is done by creating
-    references with the `sort()`, `merge`, and `combine` functions in
+    references with sorted(), and the `merge`, and `combine` functions in
     `refspy.range.Range`, or calling the methods of the same name on references.
 
     Example:
         ```
-        assert reference(sort(ranges)) == reference(ranges).sort()
-        assert reference(merge(ranges)) == reference(ranges).merge()
-        assert reference(combine(ranges)) == reference(ranges).combine()
+        from reference import merge, combine
+
+        assert reference(*sorted(ranges)) == reference(*ranges).sort()
+        assert reference(*merge(ranges)) == reference(*ranges).merge()
+        assert reference(*combine(ranges)) == reference(*ranges).combine()
         ```
     """
 
@@ -151,7 +153,7 @@ class Reference(BaseModel):
 
     def sort(self) -> Self:
         """Return a sorted reference."""
-        return self.__class__(ranges=sort(self.ranges))
+        return self.__class__(ranges=sorted(self.ranges))
 
     def merge(self) -> Self:
         """Return a merged reference.

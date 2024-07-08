@@ -130,24 +130,24 @@ def test_bcv():
 
 def test_bcr():
     bk_2_135 = __.bcr("Book", 2, [1, 3, 5])
-    assert __.name(bk_2_135) == "Book 2:1,3,5"
+    assert __.name(bk_2_135) == "Book 2:1, 3, 5"
     bk_2_1357 = __.bcr("Book", 2, [(1, 3), (5, 7)])
-    assert __.name(bk_2_1357) == "Book 2:1–3,5–7"
+    assert __.name(bk_2_1357) == "Book 2:1–3, 5–7"
 
 
 def test_r():
     ref = __.r("Book 1:1")
     assert ref is not None
     assert __.name(ref) == "Book 1:1"
-    ref = __.r("Book 1:1,3")
+    ref = __.r("Book 1:1, 3")
     assert ref is not None
-    assert __.name(ref) == "Book 1:1,3"
+    assert __.name(ref) == "Book 1:1, 3"
     ref = __.r("Book 1:1-3")
     assert ref is not None
     assert __.name(ref) == "Book 1:1–3"
-    ref = __.r("Book 1:1-3,5-7")
+    ref = __.r("Book 1:1-3, 5-7")
     assert ref is not None
-    assert __.name(ref) == "Book 1:1–3,5–7"
+    assert __.name(ref) == "Book 1:1–3, 5–7"
     ref = __.r("Book 1:1–2:4")
     assert ref is not None
     assert __.name(ref) == "Book 1:1–2:4"
@@ -156,10 +156,10 @@ def test_r():
     assert __.name(ref) == "Book 1:1–2:4"
 
 
-def test_book():
+def test_get_book():
     ref = __.r("Book 1:1")
     assert ref is not None
-    book = __.book(ref)
+    book = __.get_book(ref)
     assert book.name == "Book"
 
 
@@ -177,25 +177,51 @@ def test_chapter_reference():
     assert __.name(chapter_ref) == "Book 1"
 
 
-def test_abbrev():
-    ref = __.r("Book 1:1")
-    assert ref is not None
-    assert __.abbrev(ref) == "Bk 1:1"
-
-
-def test_param():
-    ref = __.r("Book 1:1")
-    assert ref is not None
-    assert __.param(ref) == "bk+1.1"
-
-
 def test_name():
     ref = __.r("Book 1:1")
     assert ref is not None
     assert __.name(ref) == "Book 1:1"
 
 
+def test_book():
+    ref = __.r("Book 1:1")
+    assert ref is not None
+    assert __.book(ref) == "Book"
+
+
 def test_numbers():
     ref = __.r("Book 1:1")
     assert ref is not None
     assert __.numbers(ref) == "1:1"
+
+
+def test_abbrev_name():
+    ref = __.r("Book 1:1")
+    assert ref is not None
+    assert __.abbrev_name(ref) == "Bk 1:1"
+
+
+def test_abbrev_book():
+    ref = __.r("Book 1:1")
+    assert ref is not None
+    assert __.abbrev_book(ref) == "Bk"
+
+
+def test_template():
+    ref = __.r("1 Cor 2:3-4, 5")
+    if ref is not None:
+        assert __.template(ref, "x {NAME}") == "x 1 Corinthians 2:3–4, 5"
+        assert __.template(ref, "x {BOOK}") == "x 1 Corinthians"
+        assert __.template(ref, "x {NUMBERS}") == "x 2:3–4, 5"
+        assert __.template(ref, "x {ABBREV_NAME}") == "x 1 Cor 2:3–4, 5"
+        assert __.template(ref, "x {ABBREV_BOOK}") == "x 1 Cor"
+        assert __.template(ref, "x {ABBREV_NUMBERS}") == "x 2:3–4, 5"
+        assert __.template(ref, "x {ESC_NAME}") == "x 1%20Corinthians%202%3A3-4,%205"
+        assert __.template(ref, "x {ESC_BOOK}") == "x 1%20Corinthians"
+        assert __.template(ref, "x {ESC_NUMBERS}") == "x 2%3A3-4,%205"
+        assert __.template(ref, "x {ESC_ABBREV_NAME}") == "x 1%20Cor%202%3A3-4,%205"
+        assert __.template(ref, "x {ESC_ABBREV_BOOK}") == "x 1%20Cor"
+        assert __.template(ref, "x {ESC_ABBREV_NUMBERS}") == "x 2%3A3-4,%205"
+        assert __.template(ref, "x {PARAM}") == "x 1cor+2:3-4,+5"
+        assert __.template(ref, "x {PARAM_BOOK}") == "x 1cor"
+        assert __.template(ref, "x {PARAM_NUMBERS}") == "x 2:3-4,+5"

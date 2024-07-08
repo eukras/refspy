@@ -97,12 +97,8 @@ def test_chapter_verses_regexp():
 
 def test_name_regexp():
     regexp = matcher.build_reference_regexp()
-    # assert re.escape("first") in regexp
     assert re.escape("Big") + "\\s+" + re.escape("Book") in regexp
-    # assert re.escape("big") in regexp
     assert re.escape("Small") + "\\s+" + re.escape("Book") in regexp
-    # assert re.escape("small") in regexp
-    # assert re.escape("last") in regexp
 
 
 def test_match_brackets():
@@ -294,7 +290,7 @@ def test_single_parentheses():
 
 
 def test_number_prefixes():
-    sample_text = "1 Book 1:1, First Book 1:1, I Book 1:1"
+    sample_text = "1 Book 1:1, First Book 1:1, 1st Book 1:1, I Book 1:1"
     first_reference = verse_reference(1, 4, 1, 1)
     print("HMM", matcher.name_regexp)
     __ = matcher.generate_references(sample_text)
@@ -303,6 +299,9 @@ def test_number_prefixes():
     assert ref == first_reference
     text, ref = next(__)
     assert text == "First Book 1:1"
+    assert ref == first_reference
+    text, ref = next(__)
+    assert text == "1st Book 1:1"
     assert ref == first_reference
     text, ref = next(__)
     assert text == "I Book 1:1"

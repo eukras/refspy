@@ -30,12 +30,22 @@ def parse_number(number_str: str) -> Number:
     raise ValueError(f"Invalid number string for parse_number: '{number_str}'")
 
 
+def url_escape(name: str) -> str:
+    """Turn a library or book name into a URL escaped string
+
+    Simple URL encode for significant characters:
+
+        * '1 Cor 3:4–5 -> '1%20Cor%203%3A4-5'
+    """
+    return name.replace(" ", "%20").replace(":", "%3A").replace("–", "-")
+
+
 def url_param(name: str) -> str:
     """Turn a library or book name into a URL-friendly string.
 
-    Lowercase and no spaces: '1 Cor' -> '1+cor'
+    Lowercase and no spaces: '1 Cor 3:4-5' -> '1+cor+3.4-5'
     """
-    return name.lower().replace(" ", "+").replace(":", ".")
+    return name.lower().replace(" ", "+").replace(":", ".").replace("–", "-")
 
 
 def normalize_spacing(text: str) -> str:
