@@ -18,7 +18,6 @@ Refspy is a Python package for working with biblical references in ordinary text
 * [refspy on ReadTheDocs](https://refspy.readthedocs.io/en/latest/refspy.html) &rarr; See `docs/` dir.
 * [CHANGES.md](https://github.com/eukras/refspy/blob/master/CHANGES.md) | [TODO.md](https://github.com/eukras/refspy/blob/master/TODO.md)
 
-
 ## Demo
 
 ![RefSpy Demo](https://github.com/eukras/refspy/raw/master/media/refspy-demo.png)
