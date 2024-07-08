@@ -1,15 +1,14 @@
 ![RefSpy Logo](https://github.com/eukras/refspy/raw/master/media/refspy-logo.png)
 
-Refspy is a Python package for working with biblical references in ordinary text.
+[![Python package](https://github.com/eukras/refspy/actions/workflows/python-package.yml/badge.svg)](https://github.com/eukras/refspy/actions/workflows/python-package.yml)
+[![Documentation Status](https://readthedocs.org/projects/refspy/badge/?version=latest)](https://refspy.readthedocs.io/en/latest/?badge=latest)
 
 [![python](https://img.shields.io/badge/Python-3.11-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![Version: 0.9.7 Beta](https://img.shields.io/badge/Version-0.9.7-purple) 
 ![Status: BETA](https://img.shields.io/badge/Status-BETA-red)
 
-[![Python package](https://github.com/eukras/refspy/actions/workflows/python-package.yml/badge.svg)](https://github.com/eukras/refspy/actions/workflows/python-package.yml)
-[![Documentation Status](https://readthedocs.org/projects/refspy/badge/?version=latest)](https://refspy.readthedocs.io/en/latest/?badge=latest)
-
+Refspy is a Python package for working with biblical references in ordinary text.
 
 
 # README 
@@ -17,8 +16,7 @@ Refspy is a Python package for working with biblical references in ordinary text
 * [eukras/refspy on Github](https://github.com/eukras/refspy) | [Report Issue](https://github.com/eukras/refspy/issues) | [Contact Author](mailto:nigel@chapman.id.au)
 * [refspy on PyPI](https://pypi.org/project/refspy/) &rarr; `pip install refspy`.
 * [refspy on ReadTheDocs](https://refspy.readthedocs.io/en/latest/refspy.html) &rarr; See `docs/` dir.
-* [CHANGES.md](https://github.com/eukras/refspy/blob/master/CHANGES.md) [TODO.md](https://github.com/eukras/refspy/blob/master/TODO.md)
-
+* [CHANGES.md](https://github.com/eukras/refspy/blob/master/CHANGES.md) | [TODO.md](https://github.com/eukras/refspy/blob/master/TODO.md)
 
 ## Demo
 
