@@ -3,12 +3,19 @@
 See `refspy.refspy()` for a useful helper function.
 """
 
-from typing import Dict, Generator, List, Optional, Tuple
+import re
+from typing import Dict, Generator, List, Tuple
 
 from pydantic import TypeAdapter
 
 from refspy.book import Book
-from refspy.format import ABBREV_FORMAT, NAME_FORMAT, NUMBER_FORMAT
+from refspy.format import (
+    ABBREV_BOOK_FORMAT,
+    ABBREV_NAME_FORMAT,
+    BOOK_FORMAT,
+    NAME_FORMAT,
+    NUMBER_FORMAT,
+)
 from refspy.formatter import Formatter
 from refspy.indexers import (
     index_book_aliases,
@@ -19,7 +26,7 @@ from refspy.language import Language
 from refspy.library import Library
 from refspy.matcher import Matcher
 from refspy.navigator import Navigator
-from refspy.range import combine, merge, range, sort
+from refspy.range import combine, merge, range
 from refspy.reference import (
     Reference,
     book_reference,
@@ -27,7 +34,7 @@ from refspy.reference import (
     reference,
     verse_reference,
 )
-from refspy.utils import url_param
+from refspy.utils import url_param, url_escape
 from refspy.verse import Number, verse
 
 
@@ -65,7 +72,9 @@ class Manager:
     # Index and summary functions
     # -----------------------------------
 
-    def make_index(self, references: List[Reference]) -> str:
+    def make_index(
+        self, references: List[Reference], pattern: str | None = None
+    ) -> str:
         """Write a one-line index of references, sorted and grouped by book.abbrev."""
         index = []
         collation = self.collate(
@@ -74,10 +83,15 @@ class Manager:
         for _, book_collation in collation:
             for _, reference_list in book_collation:
                 sorted_ref = self.sort_references(reference_list)
-                index.append(self.abbrev(sorted_ref))
+                if pattern:
+                    index.append(self.template(sorted_ref, pattern))
+                else:
+                    index.append(self.abbrev_name(sorted_ref))
         return "; ".join(index)
 
-    def make_summary(self, references: List[Reference]) -> str:
+    def make_summary(
+        self, references: List[Reference], pattern: str | None = None
+    ) -> str:
         """Write a one-line summary, like for index, but merge and join ranges."""
         summary = []
         collation = self.collate(
@@ -86,7 +100,10 @@ class Manager:
         for _, book_collation in collation:
             for _, reference_list in book_collation:
                 compact_ref = self.combine_references(reference_list)
-                summary.append(self.abbrev(compact_ref))
+                if pattern:
+                    summary.append(self.template(compact_ref, pattern))
+                else:
+                    summary.append(self.abbrev_name(compact_ref))
         return "; ".join(summary)
 
     # -----------------------------------
@@ -324,7 +341,7 @@ class Manager:
     # Manipulation functions
     # -----------------------------------
 
-    def book(self, ref: Reference) -> Book:
+    def get_book(self, ref: Reference) -> Book:
         """Get the book object for this reference's first range."""
         v1 = ref.ranges[0].start
         return self.books[v1.library, v1.book]
@@ -356,17 +373,95 @@ class Manager:
     # -----------------------------------
 
     def name(self, ref: Reference) -> str:
-        """Format a reference using its full name."""
+        """Format a reference."""
         return self.formatter.format(ref, NAME_FORMAT)
 
-    def abbrev(self, ref: Reference) -> str:
-        """Format a reference using its abbreviated name."""
-        return self.formatter.format(ref, ABBREV_FORMAT)
+    def book(self, ref: Reference) -> str:
+        """Format a reference using only the book part of its name."""
+        return self.formatter.format(ref, BOOK_FORMAT)
 
-    def param(self, ref: Reference) -> str:
-        """Format a reference for use as a URL parameter"""
-        return url_param(self.formatter.format(ref, ABBREV_FORMAT))
+    def abbrev_name(self, ref: Reference) -> str:
+        """Format an abbreviated reference."""
+        return self.formatter.format(ref, ABBREV_NAME_FORMAT)
+
+    def abbrev_book(self, ref: Reference) -> str:
+        """Format an abbreviated reference using only the book part of its name."""
+        return self.formatter.format(ref, ABBREV_BOOK_FORMAT)
 
     def numbers(self, ref: Reference) -> str:
-        """Format a reference with only the reference number."""
+        """Format a reference using only the number part of its name.
+
+        The number part is the same for full names and abreviated names.
+        """
         return self.formatter.format(ref, NUMBER_FORMAT)
+
+    # -----------------------------------
+    # Template formatting functions
+    # -----------------------------------
+
+    def template(self, reference: Reference, pattern: str) -> str:
+        """
+        Substitute formatting values in a string:
+
+            * `{NAME}` -> "1 Corinthians 2:3–4"
+            * `{BOOK}` -> "1 Corinthians"
+            * `{NUMBERS}` -> "2:3–4"
+            * `{ABBREV_NAME}` -> "1 Cor 2:3–4"
+            * `{ABBREV_BOOK}` -> "1 Cor"
+            * `{ABBREV_NUMBERS}` -> "2:3–4"
+            * `{ESC_NAME}` -> "1%20Corinthians%202%3A3-4"
+            * `{ESC_BOOK}` -> "1%20Corinthians"
+            * `{ESC_NUMBERS}` -> "2%3A3-4"
+            * `{ESC_ABBREV_NAME}` -> "1%20Cor%202%3A3-4"
+            * `{ESC_ABBREV_BOOK}` -> "1%20Cor"
+            * `{ESC_ABBREV_NUMBERS}` -> "2%3A3-4"
+            * `{PARAM}`-> "1cor+2.3-4"
+            * `{PARAM_BOOK}` -> "1cor"
+            * `{PARAM_NUMBERS}` -> "2.3-4"
+
+        We calculate only the values required by the template string.
+        """
+        out = pattern
+        regexp = re.compile(r"\{[A-Z_]+\}")
+        matches = regexp.findall(pattern)
+        numbers = self.numbers(reference)
+        for _ in matches:
+            if _ == "{NAME}":
+                out = out.replace("{NAME}", self.name(reference))
+            elif _ == "{BOOK}":
+                out = out.replace("{BOOK}", self.book(reference))
+            elif _ == "{NUMBERS}":
+                out = out.replace("{NUMBERS}", numbers)
+            elif _ == "{ASCII_NUMBERS}":
+                out = out.replace("{ASCII_NUMBERS}", numbers.replace("–", "-"))
+            elif _ == "{ABBREV_NAME}":
+                out = out.replace("{ABBREV_NAME}", self.abbrev_name(reference))
+            elif _ == "{ABBREV_BOOK}":
+                out = out.replace("{ABBREV_BOOK}", self.abbrev_name(reference))
+            elif _ == "{ESC_NAME}":
+                out = out.replace("{ESC_NAME}", url_escape(self.name(reference)))
+            elif _ == "{ESC_BOOK}":
+                out = out.replace("{ESC_BOOK}", url_escape(self.book(reference)))
+            elif _ == "{ESC_NUMBERS}":
+                out = out.replace("{ESC_NUMBERS}", url_escape(numbers))
+            elif _ == "{ESC_ASCII_NUMBERS}":
+                out = out.replace(
+                    "{ESC_ASCII_NUMBERS}",
+                    url_escape(numbers.replace("–", "-")),
+                )
+            elif _ == "{ESC_ABBREV_NAME}":
+                out = out.replace(
+                    "{ESC_ABBREV_NAME}", url_escape(self.abbrev_name(reference))
+                )
+            elif _ == "{ESC_ABBREV_BOOK}":
+                out = out.replace(
+                    "{ESC_ABBREV_BOOK}",
+                    url_escape(self.abbrev_book(reference)),
+                )
+            elif _ == "{PARAM}":
+                out = out.replace("{PARAM}", url_param(self.name(reference)))
+            elif _ == "{PARAM_BOOK}":
+                out = out.replace("{PARAM_BOOK}", url_param(numbers))
+            elif _ == "{PARAM_NUMBERS}":
+                out = out.replace("{PARAM_NUMBERS}", url_param(numbers))
+        return out

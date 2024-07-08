@@ -10,7 +10,6 @@ from refspy.range import (
     combine,
     merge,
     range,
-    sort,
     verse_range,
 )
 from refspy.verse import verse
@@ -76,10 +75,10 @@ def test_adjoins_chapters():
     assert range_1.adjoins(range_2)
 
 
-def test_sort_basic():
+def test_sorted():
     range_1 = verse_range(1, 2, 3, 4, 6)
     range_2 = verse_range(1, 2, 3, 6, 8)
-    assert sort([range_2, range_1]) == [range_1, range_2]
+    assert sorted([range_2, range_1]) == [range_1, range_2]
 
 
 def test_merge_overlapping():

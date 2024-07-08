@@ -307,21 +307,12 @@ def range(start: Verse, end: Verse) -> Range:
     return Range(start=start, end=end)
 
 
-def sort(ranges: List[Range]) -> List[Range]:
-    """Sort a list of ranges.
-
-    Ranges sort without any special handling because of
-    `refspy.range.Range.__lt__`.
-    """
-    return sorted(ranges)
-
-
 def merge(ranges: List[Range], skip_sort: bool = False) -> List[Range]:
     """Merge overlapping ranges within a sorted list.
 
-    This performs a sort before merging.
+    This performs a sort before merging unless skip_sort=True.
     """
-    sorted_ranges = ranges if skip_sort else sort(ranges)
+    sorted_ranges = ranges if skip_sort else sorted(ranges)
     new_ranges = []
     last_range = sorted_ranges[0]
     if sorted_ranges:
@@ -338,7 +329,7 @@ def merge(ranges: List[Range], skip_sort: bool = False) -> List[Range]:
 def combine(ranges: List[Range], skip_merge: bool = False) -> List[Range]:
     """Join adjacent ranges within a sorted and merged list
 
-    This performs a sort and merge before combining.
+    This performs a sort and merge before combining, unless skip_merge=True.
     """
     merged_ranges = ranges if skip_merge else merge(ranges)
     new_ranges = []

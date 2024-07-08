@@ -1,7 +1,7 @@
 from context import *
 
-from refspy.formatter import Formatter, abbreviate_range
-from refspy.format import NAME_FORMAT, NUMBER_FORMAT, ABBREV_FORMAT
+from refspy.formatter import Formatter
+from refspy.format import ABBREV_NAME_FORMAT, NAME_FORMAT, NUMBER_FORMAT
 from refspy.indexers import index_book_aliases, index_books
 from refspy.range import range
 from refspy.reference import reference
@@ -23,7 +23,7 @@ def test_book_reference():
 def test_book_range():
     ref = reference(range(verse(1, 2, 1, 1), verse(1, 3, 999, 999)))
 
-    assert fmt.format(ref, ABBREV_FORMAT) == "Big–Small"
+    assert fmt.format(ref, ABBREV_NAME_FORMAT) == "Big–Small"
 
 
 def test_chapter_reference():
@@ -42,7 +42,7 @@ def test_single_range():
     ref = reference(range(verse(1, 2, 1, 1), verse(1, 2, 1, 2)))
 
     assert fmt.format(ref, NAME_FORMAT) == "Big Book 1:1–2"
-    assert fmt.format(ref, ABBREV_FORMAT) == "Big 1:1–2"
+    assert fmt.format(ref, ABBREV_NAME_FORMAT) == "Big 1:1–2"
     assert fmt.format(ref, NUMBER_FORMAT) == "1:1–2"
 
 
@@ -52,7 +52,7 @@ def test_multiple_verse_range():
         range(verse(1, 2, 1, 7), verse(1, 2, 1, 9)),
     )
 
-    assert fmt.format(ref, NAME_FORMAT) == "Big Book 1:1–2,7–9"
+    assert fmt.format(ref, NAME_FORMAT) == "Big Book 1:1–2, 7–9"
 
 
 def test_inter_chapter_ranges():
@@ -108,8 +108,3 @@ def test_book_chapter_equal_1():
         range(verse(1, 3, 1, 1), verse(1, 3, 1, 2)),
     )
     assert fmt.format(ref, NAME_FORMAT) == "Small Book 1–2"
-
-
-def test_abbreviate_range():
-    assert abbreviate_range(23, 24) == (23, 24)
-    assert abbreviate_range(123, 124) == (123, 24)

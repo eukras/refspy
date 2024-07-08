@@ -8,7 +8,7 @@ from refspy.reference import (
     reference,
     verse_reference,
 )
-from refspy.range import merge, range, sort
+from refspy.range import range
 from refspy.verse import verse
 
 

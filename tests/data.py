@@ -3,9 +3,9 @@ from refspy.library import Library
 
 FIRST_BOOK = Book(
     id=1,
-    name="First Book",
-    abbrev="First",
-    aliases=["Primo"],
+    name="Primo Booko",
+    abbrev="Primo",
+    aliases=[],
     chapters=10,
 )
 
