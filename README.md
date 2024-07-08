@@ -421,6 +421,8 @@ sql_clause = " OR ".join([
 ])
 ```
 
+Verses are read back with the class method `refspy.verse.Verse.from_index()`.
+
 ## Ranges
 
 A range contains start and end verses.
