@@ -109,9 +109,6 @@
                     <a class="function" href="#range">range</a>
             </li>
             <li>
-                    <a class="function" href="#sort">sort</a>
-            </li>
-            <li>
                     <a class="function" href="#merge">merge</a>
             </li>
             <li>
@@ -458,99 +455,90 @@
 </span><span id="L-307"><a href="#L-307"><span class="linenos">307</span></a>    <span class="k">return</span> <span class="n">Range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">)</span>
 </span><span id="L-308"><a href="#L-308"><span class="linenos">308</span></a>
 </span><span id="L-309"><a href="#L-309"><span class="linenos">309</span></a>
-</span><span id="L-310"><a href="#L-310"><span class="linenos">310</span></a><span class="k">def</span> <span class="nf">sort</span><span class="p">(</span><span class="n">ranges</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">]:</span>
-</span><span id="L-311"><a href="#L-311"><span class="linenos">311</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Sort a list of ranges.</span>
+</span><span id="L-310"><a href="#L-310"><span class="linenos">310</span></a><span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="n">ranges</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">],</span> <span class="n">skip_sort</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">]:</span>
+</span><span id="L-311"><a href="#L-311"><span class="linenos">311</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Merge overlapping ranges within a sorted list.</span>
 </span><span id="L-312"><a href="#L-312"><span class="linenos">312</span></a>
-</span><span id="L-313"><a href="#L-313"><span class="linenos">313</span></a><span class="sd">    Ranges sort without any special handling because of</span>
-</span><span id="L-314"><a href="#L-314"><span class="linenos">314</span></a><span class="sd">    `refspy.range.Range.__lt__`.</span>
-</span><span id="L-315"><a href="#L-315"><span class="linenos">315</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-316"><a href="#L-316"><span class="linenos">316</span></a>    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">ranges</span><span class="p">)</span>
-</span><span id="L-317"><a href="#L-317"><span class="linenos">317</span></a>
-</span><span id="L-318"><a href="#L-318"><span class="linenos">318</span></a>
-</span><span id="L-319"><a href="#L-319"><span class="linenos">319</span></a><span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="n">ranges</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">],</span> <span class="n">skip_sort</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">]:</span>
-</span><span id="L-320"><a href="#L-320"><span class="linenos">320</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Merge overlapping ranges within a sorted list.</span>
-</span><span id="L-321"><a href="#L-321"><span class="linenos">321</span></a>
-</span><span id="L-322"><a href="#L-322"><span class="linenos">322</span></a><span class="sd">    This performs a sort before merging.</span>
-</span><span id="L-323"><a href="#L-323"><span class="linenos">323</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-324"><a href="#L-324"><span class="linenos">324</span></a>    <span class="n">sorted_ranges</span> <span class="o">=</span> <span class="n">ranges</span> <span class="k">if</span> <span class="n">skip_sort</span> <span class="k">else</span> <span class="n">sort</span><span class="p">(</span><span class="n">ranges</span><span class="p">)</span>
-</span><span id="L-325"><a href="#L-325"><span class="linenos">325</span></a>    <span class="n">new_ranges</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="L-326"><a href="#L-326"><span class="linenos">326</span></a>    <span class="n">last_range</span> <span class="o">=</span> <span class="n">sorted_ranges</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="L-327"><a href="#L-327"><span class="linenos">327</span></a>    <span class="k">if</span> <span class="n">sorted_ranges</span><span class="p">:</span>
-</span><span id="L-328"><a href="#L-328"><span class="linenos">328</span></a>        <span class="k">for</span> <span class="n">this_range</span> <span class="ow">in</span> <span class="n">sorted_ranges</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-</span><span id="L-329"><a href="#L-329"><span class="linenos">329</span></a>            <span class="k">if</span> <span class="n">last_range</span><span class="o">.</span><span class="n">overlaps</span><span class="p">(</span><span class="n">this_range</span><span class="p">):</span>
-</span><span id="L-330"><a href="#L-330"><span class="linenos">330</span></a>                <span class="n">last_range</span> <span class="o">=</span> <span class="n">last_range</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">this_range</span><span class="p">)</span>
-</span><span id="L-331"><a href="#L-331"><span class="linenos">331</span></a>            <span class="k">else</span><span class="p">:</span>
-</span><span id="L-332"><a href="#L-332"><span class="linenos">332</span></a>                <span class="n">new_ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_range</span><span class="p">)</span>
-</span><span id="L-333"><a href="#L-333"><span class="linenos">333</span></a>                <span class="n">last_range</span> <span class="o">=</span> <span class="n">this_range</span>
-</span><span id="L-334"><a href="#L-334"><span class="linenos">334</span></a>    <span class="n">new_ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_range</span><span class="p">)</span>
-</span><span id="L-335"><a href="#L-335"><span class="linenos">335</span></a>    <span class="k">return</span> <span class="n">new_ranges</span>
-</span><span id="L-336"><a href="#L-336"><span class="linenos">336</span></a>
-</span><span id="L-337"><a href="#L-337"><span class="linenos">337</span></a>
-</span><span id="L-338"><a href="#L-338"><span class="linenos">338</span></a><span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="n">ranges</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">],</span> <span class="n">skip_merge</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">]:</span>
-</span><span id="L-339"><a href="#L-339"><span class="linenos">339</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Join adjacent ranges within a sorted and merged list</span>
-</span><span id="L-340"><a href="#L-340"><span class="linenos">340</span></a>
-</span><span id="L-341"><a href="#L-341"><span class="linenos">341</span></a><span class="sd">    This performs a sort and merge before combining.</span>
-</span><span id="L-342"><a href="#L-342"><span class="linenos">342</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-343"><a href="#L-343"><span class="linenos">343</span></a>    <span class="n">merged_ranges</span> <span class="o">=</span> <span class="n">ranges</span> <span class="k">if</span> <span class="n">skip_merge</span> <span class="k">else</span> <span class="n">merge</span><span class="p">(</span><span class="n">ranges</span><span class="p">)</span>
-</span><span id="L-344"><a href="#L-344"><span class="linenos">344</span></a>    <span class="n">new_ranges</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="L-345"><a href="#L-345"><span class="linenos">345</span></a>    <span class="n">last_range</span> <span class="o">=</span> <span class="n">merged_ranges</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="L-346"><a href="#L-346"><span class="linenos">346</span></a>    <span class="k">if</span> <span class="n">merged_ranges</span><span class="p">:</span>
-</span><span id="L-347"><a href="#L-347"><span class="linenos">347</span></a>        <span class="k">for</span> <span class="n">this_range</span> <span class="ow">in</span> <span class="n">merged_ranges</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-</span><span id="L-348"><a href="#L-348"><span class="linenos">348</span></a>            <span class="k">if</span> <span class="n">last_range</span><span class="o">.</span><span class="n">adjoins</span><span class="p">(</span><span class="n">this_range</span><span class="p">):</span>
-</span><span id="L-349"><a href="#L-349"><span class="linenos">349</span></a>                <span class="n">last_range</span> <span class="o">=</span> <span class="n">last_range</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">this_range</span><span class="p">)</span>
-</span><span id="L-350"><a href="#L-350"><span class="linenos">350</span></a>            <span class="k">else</span><span class="p">:</span>
-</span><span id="L-351"><a href="#L-351"><span class="linenos">351</span></a>                <span class="n">new_ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_range</span><span class="p">)</span>
-</span><span id="L-352"><a href="#L-352"><span class="linenos">352</span></a>                <span class="n">last_range</span> <span class="o">=</span> <span class="n">this_range</span>
-</span><span id="L-353"><a href="#L-353"><span class="linenos">353</span></a>    <span class="n">new_ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_range</span><span class="p">)</span>
-</span><span id="L-354"><a href="#L-354"><span class="linenos">354</span></a>    <span class="k">return</span> <span class="n">new_ranges</span>
-</span><span id="L-355"><a href="#L-355"><span class="linenos">355</span></a>
-</span><span id="L-356"><a href="#L-356"><span class="linenos">356</span></a>
-</span><span id="L-357"><a href="#L-357"><span class="linenos">357</span></a><span class="k">def</span> <span class="nf">book_range</span><span class="p">(</span>
-</span><span id="L-358"><a href="#L-358"><span class="linenos">358</span></a>    <span class="n">library_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">book_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">book_end_id</span><span class="p">:</span> <span class="n">Number</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="L-359"><a href="#L-359"><span class="linenos">359</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Range</span><span class="p">:</span>
-</span><span id="L-360"><a href="#L-360"><span class="linenos">360</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-361"><a href="#L-361"><span class="linenos">361</span></a><span class="sd">    Shorthand function for creating book references from `refspy.number.Number`</span>
-</span><span id="L-362"><a href="#L-362"><span class="linenos">362</span></a><span class="sd">    values.</span>
-</span><span id="L-363"><a href="#L-363"><span class="linenos">363</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-364"><a href="#L-364"><span class="linenos">364</span></a>    <span class="k">return</span> <span class="nb">range</span><span class="p">(</span>
-</span><span id="L-365"><a href="#L-365"><span class="linenos">365</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-</span><span id="L-366"><a href="#L-366"><span class="linenos">366</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_end_id</span> <span class="ow">or</span> <span class="n">book_id</span><span class="p">,</span> <span class="mi">999</span><span class="p">,</span> <span class="mi">999</span><span class="p">),</span>
-</span><span id="L-367"><a href="#L-367"><span class="linenos">367</span></a>    <span class="p">)</span>
-</span><span id="L-368"><a href="#L-368"><span class="linenos">368</span></a>
-</span><span id="L-369"><a href="#L-369"><span class="linenos">369</span></a>
-</span><span id="L-370"><a href="#L-370"><span class="linenos">370</span></a><span class="k">def</span> <span class="nf">chapter_range</span><span class="p">(</span>
-</span><span id="L-371"><a href="#L-371"><span class="linenos">371</span></a>    <span class="n">library_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
-</span><span id="L-372"><a href="#L-372"><span class="linenos">372</span></a>    <span class="n">book_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
-</span><span id="L-373"><a href="#L-373"><span class="linenos">373</span></a>    <span class="n">chapter_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
-</span><span id="L-374"><a href="#L-374"><span class="linenos">374</span></a>    <span class="n">chapter_end_id</span><span class="p">:</span> <span class="n">Number</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="L-375"><a href="#L-375"><span class="linenos">375</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Range</span><span class="p">:</span>
-</span><span id="L-376"><a href="#L-376"><span class="linenos">376</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-377"><a href="#L-377"><span class="linenos">377</span></a><span class="sd">    Shorthand function for creating chapter references from</span>
-</span><span id="L-378"><a href="#L-378"><span class="linenos">378</span></a><span class="sd">    `refspy.number.Number` values.</span>
-</span><span id="L-379"><a href="#L-379"><span class="linenos">379</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-380"><a href="#L-380"><span class="linenos">380</span></a>    <span class="k">return</span> <span class="nb">range</span><span class="p">(</span>
-</span><span id="L-381"><a href="#L-381"><span class="linenos">381</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="n">chapter_id</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-</span><span id="L-382"><a href="#L-382"><span class="linenos">382</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="n">chapter_end_id</span> <span class="ow">or</span> <span class="n">chapter_id</span><span class="p">,</span> <span class="mi">999</span><span class="p">),</span>
-</span><span id="L-383"><a href="#L-383"><span class="linenos">383</span></a>    <span class="p">)</span>
-</span><span id="L-384"><a href="#L-384"><span class="linenos">384</span></a>
-</span><span id="L-385"><a href="#L-385"><span class="linenos">385</span></a>
-</span><span id="L-386"><a href="#L-386"><span class="linenos">386</span></a><span class="k">def</span> <span class="nf">verse_range</span><span class="p">(</span>
-</span><span id="L-387"><a href="#L-387"><span class="linenos">387</span></a>    <span class="n">library_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
-</span><span id="L-388"><a href="#L-388"><span class="linenos">388</span></a>    <span class="n">book_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
-</span><span id="L-389"><a href="#L-389"><span class="linenos">389</span></a>    <span class="n">chapter_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
-</span><span id="L-390"><a href="#L-390"><span class="linenos">390</span></a>    <span class="n">verse_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
-</span><span id="L-391"><a href="#L-391"><span class="linenos">391</span></a>    <span class="n">verse_end_id</span><span class="p">:</span> <span class="n">Number</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="L-392"><a href="#L-392"><span class="linenos">392</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Range</span><span class="p">:</span>
-</span><span id="L-393"><a href="#L-393"><span class="linenos">393</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-394"><a href="#L-394"><span class="linenos">394</span></a><span class="sd">    Shorthand function for creating verse or range references from</span>
-</span><span id="L-395"><a href="#L-395"><span class="linenos">395</span></a><span class="sd">    `refspy.number.Number` values.</span>
-</span><span id="L-396"><a href="#L-396"><span class="linenos">396</span></a>
-</span><span id="L-397"><a href="#L-397"><span class="linenos">397</span></a><span class="sd">    See `refspy.manager.Manager.bcv`</span>
-</span><span id="L-398"><a href="#L-398"><span class="linenos">398</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-399"><a href="#L-399"><span class="linenos">399</span></a>    <span class="k">return</span> <span class="nb">range</span><span class="p">(</span>
-</span><span id="L-400"><a href="#L-400"><span class="linenos">400</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="n">chapter_id</span><span class="p">,</span> <span class="n">verse_id</span><span class="p">),</span>
-</span><span id="L-401"><a href="#L-401"><span class="linenos">401</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="n">chapter_id</span><span class="p">,</span> <span class="n">verse_end_id</span> <span class="ow">or</span> <span class="n">verse_id</span><span class="p">),</span>
-</span><span id="L-402"><a href="#L-402"><span class="linenos">402</span></a>    <span class="p">)</span>
+</span><span id="L-313"><a href="#L-313"><span class="linenos">313</span></a><span class="sd">    This performs a sort before merging unless skip_sort=True.</span>
+</span><span id="L-314"><a href="#L-314"><span class="linenos">314</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-315"><a href="#L-315"><span class="linenos">315</span></a>    <span class="n">sorted_ranges</span> <span class="o">=</span> <span class="n">ranges</span> <span class="k">if</span> <span class="n">skip_sort</span> <span class="k">else</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">ranges</span><span class="p">)</span>
+</span><span id="L-316"><a href="#L-316"><span class="linenos">316</span></a>    <span class="n">new_ranges</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="L-317"><a href="#L-317"><span class="linenos">317</span></a>    <span class="n">last_range</span> <span class="o">=</span> <span class="n">sorted_ranges</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="L-318"><a href="#L-318"><span class="linenos">318</span></a>    <span class="k">if</span> <span class="n">sorted_ranges</span><span class="p">:</span>
+</span><span id="L-319"><a href="#L-319"><span class="linenos">319</span></a>        <span class="k">for</span> <span class="n">this_range</span> <span class="ow">in</span> <span class="n">sorted_ranges</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+</span><span id="L-320"><a href="#L-320"><span class="linenos">320</span></a>            <span class="k">if</span> <span class="n">last_range</span><span class="o">.</span><span class="n">overlaps</span><span class="p">(</span><span class="n">this_range</span><span class="p">):</span>
+</span><span id="L-321"><a href="#L-321"><span class="linenos">321</span></a>                <span class="n">last_range</span> <span class="o">=</span> <span class="n">last_range</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">this_range</span><span class="p">)</span>
+</span><span id="L-322"><a href="#L-322"><span class="linenos">322</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="L-323"><a href="#L-323"><span class="linenos">323</span></a>                <span class="n">new_ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_range</span><span class="p">)</span>
+</span><span id="L-324"><a href="#L-324"><span class="linenos">324</span></a>                <span class="n">last_range</span> <span class="o">=</span> <span class="n">this_range</span>
+</span><span id="L-325"><a href="#L-325"><span class="linenos">325</span></a>    <span class="n">new_ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_range</span><span class="p">)</span>
+</span><span id="L-326"><a href="#L-326"><span class="linenos">326</span></a>    <span class="k">return</span> <span class="n">new_ranges</span>
+</span><span id="L-327"><a href="#L-327"><span class="linenos">327</span></a>
+</span><span id="L-328"><a href="#L-328"><span class="linenos">328</span></a>
+</span><span id="L-329"><a href="#L-329"><span class="linenos">329</span></a><span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="n">ranges</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">],</span> <span class="n">skip_merge</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">]:</span>
+</span><span id="L-330"><a href="#L-330"><span class="linenos">330</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Join adjacent ranges within a sorted and merged list</span>
+</span><span id="L-331"><a href="#L-331"><span class="linenos">331</span></a>
+</span><span id="L-332"><a href="#L-332"><span class="linenos">332</span></a><span class="sd">    This performs a sort and merge before combining, unless skip_merge=True.</span>
+</span><span id="L-333"><a href="#L-333"><span class="linenos">333</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-334"><a href="#L-334"><span class="linenos">334</span></a>    <span class="n">merged_ranges</span> <span class="o">=</span> <span class="n">ranges</span> <span class="k">if</span> <span class="n">skip_merge</span> <span class="k">else</span> <span class="n">merge</span><span class="p">(</span><span class="n">ranges</span><span class="p">)</span>
+</span><span id="L-335"><a href="#L-335"><span class="linenos">335</span></a>    <span class="n">new_ranges</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="L-336"><a href="#L-336"><span class="linenos">336</span></a>    <span class="n">last_range</span> <span class="o">=</span> <span class="n">merged_ranges</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="L-337"><a href="#L-337"><span class="linenos">337</span></a>    <span class="k">if</span> <span class="n">merged_ranges</span><span class="p">:</span>
+</span><span id="L-338"><a href="#L-338"><span class="linenos">338</span></a>        <span class="k">for</span> <span class="n">this_range</span> <span class="ow">in</span> <span class="n">merged_ranges</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+</span><span id="L-339"><a href="#L-339"><span class="linenos">339</span></a>            <span class="k">if</span> <span class="n">last_range</span><span class="o">.</span><span class="n">adjoins</span><span class="p">(</span><span class="n">this_range</span><span class="p">):</span>
+</span><span id="L-340"><a href="#L-340"><span class="linenos">340</span></a>                <span class="n">last_range</span> <span class="o">=</span> <span class="n">last_range</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">this_range</span><span class="p">)</span>
+</span><span id="L-341"><a href="#L-341"><span class="linenos">341</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="L-342"><a href="#L-342"><span class="linenos">342</span></a>                <span class="n">new_ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_range</span><span class="p">)</span>
+</span><span id="L-343"><a href="#L-343"><span class="linenos">343</span></a>                <span class="n">last_range</span> <span class="o">=</span> <span class="n">this_range</span>
+</span><span id="L-344"><a href="#L-344"><span class="linenos">344</span></a>    <span class="n">new_ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_range</span><span class="p">)</span>
+</span><span id="L-345"><a href="#L-345"><span class="linenos">345</span></a>    <span class="k">return</span> <span class="n">new_ranges</span>
+</span><span id="L-346"><a href="#L-346"><span class="linenos">346</span></a>
+</span><span id="L-347"><a href="#L-347"><span class="linenos">347</span></a>
+</span><span id="L-348"><a href="#L-348"><span class="linenos">348</span></a><span class="k">def</span> <span class="nf">book_range</span><span class="p">(</span>
+</span><span id="L-349"><a href="#L-349"><span class="linenos">349</span></a>    <span class="n">library_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">book_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">book_end_id</span><span class="p">:</span> <span class="n">Number</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="L-350"><a href="#L-350"><span class="linenos">350</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Range</span><span class="p">:</span>
+</span><span id="L-351"><a href="#L-351"><span class="linenos">351</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-352"><a href="#L-352"><span class="linenos">352</span></a><span class="sd">    Shorthand function for creating book references from `refspy.number.Number`</span>
+</span><span id="L-353"><a href="#L-353"><span class="linenos">353</span></a><span class="sd">    values.</span>
+</span><span id="L-354"><a href="#L-354"><span class="linenos">354</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-355"><a href="#L-355"><span class="linenos">355</span></a>    <span class="k">return</span> <span class="nb">range</span><span class="p">(</span>
+</span><span id="L-356"><a href="#L-356"><span class="linenos">356</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="L-357"><a href="#L-357"><span class="linenos">357</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_end_id</span> <span class="ow">or</span> <span class="n">book_id</span><span class="p">,</span> <span class="mi">999</span><span class="p">,</span> <span class="mi">999</span><span class="p">),</span>
+</span><span id="L-358"><a href="#L-358"><span class="linenos">358</span></a>    <span class="p">)</span>
+</span><span id="L-359"><a href="#L-359"><span class="linenos">359</span></a>
+</span><span id="L-360"><a href="#L-360"><span class="linenos">360</span></a>
+</span><span id="L-361"><a href="#L-361"><span class="linenos">361</span></a><span class="k">def</span> <span class="nf">chapter_range</span><span class="p">(</span>
+</span><span id="L-362"><a href="#L-362"><span class="linenos">362</span></a>    <span class="n">library_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
+</span><span id="L-363"><a href="#L-363"><span class="linenos">363</span></a>    <span class="n">book_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
+</span><span id="L-364"><a href="#L-364"><span class="linenos">364</span></a>    <span class="n">chapter_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
+</span><span id="L-365"><a href="#L-365"><span class="linenos">365</span></a>    <span class="n">chapter_end_id</span><span class="p">:</span> <span class="n">Number</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="L-366"><a href="#L-366"><span class="linenos">366</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Range</span><span class="p">:</span>
+</span><span id="L-367"><a href="#L-367"><span class="linenos">367</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-368"><a href="#L-368"><span class="linenos">368</span></a><span class="sd">    Shorthand function for creating chapter references from</span>
+</span><span id="L-369"><a href="#L-369"><span class="linenos">369</span></a><span class="sd">    `refspy.number.Number` values.</span>
+</span><span id="L-370"><a href="#L-370"><span class="linenos">370</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-371"><a href="#L-371"><span class="linenos">371</span></a>    <span class="k">return</span> <span class="nb">range</span><span class="p">(</span>
+</span><span id="L-372"><a href="#L-372"><span class="linenos">372</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="n">chapter_id</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="L-373"><a href="#L-373"><span class="linenos">373</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="n">chapter_end_id</span> <span class="ow">or</span> <span class="n">chapter_id</span><span class="p">,</span> <span class="mi">999</span><span class="p">),</span>
+</span><span id="L-374"><a href="#L-374"><span class="linenos">374</span></a>    <span class="p">)</span>
+</span><span id="L-375"><a href="#L-375"><span class="linenos">375</span></a>
+</span><span id="L-376"><a href="#L-376"><span class="linenos">376</span></a>
+</span><span id="L-377"><a href="#L-377"><span class="linenos">377</span></a><span class="k">def</span> <span class="nf">verse_range</span><span class="p">(</span>
+</span><span id="L-378"><a href="#L-378"><span class="linenos">378</span></a>    <span class="n">library_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
+</span><span id="L-379"><a href="#L-379"><span class="linenos">379</span></a>    <span class="n">book_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
+</span><span id="L-380"><a href="#L-380"><span class="linenos">380</span></a>    <span class="n">chapter_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
+</span><span id="L-381"><a href="#L-381"><span class="linenos">381</span></a>    <span class="n">verse_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
+</span><span id="L-382"><a href="#L-382"><span class="linenos">382</span></a>    <span class="n">verse_end_id</span><span class="p">:</span> <span class="n">Number</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="L-383"><a href="#L-383"><span class="linenos">383</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Range</span><span class="p">:</span>
+</span><span id="L-384"><a href="#L-384"><span class="linenos">384</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-385"><a href="#L-385"><span class="linenos">385</span></a><span class="sd">    Shorthand function for creating verse or range references from</span>
+</span><span id="L-386"><a href="#L-386"><span class="linenos">386</span></a><span class="sd">    `refspy.number.Number` values.</span>
+</span><span id="L-387"><a href="#L-387"><span class="linenos">387</span></a>
+</span><span id="L-388"><a href="#L-388"><span class="linenos">388</span></a><span class="sd">    See `refspy.manager.Manager.bcv`</span>
+</span><span id="L-389"><a href="#L-389"><span class="linenos">389</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-390"><a href="#L-390"><span class="linenos">390</span></a>    <span class="k">return</span> <span class="nb">range</span><span class="p">(</span>
+</span><span id="L-391"><a href="#L-391"><span class="linenos">391</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="n">chapter_id</span><span class="p">,</span> <span class="n">verse_id</span><span class="p">),</span>
+</span><span id="L-392"><a href="#L-392"><span class="linenos">392</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="n">chapter_id</span><span class="p">,</span> <span class="n">verse_end_id</span> <span class="ow">or</span> <span class="n">verse_id</span><span class="p">),</span>
+</span><span id="L-393"><a href="#L-393"><span class="linenos">393</span></a>    <span class="p">)</span>
 </span></pre></div>
 
 
@@ -1712,35 +1700,6 @@ and chapter.</p>
 
 
                 </section>
-                <section id="sort">
-                            <input id="sort-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-<div class="attr function">
-            
-        <span class="def">def</span>
-        <span class="name">sort</span><span class="signature pdoc-code condensed">(<span class="param"><span class="n">ranges</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n"><a href="#Range">Range</a></span><span class="p">]</span></span><span class="return-annotation">) -> <span class="n">List</span><span class="p">[</span><span class="n"><a href="#Range">Range</a></span><span class="p">]</span>:</span></span>
-
-                <label class="view-source-button" for="sort-view-source"><span>View Source</span></label>
-
-    </div>
-    <a class="headerlink" href="#sort"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="sort-311"><a href="#sort-311"><span class="linenos">311</span></a><span class="k">def</span> <span class="nf">sort</span><span class="p">(</span><span class="n">ranges</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">]:</span>
-</span><span id="sort-312"><a href="#sort-312"><span class="linenos">312</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Sort a list of ranges.</span>
-</span><span id="sort-313"><a href="#sort-313"><span class="linenos">313</span></a>
-</span><span id="sort-314"><a href="#sort-314"><span class="linenos">314</span></a><span class="sd">    Ranges sort without any special handling because of</span>
-</span><span id="sort-315"><a href="#sort-315"><span class="linenos">315</span></a><span class="sd">    `refspy.range.Range.__lt__`.</span>
-</span><span id="sort-316"><a href="#sort-316"><span class="linenos">316</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="sort-317"><a href="#sort-317"><span class="linenos">317</span></a>    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">ranges</span><span class="p">)</span>
-</span></pre></div>
-
-
-            <div class="docstring"><p>Sort a list of ranges.</p>
-
-<p>Ranges sort without any special handling because of
-<code>refspy.range.Range.__lt__</code>.</p>
-</div>
-
-
-                </section>
                 <section id="merge">
                             <input id="merge-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
 <div class="attr function">
@@ -1752,29 +1711,29 @@ and chapter.</p>
 
     </div>
     <a class="headerlink" href="#merge"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="merge-320"><a href="#merge-320"><span class="linenos">320</span></a><span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="n">ranges</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">],</span> <span class="n">skip_sort</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">]:</span>
-</span><span id="merge-321"><a href="#merge-321"><span class="linenos">321</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Merge overlapping ranges within a sorted list.</span>
-</span><span id="merge-322"><a href="#merge-322"><span class="linenos">322</span></a>
-</span><span id="merge-323"><a href="#merge-323"><span class="linenos">323</span></a><span class="sd">    This performs a sort before merging.</span>
-</span><span id="merge-324"><a href="#merge-324"><span class="linenos">324</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="merge-325"><a href="#merge-325"><span class="linenos">325</span></a>    <span class="n">sorted_ranges</span> <span class="o">=</span> <span class="n">ranges</span> <span class="k">if</span> <span class="n">skip_sort</span> <span class="k">else</span> <span class="n">sort</span><span class="p">(</span><span class="n">ranges</span><span class="p">)</span>
-</span><span id="merge-326"><a href="#merge-326"><span class="linenos">326</span></a>    <span class="n">new_ranges</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="merge-327"><a href="#merge-327"><span class="linenos">327</span></a>    <span class="n">last_range</span> <span class="o">=</span> <span class="n">sorted_ranges</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="merge-328"><a href="#merge-328"><span class="linenos">328</span></a>    <span class="k">if</span> <span class="n">sorted_ranges</span><span class="p">:</span>
-</span><span id="merge-329"><a href="#merge-329"><span class="linenos">329</span></a>        <span class="k">for</span> <span class="n">this_range</span> <span class="ow">in</span> <span class="n">sorted_ranges</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-</span><span id="merge-330"><a href="#merge-330"><span class="linenos">330</span></a>            <span class="k">if</span> <span class="n">last_range</span><span class="o">.</span><span class="n">overlaps</span><span class="p">(</span><span class="n">this_range</span><span class="p">):</span>
-</span><span id="merge-331"><a href="#merge-331"><span class="linenos">331</span></a>                <span class="n">last_range</span> <span class="o">=</span> <span class="n">last_range</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">this_range</span><span class="p">)</span>
-</span><span id="merge-332"><a href="#merge-332"><span class="linenos">332</span></a>            <span class="k">else</span><span class="p">:</span>
-</span><span id="merge-333"><a href="#merge-333"><span class="linenos">333</span></a>                <span class="n">new_ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_range</span><span class="p">)</span>
-</span><span id="merge-334"><a href="#merge-334"><span class="linenos">334</span></a>                <span class="n">last_range</span> <span class="o">=</span> <span class="n">this_range</span>
-</span><span id="merge-335"><a href="#merge-335"><span class="linenos">335</span></a>    <span class="n">new_ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_range</span><span class="p">)</span>
-</span><span id="merge-336"><a href="#merge-336"><span class="linenos">336</span></a>    <span class="k">return</span> <span class="n">new_ranges</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="merge-311"><a href="#merge-311"><span class="linenos">311</span></a><span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="n">ranges</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">],</span> <span class="n">skip_sort</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">]:</span>
+</span><span id="merge-312"><a href="#merge-312"><span class="linenos">312</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Merge overlapping ranges within a sorted list.</span>
+</span><span id="merge-313"><a href="#merge-313"><span class="linenos">313</span></a>
+</span><span id="merge-314"><a href="#merge-314"><span class="linenos">314</span></a><span class="sd">    This performs a sort before merging unless skip_sort=True.</span>
+</span><span id="merge-315"><a href="#merge-315"><span class="linenos">315</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="merge-316"><a href="#merge-316"><span class="linenos">316</span></a>    <span class="n">sorted_ranges</span> <span class="o">=</span> <span class="n">ranges</span> <span class="k">if</span> <span class="n">skip_sort</span> <span class="k">else</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">ranges</span><span class="p">)</span>
+</span><span id="merge-317"><a href="#merge-317"><span class="linenos">317</span></a>    <span class="n">new_ranges</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="merge-318"><a href="#merge-318"><span class="linenos">318</span></a>    <span class="n">last_range</span> <span class="o">=</span> <span class="n">sorted_ranges</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="merge-319"><a href="#merge-319"><span class="linenos">319</span></a>    <span class="k">if</span> <span class="n">sorted_ranges</span><span class="p">:</span>
+</span><span id="merge-320"><a href="#merge-320"><span class="linenos">320</span></a>        <span class="k">for</span> <span class="n">this_range</span> <span class="ow">in</span> <span class="n">sorted_ranges</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+</span><span id="merge-321"><a href="#merge-321"><span class="linenos">321</span></a>            <span class="k">if</span> <span class="n">last_range</span><span class="o">.</span><span class="n">overlaps</span><span class="p">(</span><span class="n">this_range</span><span class="p">):</span>
+</span><span id="merge-322"><a href="#merge-322"><span class="linenos">322</span></a>                <span class="n">last_range</span> <span class="o">=</span> <span class="n">last_range</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">this_range</span><span class="p">)</span>
+</span><span id="merge-323"><a href="#merge-323"><span class="linenos">323</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="merge-324"><a href="#merge-324"><span class="linenos">324</span></a>                <span class="n">new_ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_range</span><span class="p">)</span>
+</span><span id="merge-325"><a href="#merge-325"><span class="linenos">325</span></a>                <span class="n">last_range</span> <span class="o">=</span> <span class="n">this_range</span>
+</span><span id="merge-326"><a href="#merge-326"><span class="linenos">326</span></a>    <span class="n">new_ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_range</span><span class="p">)</span>
+</span><span id="merge-327"><a href="#merge-327"><span class="linenos">327</span></a>    <span class="k">return</span> <span class="n">new_ranges</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Merge overlapping ranges within a sorted list.</p>
 
-<p>This performs a sort before merging.</p>
+<p>This performs a sort before merging unless skip_sort=True.</p>
 </div>
 
 
@@ -1790,29 +1749,29 @@ and chapter.</p>
 
     </div>
     <a class="headerlink" href="#combine"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="combine-339"><a href="#combine-339"><span class="linenos">339</span></a><span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="n">ranges</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">],</span> <span class="n">skip_merge</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">]:</span>
-</span><span id="combine-340"><a href="#combine-340"><span class="linenos">340</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Join adjacent ranges within a sorted and merged list</span>
-</span><span id="combine-341"><a href="#combine-341"><span class="linenos">341</span></a>
-</span><span id="combine-342"><a href="#combine-342"><span class="linenos">342</span></a><span class="sd">    This performs a sort and merge before combining.</span>
-</span><span id="combine-343"><a href="#combine-343"><span class="linenos">343</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="combine-344"><a href="#combine-344"><span class="linenos">344</span></a>    <span class="n">merged_ranges</span> <span class="o">=</span> <span class="n">ranges</span> <span class="k">if</span> <span class="n">skip_merge</span> <span class="k">else</span> <span class="n">merge</span><span class="p">(</span><span class="n">ranges</span><span class="p">)</span>
-</span><span id="combine-345"><a href="#combine-345"><span class="linenos">345</span></a>    <span class="n">new_ranges</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="combine-346"><a href="#combine-346"><span class="linenos">346</span></a>    <span class="n">last_range</span> <span class="o">=</span> <span class="n">merged_ranges</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="combine-347"><a href="#combine-347"><span class="linenos">347</span></a>    <span class="k">if</span> <span class="n">merged_ranges</span><span class="p">:</span>
-</span><span id="combine-348"><a href="#combine-348"><span class="linenos">348</span></a>        <span class="k">for</span> <span class="n">this_range</span> <span class="ow">in</span> <span class="n">merged_ranges</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-</span><span id="combine-349"><a href="#combine-349"><span class="linenos">349</span></a>            <span class="k">if</span> <span class="n">last_range</span><span class="o">.</span><span class="n">adjoins</span><span class="p">(</span><span class="n">this_range</span><span class="p">):</span>
-</span><span id="combine-350"><a href="#combine-350"><span class="linenos">350</span></a>                <span class="n">last_range</span> <span class="o">=</span> <span class="n">last_range</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">this_range</span><span class="p">)</span>
-</span><span id="combine-351"><a href="#combine-351"><span class="linenos">351</span></a>            <span class="k">else</span><span class="p">:</span>
-</span><span id="combine-352"><a href="#combine-352"><span class="linenos">352</span></a>                <span class="n">new_ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_range</span><span class="p">)</span>
-</span><span id="combine-353"><a href="#combine-353"><span class="linenos">353</span></a>                <span class="n">last_range</span> <span class="o">=</span> <span class="n">this_range</span>
-</span><span id="combine-354"><a href="#combine-354"><span class="linenos">354</span></a>    <span class="n">new_ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_range</span><span class="p">)</span>
-</span><span id="combine-355"><a href="#combine-355"><span class="linenos">355</span></a>    <span class="k">return</span> <span class="n">new_ranges</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="combine-330"><a href="#combine-330"><span class="linenos">330</span></a><span class="k">def</span> <span class="nf">combine</span><span class="p">(</span><span class="n">ranges</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">],</span> <span class="n">skip_merge</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Range</span><span class="p">]:</span>
+</span><span id="combine-331"><a href="#combine-331"><span class="linenos">331</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Join adjacent ranges within a sorted and merged list</span>
+</span><span id="combine-332"><a href="#combine-332"><span class="linenos">332</span></a>
+</span><span id="combine-333"><a href="#combine-333"><span class="linenos">333</span></a><span class="sd">    This performs a sort and merge before combining, unless skip_merge=True.</span>
+</span><span id="combine-334"><a href="#combine-334"><span class="linenos">334</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="combine-335"><a href="#combine-335"><span class="linenos">335</span></a>    <span class="n">merged_ranges</span> <span class="o">=</span> <span class="n">ranges</span> <span class="k">if</span> <span class="n">skip_merge</span> <span class="k">else</span> <span class="n">merge</span><span class="p">(</span><span class="n">ranges</span><span class="p">)</span>
+</span><span id="combine-336"><a href="#combine-336"><span class="linenos">336</span></a>    <span class="n">new_ranges</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="combine-337"><a href="#combine-337"><span class="linenos">337</span></a>    <span class="n">last_range</span> <span class="o">=</span> <span class="n">merged_ranges</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="combine-338"><a href="#combine-338"><span class="linenos">338</span></a>    <span class="k">if</span> <span class="n">merged_ranges</span><span class="p">:</span>
+</span><span id="combine-339"><a href="#combine-339"><span class="linenos">339</span></a>        <span class="k">for</span> <span class="n">this_range</span> <span class="ow">in</span> <span class="n">merged_ranges</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+</span><span id="combine-340"><a href="#combine-340"><span class="linenos">340</span></a>            <span class="k">if</span> <span class="n">last_range</span><span class="o">.</span><span class="n">adjoins</span><span class="p">(</span><span class="n">this_range</span><span class="p">):</span>
+</span><span id="combine-341"><a href="#combine-341"><span class="linenos">341</span></a>                <span class="n">last_range</span> <span class="o">=</span> <span class="n">last_range</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">this_range</span><span class="p">)</span>
+</span><span id="combine-342"><a href="#combine-342"><span class="linenos">342</span></a>            <span class="k">else</span><span class="p">:</span>
+</span><span id="combine-343"><a href="#combine-343"><span class="linenos">343</span></a>                <span class="n">new_ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_range</span><span class="p">)</span>
+</span><span id="combine-344"><a href="#combine-344"><span class="linenos">344</span></a>                <span class="n">last_range</span> <span class="o">=</span> <span class="n">this_range</span>
+</span><span id="combine-345"><a href="#combine-345"><span class="linenos">345</span></a>    <span class="n">new_ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">last_range</span><span class="p">)</span>
+</span><span id="combine-346"><a href="#combine-346"><span class="linenos">346</span></a>    <span class="k">return</span> <span class="n">new_ranges</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Join adjacent ranges within a sorted and merged list</p>
 
-<p>This performs a sort and merge before combining.</p>
+<p>This performs a sort and merge before combining, unless skip_merge=True.</p>
 </div>
 
 
@@ -1828,17 +1787,17 @@ and chapter.</p>
 
     </div>
     <a class="headerlink" href="#book_range"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="book_range-358"><a href="#book_range-358"><span class="linenos">358</span></a><span class="k">def</span> <span class="nf">book_range</span><span class="p">(</span>
-</span><span id="book_range-359"><a href="#book_range-359"><span class="linenos">359</span></a>    <span class="n">library_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">book_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">book_end_id</span><span class="p">:</span> <span class="n">Number</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="book_range-360"><a href="#book_range-360"><span class="linenos">360</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Range</span><span class="p">:</span>
-</span><span id="book_range-361"><a href="#book_range-361"><span class="linenos">361</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="book_range-362"><a href="#book_range-362"><span class="linenos">362</span></a><span class="sd">    Shorthand function for creating book references from `refspy.number.Number`</span>
-</span><span id="book_range-363"><a href="#book_range-363"><span class="linenos">363</span></a><span class="sd">    values.</span>
-</span><span id="book_range-364"><a href="#book_range-364"><span class="linenos">364</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="book_range-365"><a href="#book_range-365"><span class="linenos">365</span></a>    <span class="k">return</span> <span class="nb">range</span><span class="p">(</span>
-</span><span id="book_range-366"><a href="#book_range-366"><span class="linenos">366</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-</span><span id="book_range-367"><a href="#book_range-367"><span class="linenos">367</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_end_id</span> <span class="ow">or</span> <span class="n">book_id</span><span class="p">,</span> <span class="mi">999</span><span class="p">,</span> <span class="mi">999</span><span class="p">),</span>
-</span><span id="book_range-368"><a href="#book_range-368"><span class="linenos">368</span></a>    <span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="book_range-349"><a href="#book_range-349"><span class="linenos">349</span></a><span class="k">def</span> <span class="nf">book_range</span><span class="p">(</span>
+</span><span id="book_range-350"><a href="#book_range-350"><span class="linenos">350</span></a>    <span class="n">library_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">book_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">book_end_id</span><span class="p">:</span> <span class="n">Number</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="book_range-351"><a href="#book_range-351"><span class="linenos">351</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Range</span><span class="p">:</span>
+</span><span id="book_range-352"><a href="#book_range-352"><span class="linenos">352</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="book_range-353"><a href="#book_range-353"><span class="linenos">353</span></a><span class="sd">    Shorthand function for creating book references from `refspy.number.Number`</span>
+</span><span id="book_range-354"><a href="#book_range-354"><span class="linenos">354</span></a><span class="sd">    values.</span>
+</span><span id="book_range-355"><a href="#book_range-355"><span class="linenos">355</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="book_range-356"><a href="#book_range-356"><span class="linenos">356</span></a>    <span class="k">return</span> <span class="nb">range</span><span class="p">(</span>
+</span><span id="book_range-357"><a href="#book_range-357"><span class="linenos">357</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="book_range-358"><a href="#book_range-358"><span class="linenos">358</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_end_id</span> <span class="ow">or</span> <span class="n">book_id</span><span class="p">,</span> <span class="mi">999</span><span class="p">,</span> <span class="mi">999</span><span class="p">),</span>
+</span><span id="book_range-359"><a href="#book_range-359"><span class="linenos">359</span></a>    <span class="p">)</span>
 </span></pre></div>
 
 
@@ -1859,20 +1818,20 @@ values.</p>
 
     </div>
     <a class="headerlink" href="#chapter_range"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="chapter_range-371"><a href="#chapter_range-371"><span class="linenos">371</span></a><span class="k">def</span> <span class="nf">chapter_range</span><span class="p">(</span>
-</span><span id="chapter_range-372"><a href="#chapter_range-372"><span class="linenos">372</span></a>    <span class="n">library_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
-</span><span id="chapter_range-373"><a href="#chapter_range-373"><span class="linenos">373</span></a>    <span class="n">book_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
-</span><span id="chapter_range-374"><a href="#chapter_range-374"><span class="linenos">374</span></a>    <span class="n">chapter_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
-</span><span id="chapter_range-375"><a href="#chapter_range-375"><span class="linenos">375</span></a>    <span class="n">chapter_end_id</span><span class="p">:</span> <span class="n">Number</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="chapter_range-376"><a href="#chapter_range-376"><span class="linenos">376</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Range</span><span class="p">:</span>
-</span><span id="chapter_range-377"><a href="#chapter_range-377"><span class="linenos">377</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="chapter_range-378"><a href="#chapter_range-378"><span class="linenos">378</span></a><span class="sd">    Shorthand function for creating chapter references from</span>
-</span><span id="chapter_range-379"><a href="#chapter_range-379"><span class="linenos">379</span></a><span class="sd">    `refspy.number.Number` values.</span>
-</span><span id="chapter_range-380"><a href="#chapter_range-380"><span class="linenos">380</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="chapter_range-381"><a href="#chapter_range-381"><span class="linenos">381</span></a>    <span class="k">return</span> <span class="nb">range</span><span class="p">(</span>
-</span><span id="chapter_range-382"><a href="#chapter_range-382"><span class="linenos">382</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="n">chapter_id</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-</span><span id="chapter_range-383"><a href="#chapter_range-383"><span class="linenos">383</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="n">chapter_end_id</span> <span class="ow">or</span> <span class="n">chapter_id</span><span class="p">,</span> <span class="mi">999</span><span class="p">),</span>
-</span><span id="chapter_range-384"><a href="#chapter_range-384"><span class="linenos">384</span></a>    <span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="chapter_range-362"><a href="#chapter_range-362"><span class="linenos">362</span></a><span class="k">def</span> <span class="nf">chapter_range</span><span class="p">(</span>
+</span><span id="chapter_range-363"><a href="#chapter_range-363"><span class="linenos">363</span></a>    <span class="n">library_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
+</span><span id="chapter_range-364"><a href="#chapter_range-364"><span class="linenos">364</span></a>    <span class="n">book_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
+</span><span id="chapter_range-365"><a href="#chapter_range-365"><span class="linenos">365</span></a>    <span class="n">chapter_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
+</span><span id="chapter_range-366"><a href="#chapter_range-366"><span class="linenos">366</span></a>    <span class="n">chapter_end_id</span><span class="p">:</span> <span class="n">Number</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="chapter_range-367"><a href="#chapter_range-367"><span class="linenos">367</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Range</span><span class="p">:</span>
+</span><span id="chapter_range-368"><a href="#chapter_range-368"><span class="linenos">368</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="chapter_range-369"><a href="#chapter_range-369"><span class="linenos">369</span></a><span class="sd">    Shorthand function for creating chapter references from</span>
+</span><span id="chapter_range-370"><a href="#chapter_range-370"><span class="linenos">370</span></a><span class="sd">    `refspy.number.Number` values.</span>
+</span><span id="chapter_range-371"><a href="#chapter_range-371"><span class="linenos">371</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="chapter_range-372"><a href="#chapter_range-372"><span class="linenos">372</span></a>    <span class="k">return</span> <span class="nb">range</span><span class="p">(</span>
+</span><span id="chapter_range-373"><a href="#chapter_range-373"><span class="linenos">373</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="n">chapter_id</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="chapter_range-374"><a href="#chapter_range-374"><span class="linenos">374</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="n">chapter_end_id</span> <span class="ow">or</span> <span class="n">chapter_id</span><span class="p">,</span> <span class="mi">999</span><span class="p">),</span>
+</span><span id="chapter_range-375"><a href="#chapter_range-375"><span class="linenos">375</span></a>    <span class="p">)</span>
 </span></pre></div>
 
 
@@ -1893,23 +1852,23 @@ values.</p>
 
     </div>
     <a class="headerlink" href="#verse_range"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="verse_range-387"><a href="#verse_range-387"><span class="linenos">387</span></a><span class="k">def</span> <span class="nf">verse_range</span><span class="p">(</span>
-</span><span id="verse_range-388"><a href="#verse_range-388"><span class="linenos">388</span></a>    <span class="n">library_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
-</span><span id="verse_range-389"><a href="#verse_range-389"><span class="linenos">389</span></a>    <span class="n">book_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
-</span><span id="verse_range-390"><a href="#verse_range-390"><span class="linenos">390</span></a>    <span class="n">chapter_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
-</span><span id="verse_range-391"><a href="#verse_range-391"><span class="linenos">391</span></a>    <span class="n">verse_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
-</span><span id="verse_range-392"><a href="#verse_range-392"><span class="linenos">392</span></a>    <span class="n">verse_end_id</span><span class="p">:</span> <span class="n">Number</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="verse_range-393"><a href="#verse_range-393"><span class="linenos">393</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Range</span><span class="p">:</span>
-</span><span id="verse_range-394"><a href="#verse_range-394"><span class="linenos">394</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="verse_range-395"><a href="#verse_range-395"><span class="linenos">395</span></a><span class="sd">    Shorthand function for creating verse or range references from</span>
-</span><span id="verse_range-396"><a href="#verse_range-396"><span class="linenos">396</span></a><span class="sd">    `refspy.number.Number` values.</span>
-</span><span id="verse_range-397"><a href="#verse_range-397"><span class="linenos">397</span></a>
-</span><span id="verse_range-398"><a href="#verse_range-398"><span class="linenos">398</span></a><span class="sd">    See `refspy.manager.Manager.bcv`</span>
-</span><span id="verse_range-399"><a href="#verse_range-399"><span class="linenos">399</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="verse_range-400"><a href="#verse_range-400"><span class="linenos">400</span></a>    <span class="k">return</span> <span class="nb">range</span><span class="p">(</span>
-</span><span id="verse_range-401"><a href="#verse_range-401"><span class="linenos">401</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="n">chapter_id</span><span class="p">,</span> <span class="n">verse_id</span><span class="p">),</span>
-</span><span id="verse_range-402"><a href="#verse_range-402"><span class="linenos">402</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="n">chapter_id</span><span class="p">,</span> <span class="n">verse_end_id</span> <span class="ow">or</span> <span class="n">verse_id</span><span class="p">),</span>
-</span><span id="verse_range-403"><a href="#verse_range-403"><span class="linenos">403</span></a>    <span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="verse_range-378"><a href="#verse_range-378"><span class="linenos">378</span></a><span class="k">def</span> <span class="nf">verse_range</span><span class="p">(</span>
+</span><span id="verse_range-379"><a href="#verse_range-379"><span class="linenos">379</span></a>    <span class="n">library_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
+</span><span id="verse_range-380"><a href="#verse_range-380"><span class="linenos">380</span></a>    <span class="n">book_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
+</span><span id="verse_range-381"><a href="#verse_range-381"><span class="linenos">381</span></a>    <span class="n">chapter_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
+</span><span id="verse_range-382"><a href="#verse_range-382"><span class="linenos">382</span></a>    <span class="n">verse_id</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span>
+</span><span id="verse_range-383"><a href="#verse_range-383"><span class="linenos">383</span></a>    <span class="n">verse_end_id</span><span class="p">:</span> <span class="n">Number</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="verse_range-384"><a href="#verse_range-384"><span class="linenos">384</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Range</span><span class="p">:</span>
+</span><span id="verse_range-385"><a href="#verse_range-385"><span class="linenos">385</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="verse_range-386"><a href="#verse_range-386"><span class="linenos">386</span></a><span class="sd">    Shorthand function for creating verse or range references from</span>
+</span><span id="verse_range-387"><a href="#verse_range-387"><span class="linenos">387</span></a><span class="sd">    `refspy.number.Number` values.</span>
+</span><span id="verse_range-388"><a href="#verse_range-388"><span class="linenos">388</span></a>
+</span><span id="verse_range-389"><a href="#verse_range-389"><span class="linenos">389</span></a><span class="sd">    See `refspy.manager.Manager.bcv`</span>
+</span><span id="verse_range-390"><a href="#verse_range-390"><span class="linenos">390</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="verse_range-391"><a href="#verse_range-391"><span class="linenos">391</span></a>    <span class="k">return</span> <span class="nb">range</span><span class="p">(</span>
+</span><span id="verse_range-392"><a href="#verse_range-392"><span class="linenos">392</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="n">chapter_id</span><span class="p">,</span> <span class="n">verse_id</span><span class="p">),</span>
+</span><span id="verse_range-393"><a href="#verse_range-393"><span class="linenos">393</span></a>        <span class="n">verse</span><span class="p">(</span><span class="n">library_id</span><span class="p">,</span> <span class="n">book_id</span><span class="p">,</span> <span class="n">chapter_id</span><span class="p">,</span> <span class="n">verse_end_id</span> <span class="ow">or</span> <span class="n">verse_id</span><span class="p">),</span>
+</span><span id="verse_range-394"><a href="#verse_range-394"><span class="linenos">394</span></a>    <span class="p">)</span>
 </span></pre></div>
 
 
