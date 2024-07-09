@@ -222,6 +222,6 @@ def test_template():
         assert __.template(ref, "x {ESC_ABBREV_NAME}") == "x 1%20Cor%202%3A3-4,%205"
         assert __.template(ref, "x {ESC_ABBREV_BOOK}") == "x 1%20Cor"
         assert __.template(ref, "x {ESC_ABBREV_NUMBERS}") == "x 2%3A3-4,%205"
-        assert __.template(ref, "x {PARAM}") == "x 1cor+2:3-4,+5"
+        assert __.template(ref, "x {PARAM_NAME}") == "x 1cor+2:3-4,+5"
         assert __.template(ref, "x {PARAM_BOOK}") == "x 1cor"
         assert __.template(ref, "x {PARAM_NUMBERS}") == "x 2:3-4,+5"

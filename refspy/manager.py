@@ -433,7 +433,7 @@ class Manager:
             * `{ESC_ABBREV_NAME}` -> "1%20Cor%202%3A3-4"
             * `{ESC_ABBREV_BOOK}` -> "1%20Cor"
             * `{ESC_ABBREV_NUMBERS}` -> "2%3A3-4"
-            * `{PARAM}`-> "1cor+2.3-4"
+            * `{PARAM_NAME}`-> "1cor+2.3-4"
             * `{PARAM_BOOK}` -> "1cor"
             * `{PARAM_NUMBERS}` -> "2.3-4"
 
@@ -476,8 +476,8 @@ class Manager:
                     "{ESC_ABBREV_BOOK}",
                     url_escape(self.abbrev_book(reference)),
                 )
-            elif _ == "{PARAM}":
-                out = out.replace("{PARAM}", url_param(self.name(reference)))
+            elif _ == "{PARAM_NAME}":
+                out = out.replace("{PARAM_NAME}", url_param(self.name(reference)))
             elif _ == "{PARAM_BOOK}":
                 out = out.replace("{PARAM_BOOK}", url_param(numbers))
             elif _ == "{PARAM_NUMBERS}":

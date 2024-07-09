@@ -161,7 +161,7 @@ The full list of template fields is:
 | `{ESC_ABBREV_NAME}` | `1%20Cor%202%3A3-4` |
 | `{ESC_ABBREV_BOOK}` | `1%20Cor` |
 | `{ESC_ABBREV_NUMBERS}` | `2%3A3-4` |
-| `{PARAM}` | `1+cor+2.3-4` |
+| `{PARAM_NAME}` | `1+cor+2.3-4` |
 | `{PARAM_BOOK}` | `1+cor` |
 | `{PARAM_NUMBERS}` | `2.3-4` |
 
