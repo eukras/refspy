@@ -6,8 +6,8 @@
 
 ## NOW: July 2024
 
-* Test against human writing styles (use Article Wiki as a live demo and playground).
-* Expand test suites to reflect special cases. 
+* Test against human writing styles (use Article Wiki as a live demo and
+    playground); expand test suites to reflect special cases. 
 
 ## Possibilities
 
