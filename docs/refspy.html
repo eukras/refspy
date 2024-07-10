@@ -89,11 +89,24 @@ introduction.</p>
 </span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="k">def</span> <span class="nf">refspy</span><span class="p">(</span><span class="n">canon_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;protestant&quot;</span><span class="p">,</span> <span class="n">locale_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en_US&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Manager</span><span class="p">:</span>
 </span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a Manager object to access all common package functions.</span>
 </span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">    Args:</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="sd">        canon_name: A valid key for the `refspy.config.LIBRARIES` dict</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">        locale_name: A valid key for the `refspy.config.LANGUAGES` dict</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>    <span class="k">return</span> <span class="n">Manager</span><span class="p">(</span><span class="n">get_canon</span><span class="p">(</span><span class="n">canon_name</span><span class="p">,</span> <span class="n">locale_name</span><span class="p">),</span> <span class="n">get_language</span><span class="p">(</span><span class="n">locale_name</span><span class="p">[:</span><span class="mi">2</span><span class="p">]))</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">    See: `refspy.manager.Manager`</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">    Args:</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="sd">        canon_name: A valid key for the `refspy.config.LIBRARIES` dict (3)</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="sd">            - `protestant`</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="sd">            - `catholic` (adds Deuterocanonicals)</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="sd">            - `orthodox` (adds Anagignoskomena)</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="sd">        locale_name: A valid key for the `refspy.config.LANGUAGES` dict (1).</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="sd">            - `en_US`</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="sd">    Note:</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="sd">        Libraries and languages can be created outside the package, and</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="sd">        supplied to the Manager object directly. These can be contributed to</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a><span class="sd">        the library, but the point of the library is to read ordinary test</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a><span class="sd">        using ordinary referencing conventions. This will have to be confirmed</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a><span class="sd">        for each proposed library and language.</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>    <span class="k">return</span> <span class="n">Manager</span><span class="p">(</span><span class="n">get_canon</span><span class="p">(</span><span class="n">canon_name</span><span class="p">,</span> <span class="n">locale_name</span><span class="p">),</span> <span class="n">get_language</span><span class="p">(</span><span class="n">locale_name</span><span class="p">[:</span><span class="mi">2</span><span class="p">]))</span>
 </span></pre></div>
 
 
@@ -112,22 +125,55 @@ introduction.</p>
             <div class="pdoc-code codehilite"><pre><span></span><span id="refspy-12"><a href="#refspy-12"><span class="linenos">12</span></a><span class="k">def</span> <span class="nf">refspy</span><span class="p">(</span><span class="n">canon_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;protestant&quot;</span><span class="p">,</span> <span class="n">locale_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en_US&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Manager</span><span class="p">:</span>
 </span><span id="refspy-13"><a href="#refspy-13"><span class="linenos">13</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a Manager object to access all common package functions.</span>
 </span><span id="refspy-14"><a href="#refspy-14"><span class="linenos">14</span></a>
-</span><span id="refspy-15"><a href="#refspy-15"><span class="linenos">15</span></a><span class="sd">    Args:</span>
-</span><span id="refspy-16"><a href="#refspy-16"><span class="linenos">16</span></a><span class="sd">        canon_name: A valid key for the `refspy.config.LIBRARIES` dict</span>
-</span><span id="refspy-17"><a href="#refspy-17"><span class="linenos">17</span></a><span class="sd">        locale_name: A valid key for the `refspy.config.LANGUAGES` dict</span>
-</span><span id="refspy-18"><a href="#refspy-18"><span class="linenos">18</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="refspy-19"><a href="#refspy-19"><span class="linenos">19</span></a>    <span class="k">return</span> <span class="n">Manager</span><span class="p">(</span><span class="n">get_canon</span><span class="p">(</span><span class="n">canon_name</span><span class="p">,</span> <span class="n">locale_name</span><span class="p">),</span> <span class="n">get_language</span><span class="p">(</span><span class="n">locale_name</span><span class="p">[:</span><span class="mi">2</span><span class="p">]))</span>
+</span><span id="refspy-15"><a href="#refspy-15"><span class="linenos">15</span></a><span class="sd">    See: `refspy.manager.Manager`</span>
+</span><span id="refspy-16"><a href="#refspy-16"><span class="linenos">16</span></a>
+</span><span id="refspy-17"><a href="#refspy-17"><span class="linenos">17</span></a><span class="sd">    Args:</span>
+</span><span id="refspy-18"><a href="#refspy-18"><span class="linenos">18</span></a><span class="sd">        canon_name: A valid key for the `refspy.config.LIBRARIES` dict (3)</span>
+</span><span id="refspy-19"><a href="#refspy-19"><span class="linenos">19</span></a><span class="sd">            - `protestant`</span>
+</span><span id="refspy-20"><a href="#refspy-20"><span class="linenos">20</span></a><span class="sd">            - `catholic` (adds Deuterocanonicals)</span>
+</span><span id="refspy-21"><a href="#refspy-21"><span class="linenos">21</span></a><span class="sd">            - `orthodox` (adds Anagignoskomena)</span>
+</span><span id="refspy-22"><a href="#refspy-22"><span class="linenos">22</span></a><span class="sd">        locale_name: A valid key for the `refspy.config.LANGUAGES` dict (1).</span>
+</span><span id="refspy-23"><a href="#refspy-23"><span class="linenos">23</span></a><span class="sd">            - `en_US`</span>
+</span><span id="refspy-24"><a href="#refspy-24"><span class="linenos">24</span></a>
+</span><span id="refspy-25"><a href="#refspy-25"><span class="linenos">25</span></a><span class="sd">    Note:</span>
+</span><span id="refspy-26"><a href="#refspy-26"><span class="linenos">26</span></a><span class="sd">        Libraries and languages can be created outside the package, and</span>
+</span><span id="refspy-27"><a href="#refspy-27"><span class="linenos">27</span></a><span class="sd">        supplied to the Manager object directly. These can be contributed to</span>
+</span><span id="refspy-28"><a href="#refspy-28"><span class="linenos">28</span></a><span class="sd">        the library, but the point of the library is to read ordinary test</span>
+</span><span id="refspy-29"><a href="#refspy-29"><span class="linenos">29</span></a><span class="sd">        using ordinary referencing conventions. This will have to be confirmed</span>
+</span><span id="refspy-30"><a href="#refspy-30"><span class="linenos">30</span></a><span class="sd">        for each proposed library and language.</span>
+</span><span id="refspy-31"><a href="#refspy-31"><span class="linenos">31</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="refspy-32"><a href="#refspy-32"><span class="linenos">32</span></a>    <span class="k">return</span> <span class="n">Manager</span><span class="p">(</span><span class="n">get_canon</span><span class="p">(</span><span class="n">canon_name</span><span class="p">,</span> <span class="n">locale_name</span><span class="p">),</span> <span class="n">get_language</span><span class="p">(</span><span class="n">locale_name</span><span class="p">[:</span><span class="mi">2</span><span class="p">]))</span>
 </span></pre></div>
 
 
             <div class="docstring"><p>Create a Manager object to access all common package functions.</p>
 
+<p>See: <code><a href="refspy/manager.html#Manager">refspy.manager.Manager</a></code></p>
+
 <h6 id="arguments">Arguments:</h6>
 
 <ul>
-<li><strong>canon_name:</strong>  A valid key for the <code><a href="refspy/config.html#LIBRARIES">refspy.config.LIBRARIES</a></code> dict</li>
-<li><strong>locale_name:</strong>  A valid key for the <code><a href="refspy/config.html#LANGUAGES">refspy.config.LANGUAGES</a></code> dict</li>
+<li><strong>canon_name:</strong>  A valid key for the <code><a href="refspy/config.html#LIBRARIES">refspy.config.LIBRARIES</a></code> dict (3)
+<ul>
+<li><code>protestant</code></li>
+<li><code>catholic</code> (adds Deuterocanonicals)</li>
+<li><code>orthodox</code> (adds Anagignoskomena)</li>
+</ul></li>
+<li><strong>locale_name:</strong>  A valid key for the <code><a href="refspy/config.html#LANGUAGES">refspy.config.LANGUAGES</a></code> dict (1).
+<ul>
+<li><code>en_US</code></li>
+</ul></li>
 </ul>
+
+<h6 id="note">Note:</h6>
+
+<blockquote>
+  <p>Libraries and languages can be created outside the package, and
+  supplied to the Manager object directly. These can be contributed to
+  the library, but the point of the library is to read ordinary test
+  using ordinary referencing conventions. This will have to be confirmed
+  for each proposed library and language.</p>
+</blockquote>
 </div>
 
 
