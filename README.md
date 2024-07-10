@@ -118,7 +118,7 @@ assert __.abbrev_numbers(ref) == '2:3–4, 7'
 
 Some utility functions can be used to turn these into usable URL parameters if needed:
 
-```
+```python
 from refspy.utils import url_param, url_escape
 
 ref = __.r('2 Cor 3:4-5')
@@ -130,7 +130,7 @@ In general, though, templating is a better way to make links.
 
 ### Templating references
 
-```
+```python
 bible_gateway = (
     '<a href="https://www.biblegateway.com/passage/'
   + '?search={ESC_ABBREV_NAME}&version=NRSVA">'
@@ -168,7 +168,7 @@ The full list of template fields is:
 Templates can be passed as optional arguments to other rendering functions, say
 to generate links within indexes. 
 
-```
+```python
 __.make_index(references, template=bible_gateway)
 ```
 
@@ -322,7 +322,7 @@ html_list = "; ".join(index)
 
 # Internals
 
-```
+```bash
 > cloc *.py *.toml *.md refspy tests
 
 -------------------------------------------------------------------------------
