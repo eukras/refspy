@@ -497,10 +497,11 @@ The reference module contains standalone functions for numeric reference
 construction that parallel the reference manager's `__.bcv()` method.
 
 ```python
-assert book_reference(NT.id, 1) == __.bcv(NT.name, 1)
-assert chapter_reference(NT.id, 2, 3) == __.bcv(NT.name, 2, 3)
-assert verse_reference(NT.id, 2, 3, 4) == __.bcv(NT.name, 2, 3, 4)
-assert verse_reference(NT.id, 2, 3, 4, 5) == __.bcv(NT.name, 2, 3, 4, 5)
+book = __.books[NT.id, 1]  # <-- Matthew is NT book ID 1
+assert book_reference(NT.id, 1) == __.bcv(book.id)
+assert chapter_reference(NT.id, 1, 2) == __.bcv(book.id, 2)
+assert verse_reference(NT.id, 1, 2, 3) == __.bcv(book.id, 2, 3)
+assert verse_reference(NT.id, 1, 2, 3, 4) == __.bcv(book.id, 2, 3, 4)
 ```
 
 The same comparison operations that work on ranges also work on references. So
