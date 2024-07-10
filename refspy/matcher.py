@@ -77,17 +77,18 @@ class Matcher:
 
         "Big Book 1:2-5 (cf. Small Book 34) is more interesting than vv.2:3-6."
 
-        ... we return:
+        ... we want to match:
 
-        Matching string
-         :                 Book Name
-         :                  :            Book Reference
-         :                  :             :        Numeric Reference
-         :                  :             :         :
-         :                  :             :         :
-        ('Big Book 1:2-5', 'Big Book',   '1:2-5',  None)
-        ('Small Book 34',  'Small Book', '34',     None)
-        ('vv.2:3-6',        None,         None,   '2:3-6')
+            ```
+            Matching string
+            :                 Book Name
+            :                  :            Book Reference
+            :                  :             :        Numeric Reference
+            :                  :             :         :
+            ('Big Book 1:2-5', 'Big Book',   '1:2-5',  None)
+            ('Small Book 34',  'Small Book', '34',     None)
+            ('vv.2:3-6',        None,         None,   '2:3-6')
+            ```
         """
         NAME_PATTERN = self.build_book_name_regexp()
         VERSE_MARKER = self.build_verse_marker_regexp()
@@ -107,8 +108,7 @@ class Matcher:
                     ]
                 ),
                 ")?",
-                ")",
-                "|" "(",
+                ")|(",
                 "".join(
                     [
                         f"{NUMBER}{COLON}{NUMBER}{DASH}{NUMBER}{COLON}{NUMBER}",  # 1:2-3:4
@@ -145,10 +145,19 @@ class Matcher:
 
     def build_book_name_regexp(self):
         """
-        Return escaped aliases, pipe-separated, without group brackets.
-        Replace spaces in aliases with space patterns
+        Sort bookname DESC to match the longest first.
+        Replace spaces with multi-space matchers in book names.
+        Group book names by prefixes.
+        Match substitute prefixes for each prefix number:
 
-        ((1|First|etc)\\s+(Corinthians|etc)|(2|Second|etc)\\s+(Corinthians|etc)|...
+        Example:
+            ```
+            (   (1|First|etc)\\s+(Corinthians|etc)
+              | (2|Second|etc)\\s+(Corinthians|etc)
+              |   ...
+              | (Galatians|Romans|etc)
+            )
+            ```
         """
         regexp_parts = []
         for number in self.numerical_book_prefixes():
@@ -180,15 +189,22 @@ class Matcher:
 
     def build_number_list_regexp(self):
         """
-        Match a comma-(and-space?)-separated list of numbers and ranges. A number
-        must not be the start of a book name, which complicates matching.
+        Match a comma-(and-space?)-separated list of numbers and ranges.
 
-        Ranges are just {1-999}{DASH}{1-999}, but individual numbers require
-        negative lookaheads to ensure they are not the start of book names:
-        So (1(?!\\s+(Cor|Thess|etc)))|2...|3 (Jn)|4-999), based on the number
-        prefixes that exist in the current book aliases.
+        Final numbers in a list require negative lookaheads to ensure they are
+        not the start of book names:
 
-        TODO: Edge case: What if 4 exists but not 3?
+            ```
+            (
+                1(?!\\s+(Corinthians|Cor|Thess|etc)))
+              | 2(?!\\s+(Corinthians|Cor|Thess|etc)))
+              | 3(?!\\s+Jn)
+              | 4-999
+            )
+            ```
+
+        TODO:
+            Must include missing numbers in the final range.
         """
         regexp_parts = []
         for number in self.numerical_book_prefixes():
@@ -236,15 +252,15 @@ class Matcher:
         reference_match = next(reference_matches, None)
 
         while reference_match or brackets_match:
+            # Handle the start or end of a bracket
+            # 0 means bracket, 1 means reference
             values = [
                 brackets_match.start() if brackets_match else math.inf,
                 reference_match.start() if reference_match else math.inf,
             ]
 
-            # 0 means bracket, 1 means reference
-            index_of_minimum = values.index(min(values))
-
             book_ref = None
+            index_of_minimum = values.index(min(values))
 
             if brackets_match and index_of_minimum == 0:
                 if brackets_match.group(0) == "(":
@@ -253,7 +269,6 @@ class Matcher:
                 if brackets_match.group(0) == ")":
                     if len(verse_stack) > 0:
                         del verse_stack[-1]
-
                 brackets_match = next(brackets_matches, None)
 
             if reference_match and index_of_minimum == 1:
@@ -409,7 +424,7 @@ def make_number_ranges(
     Args:
         last: a verse to which this number list is relative.
         matches: the result of `match_number_ranges()`
-        as_chapters: Treat these numbers as chpaters rather than verses.
+        as_chapters: Treat these numbers as chapters rather than verses.
 
     Example:
         `Phlm 3-4` (verse), `Rom 3-4` (chapter)

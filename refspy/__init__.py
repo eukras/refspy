@@ -11,8 +11,21 @@ from refspy.manager import Manager
 def refspy(canon_name: str = "protestant", locale_name: str = "en_US") -> Manager:
     """Create a Manager object to access all common package functions.
 
+    See: `refspy.manager.Manager`
+
     Args:
-        canon_name: A valid key for the `refspy.config.LIBRARIES` dict
-        locale_name: A valid key for the `refspy.config.LANGUAGES` dict
+        canon_name: A valid key for the `refspy.config.LIBRARIES` dict (3)
+            - `protestant`
+            - `catholic` (adds Deuterocanonicals)
+            - `orthodox` (adds Anagignoskomena)
+        locale_name: A valid key for the `refspy.config.LANGUAGES` dict (1).
+            - `en_US`
+
+    Note:
+        Libraries and languages can be created outside the package, and
+        supplied to the Manager object directly. These can be contributed to
+        the library, but the point of the library is to read ordinary test
+        using ordinary referencing conventions. This will have to be confirmed
+        for each proposed library and language.
     """
     return Manager(get_canon(canon_name, locale_name), get_language(locale_name[:2]))
