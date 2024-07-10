@@ -24,7 +24,7 @@ def refspy(canon_name: str = "protestant", locale_name: str = "en_US") -> Manage
     Note:
         Libraries and languages can be created outside the package, and
         supplied to the Manager object directly. These can be contributed to
-        the library, but the point of the library is to read ordinary test
+        the library, but the point of the library is to read ordinary text
         using ordinary referencing conventions. This will have to be confirmed
         for each proposed library and language.
     """
