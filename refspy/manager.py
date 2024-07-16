@@ -270,12 +270,6 @@ class Manager:
         if v is None:
             return chapter_reference(library_id, book_id, ta.validate_python(c))
 
-        print("VAL 1", c, v)
-        print(
-            "VAL 2",
-            ta.validate_python(c),
-            ta.validate_python(v),
-        )
         if not v_end:
             return verse_reference(
                 library_id,

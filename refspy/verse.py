@@ -61,7 +61,6 @@ class Verse(BaseModel):
         lbc, v = divmod(index, 1000)
         lb, c = divmod(lbc, 1000)
         l, b = divmod(lb, 1000)
-        print(l, b, c, v)
         return cls(library=l, book=b, chapter=c, verse=v)
 
     def index(self) -> Index:
