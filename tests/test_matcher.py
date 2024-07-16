@@ -24,7 +24,7 @@ from refspy.matcher import (
     match_chapter_verses,
     match_number_ranges,
 )
-from refspy.range import range
+from refspy.range import range, verse_range
 from refspy.reference import (
     book_reference,
     chapter_reference,
@@ -69,8 +69,8 @@ def test_number_list_regexp():
 
 def test_number_list_generated_regexp():
     number_list = matcher.build_number_list_regexp()
-    match = re.findall(number_list, "Big Book 1:1, 1, 1 Book 2")
-    assert match == ["1", "1, 1", "1", "2"]
+    match = re.findall(number_list, "Big Book 1:1, 1, 1 Book 2, 3, 4:5")
+    assert match == ["1", "1, 1", "1", "2, 3", "4", "5"]
     #                      ^^^^ not 1, 1, 1
 
 
@@ -139,7 +139,6 @@ def test_match_names_and_numbers():
 
 
 def test_malformed_refs():
-    last_verse = verse(1, 1, 1, 1)
     matches = match_number_ranges("1-2,4-3")
     assert matches[0] == "1-2"
     assert matches[1] == "4-3"
@@ -165,9 +164,9 @@ def test_match_names_in_context():
 
 
 def test_match_number_ranges_numeric():
-    last_verse = verse(1, 1, 1, 1)
+    last_range = verse_range(1, 1, 1, 1)
     matches = match_number_ranges("1,4-5,7–8, 9")
-    reference = make_number_ranges(last_verse, matches)
+    reference = make_number_ranges(last_range, matches)
     assert reference is not None
     assert reference.ranges[0] == range(verse(1, 1, 1, 1), verse(1, 1, 1, 1))
     assert reference.ranges[1] == range(verse(1, 1, 1, 4), verse(1, 1, 1, 5))
@@ -176,44 +175,44 @@ def test_match_number_ranges_numeric():
 
 
 def test_match_number_ranges_prefixed_v():
-    last_verse = verse(1, 1, 1, 1)
+    last_range = verse_range(1, 1, 1, 1)
     matches = match_number_ranges("v.1,4-5")
     assert matches is not None
-    reference = make_number_ranges(last_verse, matches)
+    reference = make_number_ranges(last_range, matches)
     assert reference is not None
     assert reference.ranges[0] == range(verse(1, 1, 1, 1), verse(1, 1, 1, 1))
     assert reference.ranges[1] == range(verse(1, 1, 1, 4), verse(1, 1, 1, 5))
 
 
 def test_match_number_ranges_prefixed_vv():
-    last_verse = verse(1, 1, 1, 1)
+    last_range = verse_range(1, 1, 1, 1)
     matches = match_number_ranges("vv.1,4-5")
     assert matches is not None
-    reference = make_number_ranges(last_verse, matches)
+    reference = make_number_ranges(last_range, matches)
     assert reference is not None
     assert reference.ranges[0] == range(verse(1, 1, 1, 1), verse(1, 1, 1, 1))
     assert reference.ranges[1] == range(verse(1, 1, 1, 4), verse(1, 1, 1, 5))
 
 
 def test_match_chapter_range():
-    last_verse = verse(1, 1, 1, 1)
+    last_range = verse_range(1, 1, 1, 1)
     matches = match_chapter_range("1:4-2:3")
     assert matches is not None
-    reference = make_chapter_range(last_verse, matches)
+    reference = make_chapter_range(last_range, matches)
     assert reference is not None
     assert reference.ranges == [range(verse(1, 1, 1, 4), verse(1, 1, 2, 3))]
     matches = match_chapter_range("1:4–2:3")
     assert matches is not None
-    reference = make_chapter_range(last_verse, matches)
+    reference = make_chapter_range(last_range, matches)
     assert reference is not None
     assert reference.ranges == [range(verse(1, 1, 1, 4), verse(1, 1, 2, 3))]
 
 
 def test_match_chapter_verses():
-    last_verse = verse(1, 1, 1, 1)
+    last_range = verse_range(1, 1, 1, 1)
     matches = match_chapter_verses("1:4,8-9")
     assert matches is not None
-    reference = make_chapter_verses(last_verse, matches)
+    reference = make_chapter_verses(last_range, matches)
     assert reference is not None
     assert reference.ranges == [
         range(verse(1, 1, 1, 4), verse(1, 1, 1, 4)),

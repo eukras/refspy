@@ -133,8 +133,11 @@ class Range(BaseModel):
         else:
             return self.__class__(start=other.start, end=self.end)
 
+    def is_same_library(self) -> bool:
+        return self.start.library == self.end.library
+
     def same_library_as(self, other: Self) -> bool:
-        """Determine if two references are in the same library."""
+        """Determine if two ranges are in the same library."""
         ids = set(
             [
                 self.start.library,
@@ -145,6 +148,9 @@ class Range(BaseModel):
         )
         return len(ids) == 1
 
+    def is_same_book(self) -> bool:
+        return self.is_same_library() and self.start.book == self.end.book
+
     def same_book_as(self, other: Self) -> bool:
         """Determine if two references are in the same book.
 
@@ -152,6 +158,13 @@ class Range(BaseModel):
         """
         ids = set([self.start.book, self.end.book, other.start.book, other.end.book])
         return self.same_library_as(other) and len(ids) == 1
+
+    def is_same_chapter(self) -> bool:
+        return (
+            self.is_same_library()
+            and self.is_same_book()
+            and self.start.chapter == self.end.chapter
+        )
 
     def same_chapter_as(self, other: Self) -> bool:
         """Determine if two references are in the same book.

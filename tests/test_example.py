@@ -11,8 +11,8 @@ __ = Manager(libraries=[OT, NT], language=ENGLISH)
 
 
 def test_number_ranges():
-    tuples = __.find_references("Romans 1:1–4, 6, 7-9")
-    assert tuples[0][1] == reference(
+    refs = __.find_references("Romans 1:1–4, 6, 7-9")
+    assert refs[0][1] == reference(
         verse_range(NT.id, 6, 1, 1, 4),
         verse_range(NT.id, 6, 1, 6),
         verse_range(NT.id, 6, 1, 7, 9),
@@ -37,6 +37,31 @@ def test_verse_markers():
     assert refs[2][1] == verse_reference(NT.id, 6, 1, 11, 12)
 
 
+def test_ambiguous_verses():
+    refs = __.find_references("v.5, v.6-7, 6:5, 8:6-7")
+    assert len(refs) == 0
+
+
+def test_ambiguous_verse_return_none():
+    refs = __.find_references("v.5, v.6-7, 6:5, 8:6-7", include_nones=True)
+    assert len(refs) == 4
+
+
+def test_ambiguous_context():
+    refs = __.find_references("v.5", include_nones=True)
+    assert len(refs) == 1
+    refs = __.find_references("8:5", include_nones=True)
+    assert len(refs) == 1
+    refs = __.find_references("Romans, v.5", include_nones=True)
+    assert len(refs) == 1
+
+
+def test_ambiguous_context_returns_none():
+    refs = __.find_references("Romans, v.5", include_nones=True)
+    assert len(refs) == 1
+    assert refs[0][1] == None
+
+
 def test_books_with_number_prefixes():
     refs = __.find_references("Romans 1:1, 2, 3 John 3")
     #             MATCH THIS:  ^^^^^^^^^^^^^  ^^^^^^^^
@@ -57,11 +82,11 @@ def test_substitute_number_prefixes():
 
 
 def test_backward_ranges_and_abbreviations():
-    tuples = __.find_references("Romans 1:4–1, Rom 1:776-77, Rom 1:13-4")
+    refs = __.find_references("Romans 1:4–1, Rom 1:776-77, Rom 1:13-4")
     # No match for first reference
-    assert len(tuples) == 2
-    assert tuples[0][1] == verse_reference(NT.id, 6, 1, 776, 777)
-    assert tuples[1][1] == verse_reference(NT.id, 6, 1, 13, 14)
+    assert len(refs) == 2
+    assert refs[0][1] == verse_reference(NT.id, 6, 1, 776, 777)
+    assert refs[1][1] == verse_reference(NT.id, 6, 1, 13, 14)
 
 
 def test_partial_verses():
@@ -71,21 +96,20 @@ def test_partial_verses():
 
 
 def test_brackets():
-    tuples = __.find_references("Romans (John 1:1–4 (1 Cor 5:24 ()) 3:16) 1:16-17")
+    refs = __.find_references("Romans (John 1:1–4 (1 Cor 5:24 ()) 3:16) 1:16-17")
     #                    MATCH:  xxxxxx  ^^^^^^^^^^  ^^^^^^^^^^     ^^^^  ^^^^^^^
-    #                            ^ Don't match it, but use context later: ^^^^^^^
-    assert len(tuples) == 4
-    assert tuples[0][1] == verse_reference(NT.id, 4, 1, 1, 4)
-    assert tuples[1][1] == verse_reference(NT.id, 7, 5, 24)
-    assert tuples[2][1] == verse_reference(NT.id, 4, 3, 16)
-    assert tuples[3][1] == verse_reference(NT.id, 6, 1, 16, 17)
+    #                            ^ Don't match this, but use for context: ^^^^^^^
+    assert len(refs) == 4
+    assert refs[0][1] == verse_reference(NT.id, 4, 1, 1, 4)
+    assert refs[1][1] == verse_reference(NT.id, 7, 5, 24)
+    assert refs[2][1] == verse_reference(NT.id, 4, 3, 16)
+    assert refs[3][1] == verse_reference(NT.id, 6, 1, 16, 17)
 
 
 def test_malformed_brackets():
-    tuples = __.find_references("Romans )John 1:1–4 (1 Cor 5:24 (() 3:16) 1:16-17")
+    refs = __.find_references("Romans )John 1:1–4 (1 Cor 5:24 (() 3:16) 1:16-17")
     #                            ^^^ Ignore          ^^^ 1 Corinthians
-    print(tuples)
-    assert tuples[0][1] == verse_reference(NT.id, 4, 1, 1, 4)
-    assert tuples[1][1] == verse_reference(NT.id, 7, 5, 24)
-    assert tuples[2][1] == verse_reference(NT.id, 7, 3, 16)
-    assert tuples[3][1] == verse_reference(NT.id, 7, 1, 16, 17)
+    assert refs[0][1] == verse_reference(NT.id, 4, 1, 1, 4)
+    assert refs[1][1] == verse_reference(NT.id, 7, 5, 24)
+    assert refs[2][1] == verse_reference(NT.id, 7, 3, 16)
+    assert refs[3][1] == verse_reference(NT.id, 7, 1, 16, 17)

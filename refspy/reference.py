@@ -151,6 +151,16 @@ class Reference(BaseModel):
         """
         return self.ranges[-1].end
 
+    def last_range(self) -> Range:
+        """Find the last verse.
+
+        Only sensible if sorted=True
+
+        Note:
+            Consider sorting on the fly if sorted=False
+        """
+        return self.ranges[-1]
+
     def sort(self) -> Self:
         """Return a sorted reference."""
         return self.__class__(ranges=sorted(self.ranges))

@@ -6,14 +6,14 @@ from typing import Dict, Generator, List, Match, Tuple
 
 from refspy.book import Book
 from refspy.language import Language
-from refspy.range import range
+from refspy.range import Range, range, verse_range
 from refspy.reference import (
     Reference,
     book_reference,
     reference,
 )
 from refspy.utils import parse_number, normalize_spacing
-from refspy.verse import Number, Verse, verse
+from refspy.verse import Number, verse
 
 COLON = r"[:.]"
 DASH = r"[–-]"
@@ -87,7 +87,7 @@ class Matcher:
             :                  :             :         :
             ('Big Book 1:2-5', 'Big Book',   '1:2-5',  None)
             ('Small Book 34',  'Small Book', '34',     None)
-            ('vv.2:3-6',        None,         None,   '2:3-6')
+            ( None,             None,         None,   '2:3-6')
             ```
         """
         NAME_PATTERN = self.build_book_name_regexp()
@@ -192,7 +192,7 @@ class Matcher:
         Match a comma-(and-space?)-separated list of numbers and ranges.
 
         Final numbers in a list require negative lookaheads to ensure they are
-        not the start of book names:
+        not the start of book names (1 Cor) or chapter refs (6:5):
 
             ```
             (
@@ -200,7 +200,7 @@ class Matcher:
               | 2(?!\\s+(Corinthians|Cor|Thess|etc)))
               | 3(?!\\s+Jn)
               | 4-999
-            )
+            )(?!:\\d)
             ```
 
         TODO:
@@ -221,7 +221,7 @@ class Matcher:
             )
         regexp_parts.append(f"[{len(regexp_parts) + 1}-999]")
         SAFE_NUMBER = r"|".join(regexp_parts)
-        REGEXP = f"(?:{RANGE}|{NUMBER})(?:\\,\\s*(?:{RANGE}|(?:{SAFE_NUMBER}){END}))*"
+        REGEXP = f"(?:{RANGE}|{NUMBER})(?:\\,\\s*(?:{RANGE}|(?:{SAFE_NUMBER})(?!:\\d){END}))*"
         return REGEXP
 
     def numerical_book_prefixes(self) -> List[str]:
@@ -246,7 +246,7 @@ class Matcher:
         brackets_matches = self.brackets_regexp.finditer(text)
         reference_matches = self.name_regexp.finditer(text)
 
-        verse_stack = []
+        bracket_stack = []
 
         brackets_match = next(brackets_matches, None)
         reference_match = next(reference_matches, None)
@@ -264,11 +264,11 @@ class Matcher:
 
             if brackets_match and index_of_minimum == 0:
                 if brackets_match.group(0) == "(":
-                    if len(verse_stack) > 0:
-                        verse_stack.append(verse_stack[-1])
+                    if len(bracket_stack) > 0:
+                        bracket_stack.append(bracket_stack[-1])
                 if brackets_match.group(0) == ")":
-                    if len(verse_stack) > 0:
-                        del verse_stack[-1]
+                    if len(bracket_stack) > 0:
+                        del bracket_stack[-1]
                 brackets_match = next(brackets_matches, None)
 
             if reference_match and index_of_minimum == 1:
@@ -281,72 +281,85 @@ class Matcher:
                             normalize_spacing(book_name)
                         ]
                         book = self.books[library_id, book_id]
-                        last_verse = book_reference(library_id, book_id).last_verse()
+                        last_range = book_reference(library_id, book_id).last_range()
                         if match_with_book:
                             if matches := match_chapter_range(match_with_book):
                                 # Rom 1:2-3:4
-                                book_ref = make_chapter_range(last_verse, matches)
+                                book_ref = make_chapter_range(last_range, matches)
                                 if book_ref is not None or include_nones:
                                     yield (match_str, book_ref)
                             elif matches := match_chapter_verses(match_with_book):
                                 # Rom 3:4,6-9
-                                book_ref = make_chapter_verses(last_verse, matches)
+                                book_ref = make_chapter_verses(last_range, matches)
                                 if book_ref is not None or include_nones:
                                     yield (match_str, book_ref)
                             elif matches := match_number_ranges(match_with_book):
                                 if book.chapters == 1:
                                     # Phlm 3-4 (verse)
-                                    v = verse(last_verse.library, last_verse.book, 1, 1)
+                                    v = verse_range(
+                                        last_range.start.library,
+                                        last_range.start.book,
+                                        1,
+                                        1,
+                                    )
                                     book_ref = make_number_ranges(v, matches)
                                     if book_ref is not None or include_nones:
                                         yield (match_str, book_ref)
                                 if book.chapters > 1:
                                     # Rom 3-4 (chapter)
                                     book_ref = make_number_ranges(
-                                        last_verse, matches, as_chapters=True
+                                        last_range, matches, as_chapters=True
                                     )
                                     if book_ref is not None or include_nones:
                                         yield (match_str, book_ref)
                             else:
                                 yield (match_str, None)
                         else:  # no associated reference
-                            if verse_stack:
-                                verse_stack[-1] = last_verse
+                            if bracket_stack:
+                                bracket_stack[-1] = last_range
                             else:
-                                verse_stack.append(last_verse)
+                                bracket_stack.append(last_range)
                             if include_books:
                                 yield (match_str, book_reference(library_id, book_id))
-                    elif match_without_book and verse_stack:
-                        last_verse = verse_stack[-1]
-                        library_id, book_id = last_verse.library, last_verse.book
-                        if matches := match_chapter_range(match_without_book):
-                            # 1:2-3:4
-                            book_ref = make_chapter_range(last_verse, matches)
-                            if book_ref is not None or include_nones:
-                                yield (match_without_book, book_ref)
-                        elif matches := match_chapter_verses(match_without_book):
-                            # 3:4,6-9
-                            book_ref = make_chapter_verses(last_verse, matches)
-                            if book_ref is not None or include_nones:
-                                yield (match_without_book, book_ref)
-                        elif matches := match_number_ranges(match_without_book):
-                            # v.2, vv.3-4
-                            book_ref = make_number_ranges(last_verse, matches)
-                            if book_ref is not None or include_nones:
-                                yield (match_without_book, book_ref)
+                    elif match_without_book:
+                        if bracket_stack:
+                            last_range = bracket_stack[-1]
+                            library_id, book_id = (
+                                last_range.start.library,
+                                last_range.start.book,
+                            )
+                            if matches := match_chapter_range(match_without_book):
+                                # 1:2-3:4
+                                book_ref = make_chapter_range(last_range, matches)
+                                if book_ref is not None or include_nones:
+                                    yield (match_without_book, book_ref)
+                            elif matches := match_chapter_verses(match_without_book):
+                                # 3:4,6-9
+                                book_ref = make_chapter_verses(last_range, matches)
+                                if book_ref is not None or include_nones:
+                                    yield (match_without_book, book_ref)
+                            elif matches := match_number_ranges(match_without_book):
+                                # v.2, vv.3-4
+                                book_ref = make_number_ranges(last_range, matches)
+                                if book_ref is not None or include_nones:
+                                    yield (match_without_book, book_ref)
+                            else:
+                                if include_nones:
+                                    yield (match_without_book, None)
                         else:
                             if include_nones:
-                                yield (match_str, None)
+                                yield (match_without_book, None)
+
                 except ValueError:
                     if include_nones:
-                        yield (match_str, None)
+                        yield (match_str or match_without_book, None)
 
                 if book_ref:
-                    last_verse = book_ref.ranges[-1].start
-                    if verse_stack:
-                        verse_stack[-1] = last_verse
+                    last_range = book_ref.ranges[-1]
+                    if bracket_stack:
+                        bracket_stack[-1] = last_range
                     else:
-                        verse_stack.append(last_verse)
+                        bracket_stack.append(last_range)
 
                 reference_match = next(reference_matches, None)
 
@@ -362,7 +375,7 @@ def match_chapter_range(text) -> Match | None:
     return None
 
 
-def make_chapter_range(last: Verse, match: Match) -> Reference | None:
+def make_chapter_range(last: Range, match: Match) -> Reference | None:
     """Create pair of chapter-and-verse references from a match.
 
     See `match_chapter_range`.
@@ -370,13 +383,22 @@ def make_chapter_range(last: Verse, match: Match) -> Reference | None:
     Example:
         `Rom 1:2-3:4`
     """
-    c1, v1, c2, v2 = match.groups()
-    return reference(
-        range(
-            verse(last.library, last.book, parse_number(c1), parse_number(v1)),
-            verse(last.library, last.book, parse_number(c2), parse_number(v2)),
+    if last.is_same_book():
+        c1, v1, c2, v2 = match.groups()
+        return reference(
+            range(
+                verse(
+                    last.start.library,
+                    last.start.book,
+                    parse_number(c1),
+                    parse_number(v1),
+                ),
+                verse(
+                    last.end.library, last.end.book, parse_number(c2), parse_number(v2)
+                ),
+            )
         )
-    )
+    return None
 
 
 def match_chapter_verses(text) -> Match | None:
@@ -390,7 +412,7 @@ def match_chapter_verses(text) -> Match | None:
     return None
 
 
-def make_chapter_verses(last: Verse, match: Match) -> Reference | None:
+def make_chapter_verses(last: Range, match: Match) -> Reference | None:
     """Create a reference from verse list preceded by a chapter marker.
 
     See `match_chapter_verses`.
@@ -398,12 +420,15 @@ def make_chapter_verses(last: Verse, match: Match) -> Reference | None:
     Example:
         `Rom 3:4,6-9`
     """
-    chapter, numbers = match.groups()
-    last_verse = last.model_copy()
-    last_verse.chapter = int(chapter)
-    if range_match := match_number_ranges(numbers):
-        if reference := make_number_ranges(last_verse, range_match):
-            return reference
+    if last.is_same_book():
+        chapter, numbers = match.groups()
+        if range_match := match_number_ranges(numbers):
+            last_range = range(
+                verse(last.start.library, last.start.book, int(chapter), 1),
+                verse(last.end.library, last.end.book, int(chapter), 999),
+            )
+            if reference := make_number_ranges(last_range, range_match):
+                return reference
     return None
 
 
@@ -417,9 +442,9 @@ def match_number_ranges(text) -> List[str]:
 
 
 def make_number_ranges(
-    last: Verse, matches: List[str], as_chapters: bool = False
+    last: Range, matches: List[str], as_chapters: bool = False
 ) -> Reference | None:
-    """Create a reference from a list of numbvers and number ranges.
+    """Create a reference from a list of numbers and number ranges.
 
     Args:
         last: a verse to which this number list is relative.
@@ -449,19 +474,33 @@ def make_number_ranges(
             else:
                 return None
         if as_chapters:
-            ranges.append(
-                range(
-                    verse(last.library, last.book, parse_number(start), 1),
-                    verse(last.library, last.book, parse_number(end), 999),
+            if last.is_same_book():
+                ranges.append(
+                    range(
+                        verse(
+                            last.start.library, last.start.book, parse_number(start), 1
+                        ),
+                        verse(last.end.library, last.end.book, parse_number(end), 999),
+                    )
                 )
-            )
         else:
-            ranges.append(
-                range(
-                    verse(last.library, last.book, last.chapter, parse_number(start)),
-                    verse(last.library, last.book, last.chapter, parse_number(end)),
+            if last.is_same_chapter():
+                ranges.append(
+                    range(
+                        verse(
+                            last.start.library,
+                            last.start.book,
+                            last.start.chapter,
+                            parse_number(start),
+                        ),
+                        verse(
+                            last.end.library,
+                            last.end.book,
+                            last.end.chapter,
+                            parse_number(end),
+                        ),
+                    )
                 )
-            )
     if ranges:
         return reference(*ranges)
     else:
