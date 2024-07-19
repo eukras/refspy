@@ -43,6 +43,11 @@ def test_make_hotspots_scaling():
     assert "Bk 3 ❙❙❙❙❙❙❙" in text
 
 
+def test_make_hotspots_empty():
+    text = __.make_hotspots_text([], top=2, limit=10)
+    assert text is None
+
+
 def test_non_unique():
     """
     Repeating any name/alias values raise an error.

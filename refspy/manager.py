@@ -130,13 +130,15 @@ class Manager:
 
     def make_hotspots(
         self, references: List[Reference], top=10
-    ) -> List[Tuple[str, int]]:
+    ) -> List[Tuple[str, int]] | None:
         """
         List the most referenced chapters in a set of references. The top 10
         which exceed 5% of the total. We count the start and end of each range as
         a chapter, so divide totals by 2 at the end.
         """
         totals = dict()
+        if not references:
+            return None
         for _ in self.sort_references(references).ranges:
             for tuple in [
                 (_.start.library, _.start.book, _.start.chapter),
@@ -156,17 +158,21 @@ class Manager:
         hotspots_desc = sorted(hotspots.items(), key=lambda item: item[1], reverse=True)
         return hotspots_desc[:top]
 
-    def make_hotspots_text(self, references: List[Reference], top=10, limit=10) -> str:
+    def make_hotspots_text(
+        self, references: List[Reference], top=10, limit=10
+    ) -> str | None:
         """
         Return hotspots as a text string: "Rom 3 (x4), etc"
         """
-        hotspots = self.make_hotspots(references, top)
-        max_total = max([n for _, n in hotspots])
-        scaling = limit / max_total if max_total > limit else 1
-        scaled_totals = [(ch, round(n * scaling)) for ch, n in hotspots]
-        return ", ".join(
-            [f"{chapter} {'❙' * total}" for chapter, total in scaled_totals]
-        )
+        if hotspots := self.make_hotspots(references, top, limit):
+            max_total = max([n for _, n in hotspots])
+            scaling = limit / max_total if max_total > limit else 1
+            scaled_totals = [(ch, round(n * scaling)) for ch, n in hotspots]
+            return ", ".join(
+                [f"{chapter} {'❙' * total}" for chapter, total in scaled_totals]
+            )
+        else:
+            return None
 
     # -----------------------------------
     # Merging functions
