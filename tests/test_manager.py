@@ -1,15 +1,15 @@
 import pytest
-
 from context import *
 
+from refspy import refspy
+from refspy.book import Book
 from refspy.languages.english import ENGLISH
 from refspy.libraries.en_US import NT
-from refspy.manager import Manager
-from refspy.range import range
-from refspy.reference import reference, verse_reference
-from refspy.book import Book
 from refspy.library import Library
-from refspy.verse import verse
+from refspy.manager import Manager
+from refspy.range import Range, range
+from refspy.reference import Reference, reference, verse_reference
+from refspy.verse import Verse, verse
 
 BOOK = Book(id=2, name="Book", abbrev="Bk", aliases=["vol"], chapters=3)
 
@@ -21,6 +21,7 @@ REFERENCES = [
 ]
 
 __ = Manager([LIBRARY], ENGLISH)
+REFSPY = refspy()
 
 
 def test_init():
@@ -31,20 +32,22 @@ def test_init():
 
 def test_make_hotspots():
     tuples = __.find_references("Book 1:2, 2:1, 3:4, 1:4-5, 7, 3:6")
-    text = __.make_hotspots_text([ref for _, ref in tuples if ref], top=2, limit=10)
-    assert "Bk 1 ❙❙❙" in text
-    assert "Bk 3 ❙❙" in text
+    text = __.make_hotspots_text([ref for _, ref in tuples if ref], top=2, min_count=2)
+    assert text is not None
+    assert "Bk 1 (3)" in text
+    assert "Bk 3 (2)" in text
 
 
-def test_make_hotspots_scaling():
+def test_make_hotspots_lots():
     tuples = __.find_references("Book 1:2, 2:1, 3:4, 1:4-5, 7, 3:6, " * 100)
-    text = __.make_hotspots_text([ref for _, ref in tuples if ref], top=2, limit=10)
-    assert "Bk 1 ❙❙❙❙❙❙❙❙❙❙" in text
-    assert "Bk 3 ❙❙❙❙❙❙❙" in text
+    text = __.make_hotspots_text([ref for _, ref in tuples if ref], top=2, min_count=2)
+    assert text is not None
+    assert "Bk 1 (300)" in text
+    assert "Bk 3 (200)" in text
 
 
 def test_make_hotspots_empty():
-    text = __.make_hotspots_text([], top=2, limit=10)
+    text = __.make_hotspots_text([], top=2, min_count=2)
     assert text is None
 
 

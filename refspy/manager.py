@@ -129,14 +129,14 @@ class Manager:
         return "; ".join(summary) + error_msg
 
     def make_hotspots(
-        self,
-        references: List[Reference],
-        top=10,
+        self, references: List[Reference], top=7, min_count=2
     ) -> List[Tuple[str, int]] | None:
         """
-        List the most referenced chapters in a set of references. The top 10
-        which exceed 5% of the total. We count the start and end of each range as
-        a chapter, so divide totals by 2 at the end.
+        Find the most referenced chapters in a set of references.
+
+        Args:
+            top: The maximum number of chapter hotspots to return.
+            min_count: The minimal total that qualifies as a hotspot.
         """
         totals = dict()
         if not references:
@@ -153,23 +153,19 @@ class Manager:
         hotspots = {
             self.abbrev_name(chapter_reference(*tuple)): int(total / 2)
             for tuple, total in totals.items()
+            if total > min_count
         }
         hotspots_desc = sorted(hotspots.items(), key=lambda item: item[1], reverse=True)
         return hotspots_desc[:top]
 
     def make_hotspots_text(
-        self, references: List[Reference], top=10, limit=10
+        self, references: List[Reference], top=7, min_count=2
     ) -> str | None:
         """
-        Return hotspots as a text string: "Rom 3 (x4), etc"
+        Return hotspots as a text string: "Rom 3 (4), etc"
         """
-        if hotspots := self.make_hotspots(references, top):
-            max_total = max([n for _, n in hotspots])
-            scaling = limit / max_total if max_total > limit else 1
-            scaled_totals = [(ch, round(n * scaling)) for ch, n in hotspots]
-            return ", ".join(
-                [f"{chapter} {'❙' * total}" for chapter, total in scaled_totals]
-            )
+        if hotspots := self.make_hotspots(references, top=top, min_count=min_count):
+            return ", ".join([f"{chapter} ({total})" for chapter, total in hotspots])
         else:
             return None
 
