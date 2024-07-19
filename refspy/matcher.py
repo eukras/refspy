@@ -15,7 +15,7 @@ from refspy.reference import (
 from refspy.utils import parse_number, normalize_spacing
 from refspy.verse import Number, verse
 
-COLON = r"[:.]"
+COLON = r":"
 DASH = r"[–-]"
 END = r"\b"
 NUMBER = r"\d+[a-d]?"
