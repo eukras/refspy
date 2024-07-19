@@ -129,7 +129,9 @@ class Manager:
         return "; ".join(summary) + error_msg
 
     def make_hotspots(
-        self, references: List[Reference], top=10
+        self,
+        references: List[Reference],
+        top=10,
     ) -> List[Tuple[str, int]] | None:
         """
         List the most referenced chapters in a set of references. The top 10
@@ -164,7 +166,7 @@ class Manager:
         """
         Return hotspots as a text string: "Rom 3 (x4), etc"
         """
-        if hotspots := self.make_hotspots(references, top, limit):
+        if hotspots := self.make_hotspots(references, top):
             max_total = max([n for _, n in hotspots])
             scaling = limit / max_total if max_total > limit else 1
             scaled_totals = [(ch, round(n * scaling)) for ch, n in hotspots]

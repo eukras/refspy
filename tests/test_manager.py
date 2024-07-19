@@ -31,7 +31,7 @@ def test_init():
 
 def test_make_hotspots():
     tuples = __.find_references("Book 1:2, 2:1, 3:4, 1:4-5, 7, 3:6")
-    text = __.make_hotspots_text([ref for _, ref in tuples if ref], top=2)
+    text = __.make_hotspots_text([ref for _, ref in tuples if ref], top=2, limit=10)
     assert "Bk 1 ❙❙❙" in text
     assert "Bk 3 ❙❙" in text
 
