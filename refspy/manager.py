@@ -7,7 +7,6 @@ import re
 from typing import Dict, Generator, List, Tuple
 
 from pydantic import TypeAdapter
-
 from refspy.book import Book
 from refspy.format import (
     ABBREV_BOOK_FORMAT,
@@ -34,7 +33,7 @@ from refspy.reference import (
     reference,
     verse_reference,
 )
-from refspy.utils import url_param, url_escape
+from refspy.utils import pluralize, url_param, url_escape
 from refspy.verse import Number, verse
 
 
@@ -112,6 +111,11 @@ class Manager:
             will default to `refspy.manager.Manager.abbrev_name()`.
         """
         summary = []
+        count_nones = len([ref for ref in references if ref is None])
+        if count_nones > 0:
+            error_msg = f'; <span class="wiki-error">{pluralize(count_nones, "bad reference")}</span>'
+        else:
+            error_msg = ""
         collation = self.collate(
             sorted([ref for ref in references if ref and not ref.is_book()])
         )
@@ -122,7 +126,47 @@ class Manager:
                     summary.append(self.template(compact_ref, pattern))
                 else:
                     summary.append(self.abbrev_name(compact_ref))
-        return "; ".join(summary)
+        return "; ".join(summary) + error_msg
+
+    def make_hotspots(
+        self, references: List[Reference], top=10
+    ) -> List[Tuple[str, int]]:
+        """
+        List the most referenced chapters in a set of references. The top 10
+        which exceed 5% of the total. We count the start and end of each range as
+        a chapter, so divide totals by 2 at the end.
+        """
+        totals = dict()
+        for _ in self.sort_references(references).ranges:
+            for tuple in [
+                (_.start.library, _.start.book, _.start.chapter),
+                (_.end.library, _.end.book, _.end.chapter),
+            ]:
+                if tuple in totals:
+                    totals[tuple] += 1
+                else:
+                    totals[tuple] = 1
+        grand_total = sum(totals.values())
+        lower_limit = (grand_total / top) / 2
+        hotspots = {
+            self.abbrev_name(chapter_reference(*tuple)): int(total / 2)
+            for tuple, total in totals.items()
+            if total > lower_limit
+        }
+        hotspots_desc = sorted(hotspots.items(), key=lambda item: item[1], reverse=True)
+        return hotspots_desc[:top]
+
+    def make_hotspots_text(self, references: List[Reference], top=10, limit=10) -> str:
+        """
+        Return hotspots as a text string: "Rom 3 (x4), etc"
+        """
+        hotspots = self.make_hotspots(references, top)
+        max_total = max([n for _, n in hotspots])
+        scaling = limit / max_total if max_total > limit else 1
+        scaled_totals = [(ch, round(n * scaling)) for ch, n in hotspots]
+        return ", ".join(
+            [f"{chapter} {'❙' * total}" for chapter, total in scaled_totals]
+        )
 
     # -----------------------------------
     # Merging functions

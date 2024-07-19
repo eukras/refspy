@@ -325,6 +325,8 @@ def merge(ranges: List[Range], skip_sort: bool = False) -> List[Range]:
 
     This performs a sort before merging unless skip_sort=True.
     """
+    if not ranges:
+        return []
     sorted_ranges = ranges if skip_sort else sorted(ranges)
     new_ranges = []
     last_range = sorted_ranges[0]
@@ -344,6 +346,8 @@ def combine(ranges: List[Range], skip_merge: bool = False) -> List[Range]:
 
     This performs a sort and merge before combining, unless skip_merge=True.
     """
+    if not ranges:
+        return []
     merged_ranges = ranges if skip_merge else merge(ranges)
     new_ranges = []
     last_range = merged_ranges[0]

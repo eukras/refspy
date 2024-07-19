@@ -57,6 +57,19 @@ def normalize_spacing(text: str) -> str:
     return re.sub("\\s+", " ", text)
 
 
+def pluralize(number: int, singular: str, plural: str = "") -> str:
+    """
+    Super simple pluralization.
+    """
+    if number == 1:
+        return "%d %s" % (number, singular)
+    else:
+        if plural != "":
+            return "%d %s" % (number, plural)
+        else:
+            return "%d %ss" % (number, singular)
+
+
 def sequential_replace_tuples(text: str, tuples: List[Tuple[str, str]]):
     """Replace values, searching from the end of each previous replacement.
 

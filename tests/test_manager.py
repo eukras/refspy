@@ -5,7 +5,7 @@ from context import *
 from refspy.languages.english import ENGLISH
 from refspy.libraries.en_US import NT
 from refspy.manager import Manager
-from refspy.range import merge, range
+from refspy.range import range
 from refspy.reference import reference, verse_reference
 from refspy.book import Book
 from refspy.library import Library
@@ -24,12 +24,23 @@ __ = Manager([LIBRARY], ENGLISH)
 
 
 def test_init():
-    """
-    Initialising a reference manager should create indexes for all the aliases.
-    """
     assert __.libraries[LIBRARY.id] == LIBRARY
     assert __.book_aliases["Book"] == (LIBRARY.id, BOOK.id)
     assert __.book_aliases["Bk"] == (LIBRARY.id, BOOK.id)
+
+
+def test_make_hotspots():
+    tuples = __.find_references("Book 1:2, 2:1, 3:4, 1:4-5, 7, 3:6")
+    text = __.make_hotspots_text([ref for _, ref in tuples if ref], top=2)
+    assert "Bk 1 ❙❙❙" in text
+    assert "Bk 3 ❙❙" in text
+
+
+def test_make_hotspots_scaling():
+    tuples = __.find_references("Book 1:2, 2:1, 3:4, 1:4-5, 7, 3:6, " * 100)
+    text = __.make_hotspots_text([ref for _, ref in tuples if ref], top=2, limit=10)
+    assert "Bk 1 ❙❙❙❙❙❙❙❙❙❙" in text
+    assert "Bk 3 ❙❙❙❙❙❙❙" in text
 
 
 def test_non_unique():
