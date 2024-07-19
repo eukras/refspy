@@ -150,12 +150,9 @@ class Manager:
                     totals[tuple] += 1
                 else:
                     totals[tuple] = 1
-        grand_total = sum(totals.values())
-        lower_limit = (grand_total / top) / 2
         hotspots = {
             self.abbrev_name(chapter_reference(*tuple)): int(total / 2)
             for tuple, total in totals.items()
-            if total > lower_limit
         }
         hotspots_desc = sorted(hotspots.items(), key=lambda item: item[1], reverse=True)
         return hotspots_desc[:top]
