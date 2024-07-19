@@ -123,7 +123,6 @@ def test_match_names():
 
 
 def test_match_names_and_numbers():
-    print("NAME REGEXP", matcher.name_regexp)
     assert matcher.name_regexp.findall("Big Book 1") == [
         ("Big Book 1", "Big Book", " 1", "")
     ]
@@ -233,9 +232,7 @@ def test_find_references():
         range(verse(1, 2, 34, 7), verse(1, 2, 34, 7)),
     )
     text, ref = next(__)
-    print(matcher.book_aliases)
     assert text == "Small Book 3-6"
-    print(ref.ranges[0])
     assert ref == reference(range(verse(1, 3, 1, 3), verse(1, 3, 1, 6)))
     with pytest.raises(StopIteration):
         assert next(__) is None
@@ -291,7 +288,6 @@ def test_single_parentheses():
 def test_number_prefixes():
     sample_text = "1 Book 1:1, First Book 1:1, 1st Book 1:1, I Book 1:1"
     first_reference = verse_reference(1, 4, 1, 1)
-    print("HMM", matcher.name_regexp)
     __ = matcher.generate_references(sample_text)
     text, ref = next(__)
     assert text == "1 Book 1:1"
@@ -314,7 +310,6 @@ def test_line_wrapping():
         This is a wrapped reference to 1 
         Book 5.
         """
-    print("REGEXP", matcher.build_book_name_regexp())
     __ = matcher.generate_references(text)
     text, ref = next(__)
     assert (
