@@ -38,20 +38,24 @@ def test_make_index():
 
 def test_make_hotspots():
     tuples = __.find_references("Book 1:2, 2:1, 3:4, 1:4-5, 7, 3:6")
-    text = __.make_hotspots_text([ref for _, ref in tuples if ref], top=2, min_count=2)
+    text = __.make_hotspots_text(
+        [ref for _, ref in tuples if ref], max_chapters=2, min_references=2
+    )
     assert text is not None
     assert "Bk 1, Bk 3" in text
 
 
 def test_make_hotspots_lots():
     tuples = __.find_references("Book 1:2, 2:1, 3:4, 1:4-5, 7, 3:6, " * 100)
-    text = __.make_hotspots_text([ref for _, ref in tuples if ref], top=2, min_count=2)
+    text = __.make_hotspots_text(
+        [ref for _, ref in tuples if ref], max_chapters=2, min_references=2
+    )
     assert text is not None
     assert "Bk 1, Bk 3" in text
 
 
 def test_make_hotspots_empty():
-    text = __.make_hotspots_text([], top=2, min_count=2)
+    text = __.make_hotspots_text([], max_chapters=2, min_references=2)
     assert text is None
 
 
