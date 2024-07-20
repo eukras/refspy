@@ -3,11 +3,12 @@
 ## Status
 
 * `0.9.7` is feature-complete. 
+* `0.9.13` Adds indexes, hotspots, tweaks for integration. 
 
-## NOW: July 2024
+## Next 
 
 * Test against human writing styles (use Article Wiki as a live demo and
-    playground); expand test suites to reflect special cases. 
+  playground); expand test suites to reflect special cases. 
 
 ## Possibilities
 

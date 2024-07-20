@@ -30,20 +30,24 @@ def test_init():
     assert __.book_aliases["Bk"] == (LIBRARY.id, BOOK.id)
 
 
+def test_make_index():
+    tuples = __.find_references("Book 1:2, 2:1, 3:4, 1:4-5, 7, 3:6")
+    text = __.make_index([ref for _, ref in tuples if ref])
+    assert text == "Bk 1:2, 4–5, 7; 2:1; 3:4, 6"
+
+
 def test_make_hotspots():
     tuples = __.find_references("Book 1:2, 2:1, 3:4, 1:4-5, 7, 3:6")
     text = __.make_hotspots_text([ref for _, ref in tuples if ref], top=2, min_count=2)
     assert text is not None
-    assert "Bk 1 (3)" in text
-    assert "Bk 3 (2)" in text
+    assert "Bk 1, Bk 3" in text
 
 
 def test_make_hotspots_lots():
     tuples = __.find_references("Book 1:2, 2:1, 3:4, 1:4-5, 7, 3:6, " * 100)
     text = __.make_hotspots_text([ref for _, ref in tuples if ref], top=2, min_count=2)
     assert text is not None
-    assert "Bk 1 (300)" in text
-    assert "Bk 3 (200)" in text
+    assert "Bk 1, Bk 3" in text
 
 
 def test_make_hotspots_empty():

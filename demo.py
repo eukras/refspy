@@ -38,6 +38,7 @@ bible_gateway = (
 )
 
 summary = __.make_summary(references, pattern=bible_gateway)
+hotspots = __.make_hotspots_text(references, top=7, min_count=2)
 
 GENERATOR = "https://github.com/eukras/refspy/demo.py"
 
@@ -72,6 +73,7 @@ print(f"""
         links.</p>
         <blockquote><b>Index</b>. {index}.</blockquote>
         <blockquote><b>Summary</b>. {summary}.</blockquote>
+        <blockquote><b>Hotspots</b>. {hotspots}.</blockquote>
         <p> Because a number or a range ('1' or '2-3') could refer to either
         verses or chapters, or other regular numbers having nothing to do with
         biblical referencing ('ch.8'), we only match references that are

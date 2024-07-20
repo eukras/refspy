@@ -129,14 +129,17 @@ class Manager:
         return "; ".join(summary) + error_msg
 
     def make_hotspots(
-        self, references: List[Reference], top=7, min_count=2
+        self,
+        references: List[Reference],
+        max_chapters: int = 7,
+        min_references: int = 2,
     ) -> List[Tuple[str, int]] | None:
         """
         Find the most referenced chapters in a set of references.
 
         Args:
-            top: The maximum number of chapter hotspots to return.
-            min_count: The minimal total that qualifies as a hotspot.
+            max_chapters: The maximum number of chapter hotspots to return.
+            min_references: The minimal references per chapter that qualifies as a hotspot.
         """
         totals = dict()
         if not references:
@@ -153,19 +156,25 @@ class Manager:
         hotspots = {
             self.abbrev_name(chapter_reference(*tuple)): int(total / 2)
             for tuple, total in totals.items()
-            if total > min_count
+            if total / 2 >= min_references
         }
         hotspots_desc = sorted(hotspots.items(), key=lambda item: item[1], reverse=True)
-        return hotspots_desc[:top]
+        return hotspots_desc[:max_chapters]
 
     def make_hotspots_text(
-        self, references: List[Reference], top=7, min_count=2
+        self,
+        references: List[Reference],
+        max_chapters: int = 7,
+        min_references: int = 2,
     ) -> str | None:
         """
-        Return hotspots as a text string: "Rom 3 (4), etc"
+        Return most referenced chapters as a text string: "Rom 3, 1 Cor 6" in
+        descending order of frequency.
         """
-        if hotspots := self.make_hotspots(references, top=top, min_count=min_count):
-            return ", ".join([f"{chapter} ({total})" for chapter, total in hotspots])
+        if hotspots := self.make_hotspots(
+            references, max_chapters=max_chapters, min_references=min_references
+        ):
+            return ", ".join([chapter for chapter, _ in hotspots])
         else:
             return None
 

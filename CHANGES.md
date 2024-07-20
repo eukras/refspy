@@ -1,10 +1,14 @@
 # CHANGES
 
-## 1.0
+## 1.0.0
 
 (Future)
 
-## 0.9.* -- INITIAL RELEASE
+### 0.9.13 -- BETA
+
+* Calculate hotspots (i.e. most referenced chapters)
+* Prevent matching e.g. '0.4' (no longer handle params in regular text). 
+* Article Wiki integration: support for reference indexes in book-length documents.
 
 ### 0.9.7 -- BETA
 
