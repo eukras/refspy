@@ -244,7 +244,7 @@ ref1 = __.ref('Rom 2:3-4,7')
 
 assert __.get_book(ref1).chapters == 16
 assert __.name(ref1.book_reference()) == 'Romans'
-assert __.name(ref1.chapter_reference(ref1)) == 'Romans 2'
+assert __.name(ref1.chapter_reference()) == 'Romans 2'
 ```
 
 ### Navigating references
@@ -384,9 +384,9 @@ OT = Library(
 Any major class has its own file, so `Library` is defined in
 `refspy/library.py` and so on.
 
-Books and libraries have names, abbrevs, and aliases. If URL params are needs,
+Books and libraries have names, abbrevs, and aliases. If URL params are needed,
 they are generated from these. So, the name '1 Corinthians' has the abbrev '1
-Cor', wand generates the param '1+cor'. The `languages/english.py` file says
+Cor', and generates the param '1+cor'. The `languages/english.py` file says
 that numeric prefixes must also match `I` and `First` (etc). The params are
 lowercase with no spaces.
 
