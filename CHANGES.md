@@ -4,6 +4,10 @@
 
 (Future)
 
+### 0.9.14 -- BETA
+
+* fix: make_hotposts_text() arg names; affecting demo.py
+
 ### 0.9.13 -- BETA
 
 * Calculate hotspots (i.e. most referenced chapters)
