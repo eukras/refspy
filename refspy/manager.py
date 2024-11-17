@@ -170,6 +170,10 @@ class Manager:
         """
         Return most referenced chapters as a text string: "Rom 3, 1 Cor 6" in
         descending order of frequency.
+
+        Args:
+            max_chapters: The maximum number of chapter hotspots to return.
+            min_references: The minimal references per chapter that qualifies as a hotspot.
         """
         if hotspots := self.make_hotspots(
             references, max_chapters=max_chapters, min_references=min_references
