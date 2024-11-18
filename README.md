@@ -244,7 +244,7 @@ ref1 = __.ref('Rom 2:3-4,7')
 
 assert __.get_book(ref1).chapters == 16
 assert __.name(ref1.book_reference()) == 'Romans'
-assert __.name(ref1.chapter_reference(ref1)) == 'Romans 2'
+assert __.name(ref1.chapter_reference()) == 'Romans 2'
 ```
 
 ### Navigating references
