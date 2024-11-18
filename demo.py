@@ -38,7 +38,7 @@ bible_gateway = (
 )
 
 summary = __.make_summary(references, pattern=bible_gateway)
-hotspots = __.make_hotspots_text(references, top=7, min_count=2)
+hotspots = __.make_hotspots_text(references, max_chapters=7, min_references=2)
 
 GENERATOR = "https://github.com/eukras/refspy/demo.py"
 
