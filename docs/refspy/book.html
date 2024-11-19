@@ -164,18 +164,18 @@ substitute prefixes like 'I' or 'First'.</p>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Usage docs: <a href="https://docs.pydantic.dev/2.9/concepts/models/">https://docs.pydantic.dev/2.9/concepts/models/</a></p>
+            <div class="docstring"><p>Usage docs: <a href="https://docs.pydantic.dev/2.8/concepts/models/">https://docs.pydantic.dev/2.8/concepts/models/</a></p>
 
 <p>A base class for creating Pydantic models.</p>
 
 <h6 id="attributes">Attributes:</h6>
 
 <ul>
-<li><strong>__class_vars__:</strong>  The names of the class variables defined on the model.</li>
+<li><strong>__class_vars__:</strong>  The names of classvars defined on the model.</li>
 <li><strong>__private_attributes__:</strong>  Metadata about the private attributes of the model.</li>
-<li><strong>__signature__:</strong>  The synthesized <code><a href="#Book.__init__">__init__</a></code> [<code>Signature</code>][inspect.Signature] of the model.</li>
+<li><strong>__signature__:</strong>  The signature for instantiating the model.</li>
 <li><strong>__pydantic_complete__:</strong>  Whether model building is completed, or if there are still undefined fields.</li>
-<li><strong>__pydantic_core_schema__:</strong>  The core schema of the model.</li>
+<li><strong>__pydantic_core_schema__:</strong>  The pydantic-core schema used to build the SchemaValidator and SchemaSerializer.</li>
 <li><strong>__pydantic_custom_init__:</strong>  Whether the model has a custom <code><a href="#Book.__init__">__init__</a></code> function.</li>
 <li><strong>__pydantic_decorators__:</strong>  Metadata containing the decorators defined on the model.
 This replaces <code>Model.__validators__</code> and <code>Model.__root_validators__</code> from Pydantic V1.</li>
@@ -183,13 +183,13 @@ This replaces <code>Model.__validators__</code> and <code>Model.__root_validator
 __args__, __origin__, __parameters__ in typing-module generics. May eventually be replaced by these.</li>
 <li><strong>__pydantic_parent_namespace__:</strong>  Parent namespace of the model, used for automatic rebuilding of models.</li>
 <li><strong>__pydantic_post_init__:</strong>  The name of the post-init method for the model, if defined.</li>
-<li><strong>__pydantic_root_model__:</strong>  Whether the model is a [<code>RootModel</code>][pydantic.root_model.RootModel].</li>
-<li><strong>__pydantic_serializer__:</strong>  The <code>pydantic-core</code> <code>SchemaSerializer</code> used to dump instances of the model.</li>
-<li><strong>__pydantic_validator__:</strong>  The <code>pydantic-core</code> <code>SchemaValidator</code> used to validate instances of the model.</li>
-<li><strong>__pydantic_extra__:</strong>  A dictionary containing extra values, if [<code>extra</code>][pydantic.config.ConfigDict.extra]
-is set to <code>'allow'</code>.</li>
-<li><strong>__pydantic_fields_set__:</strong>  The names of fields explicitly set during instantiation.</li>
-<li><strong>__pydantic_private__:</strong>  Values of private attributes set on the model instance.</li>
+<li><strong>__pydantic_root_model__:</strong>  Whether the model is a <code>RootModel</code>.</li>
+<li><strong>__pydantic_serializer__:</strong>  The pydantic-core SchemaSerializer used to dump instances of the model.</li>
+<li><strong>__pydantic_validator__:</strong>  The pydantic-core SchemaValidator used to validate instances of the model.</li>
+<li><strong>__pydantic_extra__:</strong>  An instance attribute with the values of extra fields from validation when
+<code>model_config['extra'] == 'allow'</code>.</li>
+<li><strong>__pydantic_fields_set__:</strong>  An instance attribute with the names of fields explicitly set.</li>
+<li><strong>__pydantic_private__:</strong>  Instance attribute with the values of private attributes set on the model instance.</li>
 </ul>
 </div>
 
@@ -251,21 +251,19 @@ is set to <code>'allow'</code>.</li>
                             </div>
                             <div id="Book.model_config" class="classattr">
                                 <div class="attr variable">
-            <span class="name">model_config</span><span class="annotation">: ClassVar[pydantic.config.ConfigDict]</span>        =
+            <span class="name">model_config</span>        =
 <span class="default_value">{}</span>
 
         
     </div>
     <a class="headerlink" href="#Book.model_config"></a>
     
-            <div class="docstring"><p>Configuration for the model, should be a dictionary conforming to [<code>ConfigDict</code>][pydantic.config.ConfigDict].</p>
-</div>
-
+    
 
                             </div>
                             <div id="Book.model_fields" class="classattr">
                                 <div class="attr variable">
-            <span class="name">model_fields</span><span class="annotation">: ClassVar[Dict[str, pydantic.fields.FieldInfo]]</span>        =
+            <span class="name">model_fields</span>        =
 <input id="Book.model_fields-view-value" class="view-value-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
             <label class="view-value-button pdoc-button" for="Book.model_fields-view-value"></label><span class="default_value">{&#39;id&#39;: FieldInfo(annotation=int, required=True, metadata=[Ge(ge=1), Le(le=999)]), &#39;name&#39;: FieldInfo(annotation=str, required=True), &#39;abbrev&#39;: FieldInfo(annotation=str, required=True), &#39;aliases&#39;: FieldInfo(annotation=List[str], required=True), &#39;chapters&#39;: FieldInfo(annotation=int, required=True)}</span>
 
@@ -273,26 +271,19 @@ is set to <code>'allow'</code>.</li>
     </div>
     <a class="headerlink" href="#Book.model_fields"></a>
     
-            <div class="docstring"><p>Metadata about the fields defined on the model,
-mapping of field names to [<code>FieldInfo</code>][pydantic.fields.FieldInfo] objects.</p>
-
-<p>This replaces <code>Model.__fields__</code> from Pydantic V1.</p>
-</div>
-
+    
 
                             </div>
                             <div id="Book.model_computed_fields" class="classattr">
                                 <div class="attr variable">
-            <span class="name">model_computed_fields</span><span class="annotation">: ClassVar[Dict[str, pydantic.fields.ComputedFieldInfo]]</span>        =
+            <span class="name">model_computed_fields</span>        =
 <span class="default_value">{}</span>
 
         
     </div>
     <a class="headerlink" href="#Book.model_computed_fields"></a>
     
-            <div class="docstring"><p>A dictionary of computed field names and their corresponding <code>ComputedFieldInfo</code> objects.</p>
-</div>
-
+    
 
                             </div>
                 </section>

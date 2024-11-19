@@ -37,6 +37,9 @@
                                 <a class="variable" href="#Language.verse_markers">verse_markers</a>
                         </li>
                         <li>
+                                <a class="variable" href="#Language.ambiguous_aliases">ambiguous_aliases</a>
+                        </li>
+                        <li>
                                 <a class="variable" href="#Language.number_prefixes">number_prefixes</a>
                         </li>
                         <li>
@@ -99,7 +102,8 @@
 </span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>
 </span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="k">class</span> <span class="nc">Language</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 </span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>    <span class="n">verse_markers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>    <span class="n">number_prefixes</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>    <span class="n">ambiguous_aliases</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>    <span class="n">number_prefixes</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
 </span></pre></div>
 
 
@@ -117,22 +121,23 @@
     <a class="headerlink" href="#Language"></a>
             <div class="pdoc-code codehilite"><pre><span></span><span id="Language-16"><a href="#Language-16"><span class="linenos">16</span></a><span class="k">class</span> <span class="nc">Language</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 </span><span id="Language-17"><a href="#Language-17"><span class="linenos">17</span></a>    <span class="n">verse_markers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-</span><span id="Language-18"><a href="#Language-18"><span class="linenos">18</span></a>    <span class="n">number_prefixes</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+</span><span id="Language-18"><a href="#Language-18"><span class="linenos">18</span></a>    <span class="n">ambiguous_aliases</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+</span><span id="Language-19"><a href="#Language-19"><span class="linenos">19</span></a>    <span class="n">number_prefixes</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Usage docs: <a href="https://docs.pydantic.dev/2.9/concepts/models/">https://docs.pydantic.dev/2.9/concepts/models/</a></p>
+            <div class="docstring"><p>Usage docs: <a href="https://docs.pydantic.dev/2.8/concepts/models/">https://docs.pydantic.dev/2.8/concepts/models/</a></p>
 
 <p>A base class for creating Pydantic models.</p>
 
 <h6 id="attributes">Attributes:</h6>
 
 <ul>
-<li><strong>__class_vars__:</strong>  The names of the class variables defined on the model.</li>
+<li><strong>__class_vars__:</strong>  The names of classvars defined on the model.</li>
 <li><strong>__private_attributes__:</strong>  Metadata about the private attributes of the model.</li>
-<li><strong>__signature__:</strong>  The synthesized <code><a href="#Language.__init__">__init__</a></code> [<code>Signature</code>][inspect.Signature] of the model.</li>
+<li><strong>__signature__:</strong>  The signature for instantiating the model.</li>
 <li><strong>__pydantic_complete__:</strong>  Whether model building is completed, or if there are still undefined fields.</li>
-<li><strong>__pydantic_core_schema__:</strong>  The core schema of the model.</li>
+<li><strong>__pydantic_core_schema__:</strong>  The pydantic-core schema used to build the SchemaValidator and SchemaSerializer.</li>
 <li><strong>__pydantic_custom_init__:</strong>  Whether the model has a custom <code><a href="#Language.__init__">__init__</a></code> function.</li>
 <li><strong>__pydantic_decorators__:</strong>  Metadata containing the decorators defined on the model.
 This replaces <code>Model.__validators__</code> and <code>Model.__root_validators__</code> from Pydantic V1.</li>
@@ -140,13 +145,13 @@ This replaces <code>Model.__validators__</code> and <code>Model.__root_validator
 __args__, __origin__, __parameters__ in typing-module generics. May eventually be replaced by these.</li>
 <li><strong>__pydantic_parent_namespace__:</strong>  Parent namespace of the model, used for automatic rebuilding of models.</li>
 <li><strong>__pydantic_post_init__:</strong>  The name of the post-init method for the model, if defined.</li>
-<li><strong>__pydantic_root_model__:</strong>  Whether the model is a [<code>RootModel</code>][pydantic.root_model.RootModel].</li>
-<li><strong>__pydantic_serializer__:</strong>  The <code>pydantic-core</code> <code>SchemaSerializer</code> used to dump instances of the model.</li>
-<li><strong>__pydantic_validator__:</strong>  The <code>pydantic-core</code> <code>SchemaValidator</code> used to validate instances of the model.</li>
-<li><strong>__pydantic_extra__:</strong>  A dictionary containing extra values, if [<code>extra</code>][pydantic.config.ConfigDict.extra]
-is set to <code>'allow'</code>.</li>
-<li><strong>__pydantic_fields_set__:</strong>  The names of fields explicitly set during instantiation.</li>
-<li><strong>__pydantic_private__:</strong>  Values of private attributes set on the model instance.</li>
+<li><strong>__pydantic_root_model__:</strong>  Whether the model is a <code>RootModel</code>.</li>
+<li><strong>__pydantic_serializer__:</strong>  The pydantic-core SchemaSerializer used to dump instances of the model.</li>
+<li><strong>__pydantic_validator__:</strong>  The pydantic-core SchemaValidator used to validate instances of the model.</li>
+<li><strong>__pydantic_extra__:</strong>  An instance attribute with the values of extra fields from validation when
+<code>model_config['extra'] == 'allow'</code>.</li>
+<li><strong>__pydantic_fields_set__:</strong>  An instance attribute with the names of fields explicitly set.</li>
+<li><strong>__pydantic_private__:</strong>  Instance attribute with the values of private attributes set on the model instance.</li>
 </ul>
 </div>
 
@@ -158,6 +163,17 @@ is set to <code>'allow'</code>.</li>
         
     </div>
     <a class="headerlink" href="#Language.verse_markers"></a>
+    
+    
+
+                            </div>
+                            <div id="Language.ambiguous_aliases" class="classattr">
+                                <div class="attr variable">
+            <span class="name">ambiguous_aliases</span><span class="annotation">: List[str]</span>
+
+        
+    </div>
+    <a class="headerlink" href="#Language.ambiguous_aliases"></a>
     
     
 
@@ -175,48 +191,39 @@ is set to <code>'allow'</code>.</li>
                             </div>
                             <div id="Language.model_config" class="classattr">
                                 <div class="attr variable">
-            <span class="name">model_config</span><span class="annotation">: ClassVar[pydantic.config.ConfigDict]</span>        =
+            <span class="name">model_config</span>        =
 <span class="default_value">{}</span>
 
         
     </div>
     <a class="headerlink" href="#Language.model_config"></a>
     
-            <div class="docstring"><p>Configuration for the model, should be a dictionary conforming to [<code>ConfigDict</code>][pydantic.config.ConfigDict].</p>
-</div>
-
+    
 
                             </div>
                             <div id="Language.model_fields" class="classattr">
                                 <div class="attr variable">
-            <span class="name">model_fields</span><span class="annotation">: ClassVar[Dict[str, pydantic.fields.FieldInfo]]</span>        =
+            <span class="name">model_fields</span>        =
 <input id="Language.model_fields-view-value" class="view-value-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-            <label class="view-value-button pdoc-button" for="Language.model_fields-view-value"></label><span class="default_value">{&#39;verse_markers&#39;: FieldInfo(annotation=List[str], required=True), &#39;number_prefixes&#39;: FieldInfo(annotation=Dict[str, List[str]], required=True)}</span>
+            <label class="view-value-button pdoc-button" for="Language.model_fields-view-value"></label><span class="default_value">{&#39;verse_markers&#39;: FieldInfo(annotation=List[str], required=True), &#39;ambiguous_aliases&#39;: FieldInfo(annotation=List[str], required=True), &#39;number_prefixes&#39;: FieldInfo(annotation=Dict[str, List[str]], required=True)}</span>
 
         
     </div>
     <a class="headerlink" href="#Language.model_fields"></a>
     
-            <div class="docstring"><p>Metadata about the fields defined on the model,
-mapping of field names to [<code>FieldInfo</code>][pydantic.fields.FieldInfo] objects.</p>
-
-<p>This replaces <code>Model.__fields__</code> from Pydantic V1.</p>
-</div>
-
+    
 
                             </div>
                             <div id="Language.model_computed_fields" class="classattr">
                                 <div class="attr variable">
-            <span class="name">model_computed_fields</span><span class="annotation">: ClassVar[Dict[str, pydantic.fields.ComputedFieldInfo]]</span>        =
+            <span class="name">model_computed_fields</span>        =
 <span class="default_value">{}</span>
 
         
     </div>
     <a class="headerlink" href="#Language.model_computed_fields"></a>
     
-            <div class="docstring"><p>A dictionary of computed field names and their corresponding <code>ComputedFieldInfo</code> objects.</p>
-</div>
-
+    
 
                             </div>
                 </section>
