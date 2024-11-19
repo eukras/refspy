@@ -5,10 +5,12 @@
 
 [![python](https://img.shields.io/badge/Python-3.11-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-![Version: 0.9.15 Beta](https://img.shields.io/badge/Version-0.9.15-purple) 
+![Version: 0.9.16 Beta](https://img.shields.io/badge/Version-0.9.16-purple) 
 ![Status: BETA](https://img.shields.io/badge/Status-BETA-red)
 
 Refspy is a Python package for working with biblical references in ordinary text.
+
+[![Github Stars](https://img.shields.io/github/stars/eukras/refspy)](https://img.shields.io/github/stars/eukras/refspy)
 
 
 # README 
@@ -53,7 +55,7 @@ __ = refspy()
 Or, to create specific canons:
 
 ```python
-from refspy.language.en import ENGLISH
+from refspy.language.english import ENGLISH
 from refspy.libraries.en_US import DC, DC_ORTHODOX, NT, OT
 from refspy.manager import Manager 
 
@@ -91,23 +93,54 @@ ref = __.r('Rom 2:6,9,1,2')
 We can construct references more programmatically with `__.bcv()`:
 
 ```python
-assert __.name(___.bcv('Rom')) == 'Romans' 
-assert __.name(___.bcv('Rom', 2)) == 'Romans 2'
-assert __.name(___.bcv('Rom', 2, 2)) == 'Romans 2:2'
-assert __.name(___.bcv('Rom', 2, 2, 3)) == 'Romans 2:2-3'
+assert __.name(__.bcv('Rom')) == 'Romans' 
+assert __.name(__.bcv('Rom', 2)) == 'Romans 2'
+assert __.name(__.bcv('Rom', 2, 2)) == 'Romans 2:2'
+assert __.name(__.bcv('Rom', 2, 2, 3)) == 'Romans 2:2-3'
 ```
 
 Or `__.bcr()` to specify book, chapter and verse ranges:
 
 ```python
-assert __.name(___.bcr('Rom', 2, [(2, 3), 7])) == "Romans 2:2-3,7"
+assert __.name(__.bcr('Rom', 2, [(2, 3), 7])) == "Romans 2:2-3,7"
+```
+
+### Options
+
+By default, we look for human-style references of the form `2 Tim 1`.  
+Both `refspy()` and `refspy.matcher.Matcher()` take the following optional
+arguments, which modify this usage.
+
+* Note. To obtain more fine-grained control of aliasing, make your own copy of
+`refspy.libraries.en_US` and use it with `Manager(libraries=[MY_LIB])`.
+
+
+#### `include_two_letter_aliases=True` (default: `True`)
+
+Allow two-letter book aliases to be matched: e.g. `Ge` for Genesis or `1 Ti`
+for First Timothy. Note that this WILL NOT match books like Isaiah (`Is`) or
+Amos (`Am`), whose abbreviations are also common words (see option 
+`include_ambiguous_aliases`). Note short names given as `abbrevs` (like `Ps`)
+will not be filtered like aliases are.
+
+#### `include_ambiguous_aliases=True` (default: `False`) 
+
+Allow ambiguous aliases (e.g. `Is`, `Am`) that are also common words to be
+matched; the list of `ambiguous_aliases` for a language is supplied in the
+language file, e.g. `refspy/languages/english.py`.
+
+```
+from refspy import refspy
+__ = refspy(include_two_letter_aliases=True)
+match, ref = __.first_reference('2Ti 1')
+assert ref == __.bcv('2 Tim', 1)
 ```
 
 
 ### Formatting references
 
 ```python
-ref = ___.r('Rom 2:3-4,7')
+ref = __.r('Rom 2:3-4,7')
 
 assert __.name(ref) == 'Romans 2:3–4, 7'
 assert __.book(ref) == 'Romans'
@@ -187,7 +220,7 @@ assert not rom_2 >= rom_4
 assert rom_4 == rom_4a
 ```
 
-Because references can be compared with `<`, they can also be sorted without any special functions, and used in `min()` and `max()`. 
+Because references can be compared using the `<` operator, they can also be sorted without any special functions, and used in `min()` and `max()`. 
 
 ```python
 assert __.sort_references([rom_4, rom_2]) == [rom_2, rom_4]
@@ -202,7 +235,7 @@ We will commonly want to know if one reference `contains()`, or `overlaps()` ano
 ```python
 gen1 = __.r('Gen 1') 
 gen2 = __.r('Gen 2') 
-gen1_23_23 = __.r('Gen 1:22-23') 
+gen1_22_23 = __.r('Gen 1:22-23') 
 gen1_24_28 = __.r('Gen 1:24-28')
   
 assert gen1.contains(gen1_22_23)
@@ -329,25 +362,26 @@ html_list = "; ".join(index)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Python                          35            710            847           2987
-Markdown                         4            145              0            428
+Python                          37            797            935           3287
+Markdown                         4            162              0            468
 TOML                             1              5              0             30
 Text                             3              1              0             30
 -------------------------------------------------------------------------------
-SUM:                            43            861            847           3475
+SUM:                            45            965            935           3815
 -------------------------------------------------------------------------------
 ```
 
 ## Glossary
 
-`Book`, `Format`, `Language`, `Library`, `Number`, `Range`, `Reference`, and
-`Verse` are Pydantic types that will raise ValueErrors if initialised with bad
-data, say if a verse has Numbers outside the range `0..999`, or if a Range has
-a start verse that is greater than its end verse.
+`Book`, `Format`, `Index`, `Language`, `Library`, `Number`, `Range`,
+`Reference`, and `Verse` are Pydantic types that will raise ValueErrors if
+initialised with bad data, say if a verse has Numbers outside the range
+`0..999`, or if a Range has a start verse that is greater than its end verse.
 
 - **Book**. A book has id, name, abbrev, aliases, and chapters. No verse counts.
 - **Format**. The Format objects define what properties and characters to use when formatting references for various purposes.
-- **Index**. An integer which results from expanding a verse by powers of 1000; `verse(1, 7, 16, 1)` becomes the integer `1007016001`. Used for database indexing.
+- **Index**. An integer which results from expanding a verse by powers of 1000; `verse(1, 7, 16, 1)` becomes the integer `1007016001`. Provided for database indexing if required.
+- **Language**. A language has verse_markers (e.g. `v.` and `.vv.`), ambiguous_aliases (e.g. `Is` and `Am`, which are also words), and number prefixes (e.g. `Second` and `II` for `2`).
 - **Library**. A library has id, name, abbrev, and a list of Books. See e.g. `libraries/en_US.py`. Library IDs are spaced out in a roughly historical order: OT is 200, NT is 400.
 - **Number**. An integer `1..999`. We assume verses/chapters/books/libraries are limited to this size. This may need modifying to accommodate, say, _zero verses_ in the Septuagint.
 - **Range**. A pair of `(start, end)` verses; `1 Cor 16:1-2` becomes `range(verse(400, 7, 16, 1), verse(400, 7, 16, 2))`.
@@ -373,7 +407,7 @@ OT = Library(
             id=1,
             name="Genesis",
             abbrev="Gen",
-            aliases=[],
+            aliases=['Ge'],
             chapters=50,
         ),
       ...
