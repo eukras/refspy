@@ -1,19 +1,22 @@
 from refspy import refspy
 from refspy.utils import sequential_replace
+from refspy.languages.english import ENGLISH
 
 __ = refspy()
 
-text = """
-Human-written Bible references look like Rom 12:1, 6-17, 2 Cor 1:2-3:4, or Phlm
-2-3. They wrap lines, use spaces in the number part, and have commas both
-between and within references. They are sometimes malformed, like Matt 1:10000
-or 1:3-2, but might also use abbreviations like Ps 119:122-24. A book name,
-such as Second Corinthians, provides context for references that follow, such
-as 5:21 or vv.25,37-38. If we refer to Romans (but then add a reference to 2
-Cor 3:5-8 in parentheses), a subsequent reference like 12:16 will still be to Romans.
-Using letters as partial verses, as in II Cor 5:30a-40d, has no consistent
-meaning and must be read as whole verses.
+text_template = """
+Human-written Bible references look like Rom 12:1, 6-17, 2 Cor 1:2-3:4, or Philemon
+2-3. They wrap lines, use spaces inconsistently, and have commas both between and
+within references. They are sometimes malformed, like Matt 1:10000 or 1:3-2,
+but might also use number abbreviations like Ps 119:122-24. A book name, such as
+Second Corinthians, provides context for references that follow, such as 5:21 or
+vv.25,37-38. If we cite Romans (but then add a reference to 2ndCo3:5-8 in
+parentheses), a subsequent reference like 12:16 will still be to Romans. Using
+letters as partial verses, as in II Cor 5:30a-40d, has no consistent meaning, so
+the letters are ignored. Ambiguous aliases ({AMBIGUOUS}) are not enabled by default.
 """
+
+text = text_template.replace('{AMBIGUOUS}', ', '.join(ENGLISH.ambiguous_aliases))
 
 matches = __.find_references(text, include_books=True, include_nones=True)
 strs, tags = [], []
@@ -40,7 +43,7 @@ bible_gateway = (
 summary = __.make_summary(references, pattern=bible_gateway)
 hotspots = __.make_hotspots_text(references, max_chapters=7, min_references=2)
 
-GENERATOR = "https://github.com/eukras/refspy/demo.py"
+GENERATOR = "https://github.com/eukras/refspy/blob/master/demo.py"
 
 print("""
 <html>
@@ -49,7 +52,8 @@ print("""
             a { text-decoration: none; }
             sup { font-family: sans-serif; font-size: xx-small;
                   color: purple; padding: 1px 3px; border: 1px solid purple;
-                  border-radius: 3px; margin-left: 2px; }
+                  border-radius: 3px; margin-left: 2px; 
+                  white-space: nowrap; }
             .green { background-color: #aaffaa; }
             .purple { background-color: #ffaaff; }
             .yellow { background-color: #ffffaa; }
@@ -68,12 +72,14 @@ print(f"""
         class="purple">purple</span>.</p>
         <blockquote><pre>{text}</pre></blockquote>
         <blockquote>{sequential_replace(text, strs, tags)}</blockquote>
-        <p>Refspy will sort and collate references into an index, and
-        optionally combine overlapping and adjacent references and add
-        links.</p>
-        <blockquote><b>Index</b>. {index}.</blockquote>
-        <blockquote><b>Summary</b>. {summary}.</blockquote>
-        <blockquote><b>Hotspots</b>. {hotspots}.</blockquote>
+        <p>Refspy will sort and collate references into an index; combine
+        overlapping and adjacent references into a summary; list the 
+        businest chapters as 'hotspots'; and add links to any of these.</p>
+        <ul>
+            <li><b>Index</b>. {index}.</li>
+            <li><b>Summary</b>. {summary}.</li>
+            <li><b>Hotspots</b>. {hotspots}.</li>
+        </ul>
         <p> Because a number or a range ('1' or '2-3') could refer to either
         verses or chapters, or other regular numbers having nothing to do with
         biblical referencing ('ch.8'), we only match references that are
