@@ -13,7 +13,7 @@ BIG_BOOK = Book(
     id=2,
     name="Big Book",
     abbrev="Big",
-    aliases=["Large"],
+    aliases=["Large", "Bg"],
     chapters=50,
 )
 
@@ -21,7 +21,7 @@ SMALL_BOOK = Book(
     id=3,
     name="Small Book",
     abbrev="Small",
-    aliases=["Tiny"],
+    aliases=["Tiny", "Sm"],
     chapters=1,
 )
 

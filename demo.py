@@ -5,20 +5,22 @@ from refspy.languages.english import ENGLISH
 __ = refspy()
 
 text_template = """
-Human-written Bible references look like Rom 12:1, 6-17, 2 Cor 1:2-3:4, or Philemon
-2-3. They wrap lines, use spaces inconsistently, and have commas both between and
-within references. They are sometimes malformed, like Matt 1:10000 or 1:3-2,
-but might also use number abbreviations like Ps 119:122-24. A book name, such as
-Second Corinthians, provides context for references that follow, such as 5:21 or
-vv.25,37-38. If we cite Romans (but then add a reference to 2ndCo3:5-8 in
-parentheses), a subsequent reference like 12:16 will still be to Romans. Using
-letters as partial verses, as in II Cor 5:30a-40d, has no consistent meaning, so
-the letters are ignored. Ambiguous aliases ({AMBIGUOUS}) are not enabled by default.
+Human-written Bible references look like Rom 12.1, 6-17, 2 Cor. 1:2-3:4, or
+Philemon 2-3. They wrap lines, use spaces inconsistently, use colons and
+periods interchangeably, indicate abbreviations with periods (or not), and have
+commas both between and within references. They are sometimes malformed, like Mt
+1.10000 or 1:3-2, but might also use number abbreviations like Ps 119:122-24. A
+book name, such as Second Corinthians, provides context for references that
+follow, such as 5:21 or vv.25,37-38. If we cite Romans (but then add a
+reference to 2ndCo 3:5-8 in parentheses), a subsequent reference like 12:16
+will still be to Romans. Using letters for partial verses, as in II Cor
+5:30a-40d, has no consistent meaning, so the letters are ignored. Ambiguous
+aliases ({AMBIGUOUS}) are not enabled by default.
 """
 
-text = text_template.replace('{AMBIGUOUS}', ', '.join(ENGLISH.ambiguous_aliases))
+TEXT = text_template.replace('{AMBIGUOUS}', ', '.join(ENGLISH.ambiguous_aliases))
 
-matches = __.find_references(text, include_books=True, include_nones=True)
+matches = __.find_references(TEXT, include_books=True, include_nones=True)
 strs, tags = [], []
 for match_str, ref in matches:
     strs.append(match_str)
@@ -32,7 +34,7 @@ for match_str, ref in matches:
         )
 
 references = [ref for _, ref in matches if ref and not ref.is_book()]
-index = __.make_index(references)
+INDEX = __.make_index(references)
 
 bible_gateway = (
     '<a href="https://www.biblegateway.com/passage/'
@@ -40,8 +42,8 @@ bible_gateway = (
     + ' target="_blank">{ABBREV_NAME}</a>'
 )
 
-summary = __.make_summary(references, pattern=bible_gateway)
-hotspots = __.make_hotspots_text(references, max_chapters=7, min_references=2)
+SUMMARY = __.make_summary(references, pattern=bible_gateway)
+HOTSPOTS = __.make_hotspots_text(references, max_chapters=7, min_references=2)
 
 GENERATOR = "https://github.com/eukras/refspy/blob/master/demo.py"
 
@@ -52,11 +54,10 @@ print("""
             a { text-decoration: none; }
             sup { font-family: sans-serif; font-size: xx-small;
                   color: purple; padding: 1px 3px; border: 1px solid purple;
-                  border-radius: 3px; margin-left: 2px; 
-                  white-space: nowrap; }
-            .green { background-color: #aaffaa; }
-            .purple { background-color: #ffaaff; }
-            .yellow { background-color: #ffffaa; }
+                  border-radius: 3px; margin-left: 2px; white-space: nowrap; }
+            .green { background-color: #aaffaa; white-space: nowrap; }
+            .purple { background-color: #ffaaff; white-space: nowrap; }
+            .yellow { background-color: #ffffaa; white-space: nowrap; }
         </style>
     </head>
 """)
@@ -70,15 +71,15 @@ print(f"""
         context are highlighted in <span class="yellow">yellow</span>.
         Malformed references are highlighted in <span
         class="purple">purple</span>.</p>
-        <blockquote><pre>{text}</pre></blockquote>
-        <blockquote>{sequential_replace(text, strs, tags)}</blockquote>
+        <blockquote><pre>{TEXT}</pre></blockquote>
+        <blockquote>{sequential_replace(TEXT, strs, tags)}</blockquote>
         <p>Refspy will sort and collate references into an index; combine
         overlapping and adjacent references into a summary; list the 
-        businest chapters as 'hotspots'; and add links to any of these.</p>
+        busiest chapters as 'hotspots'; and add links to any of these.</p>
         <ul>
-            <li><b>Index</b>. {index}.</li>
-            <li><b>Summary</b>. {summary}.</li>
-            <li><b>Hotspots</b>. {hotspots}.</li>
+            <li><b>Index</b>. {INDEX}.</li>
+            <li><b>Summary</b>. {SUMMARY}.</li>
+            <li><b>Hotspots</b>. {HOTSPOTS}.</li>
         </ul>
         <p> Because a number or a range ('1' or '2-3') could refer to either
         verses or chapters, or other regular numbers having nothing to do with

@@ -50,3 +50,11 @@ def test_include_ambiguous_aliases():
     assert ref == __.bcv('Isaiah', 1, 1)
 
 
+def test_not_matching_parts_of_words():
+    __ = refspy(include_two_letter_aliases=True, include_ambiguous_aliases=True)
+
+    match, ref = __.first_reference("Test test test. Especially the last part.")
+    #                                          ^^  Match Esther?
+    assert match == None
+    assert ref == None
+

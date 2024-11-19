@@ -13,10 +13,10 @@ from refspy.reference import (
     book_reference,
     reference,
 )
-from refspy.utils import add_space_after_book_number, get_unnumbered_book_aliases, parse_number, normalize_spacing
+from refspy.utils import add_space_after_book_number, get_unnumbered_book_aliases, parse_number, normalize_spacing, trim_trailing_period
 from refspy.verse import Number, verse
 
-COLON = r":"
+COLON = r"[:\.]"
 DASH = r"[–-]"
 END = r"\b"
 NUMBER = r"\d+[a-d]?"
@@ -173,8 +173,14 @@ class Matcher:
                 + r")"
                 + r"\s*"
                 + "(?:"
-                + "|".join([escape_book_name(_) for _ in long_names_first(aliases)])
+                + "|".join([
+                        escape_book_name(_)
+                        for _ in long_names_first(aliases)
+                    ])
                 + ")"
+                # + r"(?![^A-Za-z])"  # <-- Need a non-alpha lookahead?
+                + r"\b"
+                + r"\.?"
             )
         leading_digits = re.compile(r"^\d+\s")
         aliases = [
@@ -184,6 +190,9 @@ class Matcher:
             r"(?:"
             + "|".join([escape_book_name(_) for _ in long_names_first(aliases)])
             + ")"
+            # + r"(?![^A-Za-z])"  # <-- Need a non-alpha lookahead?
+            + r"\b"
+            + r"\.?"
         )
         return r"|".join(regexp_parts)
 
@@ -220,7 +229,7 @@ class Matcher:
                 number
                 + r"(?!"
                 + r"\s*"
-                + "(?:"
+                + "(?:"  # <-- COLON?
                 + "|".join([re.escape(key) for key in sorted(set(aliases))])
                 + "))"
             )
@@ -247,6 +256,14 @@ class Matcher:
         Match references and parentheses separately, then take the next lowest
         item (by starting match position) from the regexp match generators, and
         process. Yield references for book names and chapter/verse numbers.
+
+        This is the base function used by `__.find_references()` and
+        `__.first_reference()`.
+
+        Args:
+            text: In which to find references
+            include_books: Whether to match book names alone
+            include_nones: Whether to match malformed references
         """
         brackets_matches = self.brackets_regexp.finditer(text)
         reference_matches = self.name_regexp.finditer(text)
@@ -285,10 +302,11 @@ class Matcher:
                 try:
                     if book_name:
                         respaced_book_name = add_space_after_book_number(
-                            normalize_spacing(book_name),
+                            normalize_spacing(trim_trailing_period(book_name)),
                             unnumbered_book_aliases,
                             self.language.number_prefixes
                         )
+
                         if respaced_book_name in self.book_aliases:
                             library_id, book_id = self.book_aliases[respaced_book_name]
                             book = self.books[library_id, book_id]

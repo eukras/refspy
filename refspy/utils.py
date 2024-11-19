@@ -85,6 +85,11 @@ def add_space_after_book_number(name: str, unnumbered_book_aliases: set, number_
                 return number + ' ' + tail
     return re.sub(r"^(\d)([A-Z])([a-z].*)$", r"\1 \2\3", name)
 
+def trim_trailing_period(text: str) -> str: 
+    """Remove any tailing '.' character.
+    """
+    return text.rstrip('.')
+
 def normalize_spacing(text: str) -> str:
     """Replace multiple spaces with single spaces.
 

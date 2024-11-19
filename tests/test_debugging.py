@@ -104,3 +104,8 @@ def test_malformed_brackets():
     assert refs[1][1] == verse_reference(NT.id, 7, 5, 24)
     assert refs[2][1] == verse_reference(NT.id, 7, 3, 16)
     assert refs[3][1] == verse_reference(NT.id, 7, 1, 16, 17)
+
+def test_start_of_words():
+    refs = __.find_references("Esxxx Gexxx Rexxx Laxxx!", include_books=True, include_nones=True)
+    #                          Esth  Gen   Rev   Lam
+    assert len(refs) == 0; # ??

@@ -5,11 +5,10 @@
             a { text-decoration: none; }
             sup { font-family: sans-serif; font-size: xx-small;
                   color: purple; padding: 1px 3px; border: 1px solid purple;
-                  border-radius: 3px; margin-left: 2px; 
-                  white-space: nowrap; }
-            .green { background-color: #aaffaa; }
-            .purple { background-color: #ffaaff; }
-            .yellow { background-color: #ffffaa; }
+                  border-radius: 3px; margin-left: 2px; white-space: nowrap; }
+            .green { background-color: #aaffaa; white-space: nowrap; }
+            .purple { background-color: #ffaaff; white-space: nowrap; }
+            .yellow { background-color: #ffffaa; white-space: nowrap; }
         </style>
     </head>
 
@@ -24,30 +23,34 @@
         Malformed references are highlighted in <span
         class="purple">purple</span>.</p>
         <blockquote><pre>
-Human-written Bible references look like Rom 12:1, 6-17, 2 Cor 1:2-3:4, or Philemon
-2-3. They wrap lines, use spaces inconsistently, and have commas both between and
-within references. They are sometimes malformed, like Matt 1:10000 or 1:3-2,
-but might also use number abbreviations like Ps 119:122-24. A book name, such as
-Second Corinthians, provides context for references that follow, such as 5:21 or
-vv.25,37-38. If we cite Romans (but then add a reference to 2ndCo3:5-8 in
-parentheses), a subsequent reference like 12:16 will still be to Romans. Using
-letters as partial verses, as in II Cor 5:30a-40d, has no consistent meaning, so
-the letters are ignored. Ambiguous aliases (Am, Is) are not enabled by default.
+Human-written Bible references look like Rom 12.1, 6-17, 2 Cor. 1:2-3:4, or
+Philemon 2-3. They wrap lines, use spaces inconsistently, use colons and
+periods interchangeably, indicate abbreviations with periods (or not), and have
+commas both between and within references. They are sometimes malformed, like Mt
+1.10000 or 1:3-2, but might also use number abbreviations like Ps 119:122-24. A
+book name, such as Second Corinthians, provides context for references that
+follow, such as 5:21 or vv.25,37-38. If we cite Romans (but then add a
+reference to 2ndCo 3:5-8 in parentheses), a subsequent reference like 12:16
+will still be to Romans. Using letters for partial verses, as in II Cor
+5:30a-40d, has no consistent meaning, so the letters are ignored. Ambiguous
+aliases (Am, Ho, Is, So) are not enabled by default.
 </pre></blockquote>
         <blockquote>
-Human-written Bible references look like <span class="green">Rom 12:1, 6-17</span><sup>Rom 12:1, 6–17</sup>, <span class="green">2 Cor 1:2-3:4</span><sup>2 Cor 1:2–3:4</sup>, or <span class="green">Philemon
-2-3</span><sup>Phlm 2–3</sup>. They wrap lines, use spaces inconsistently, and have commas both between and
-within references. They are sometimes malformed, like <span class="purple">Matt 1:10000</span> or <span class="purple">1:3-2</span>,
-but might also use number abbreviations like <span class="green">Ps 119:122-24</span><sup>Ps 119:122–124</sup>. A book name, such as
-<span class="yellow">Second Corinthians</span>, provides context for references that follow, such as <span class="green">5:21</span><sup>2 Cor 5:21</sup> or
-<span class="green">vv.25,37-38</span><sup>2 Cor 5:25, 37–38</sup>. If we cite <span class="yellow">Romans</span> (but then add a reference to <span class="green">2ndCo3:5-8</span><sup>2 Cor 3:5–8</sup> in
-parentheses), a subsequent reference like <span class="green">12:16</span><sup>Rom 12:16</sup> will still be to <span class="yellow">Romans</span>. Using
-letters as partial verses, as in <span class="green">II Cor 5:30a-40d</span><sup>2 Cor 5:30–40</sup>, has no consistent meaning, so
-the letters are ignored. Ambiguous aliases (Am, Is) are not enabled by default.
+Human-written Bible references look like <span class="green">Rom 12.1, 6-17</span><sup>Rom 12:1, 6–17</sup>, <span class="green">2 Cor. 1:2-3:4</span><sup>2 Cor 1:2–3:4</sup>, or
+<span class="green">Philemon 2-3</span><sup>Phlm 2–3</sup>. They wrap lines, use spaces inconsistently, use colons and
+periods interchangeably, indicate abbreviations with periods (or not), and have
+commas both between and within references. They are sometimes malformed, like <span class="purple">Mt
+1.10000</span> or <span class="purple">1:3-2</span>, but might also use number abbreviations like <span class="green">Ps 119:122-24</span><sup>Ps 119:122–124</sup>. A
+book name, such as <span class="yellow">Second Corinthians</span>, provides context for references that
+follow, such as <span class="green">5:21</span><sup>2 Cor 5:21</sup> or <span class="green">vv.25,37-38</span><sup>2 Cor 5:25, 37–38</sup>. If we cite <span class="yellow">Romans</span> (but then add a
+reference to <span class="green">2ndCo 3:5-8</span><sup>2 Cor 3:5–8</sup> in parentheses), a subsequent reference like <span class="green">12:16</span><sup>Rom 12:16</sup>
+will still be to <span class="yellow">Romans.</span> Using letters for partial verses, as in <span class="green">II Cor
+5:30a-40d</span><sup>2 Cor 5:30–40</sup>, has no consistent meaning, so the letters are ignored. Ambiguous
+aliases (Am, Ho, Is, So) are not enabled by default.
 </blockquote>
         <p>Refspy will sort and collate references into an index; combine
         overlapping and adjacent references into a summary; list the 
-        businest chapters as 'hotspots'; and add links to any of these.</p>
+        busiest chapters as 'hotspots'; and add links to any of these.</p>
         <ul>
             <li><b>Index</b>. Ps 119:122–124; Rom 12:1, 6–17, 16; 2 Cor 1:2–3:4; 3:5–8; 5:21, 25, 30–40, 37–38; Phlm 2–3.</li>
             <li><b>Summary</b>. <a href="https://www.biblegateway.com/passage/?search=Ps%20119%3A122-124&version=NRSVA"  target="_blank">Ps 119:122–124</a>; <a href="https://www.biblegateway.com/passage/?search=Rom%2012%3A1,%206-17&version=NRSVA"  target="_blank">Rom 12:1, 6–17</a>; <a href="https://www.biblegateway.com/passage/?search=2%20Cor%201%3A2-3%3A8;%205%3A21,%2025,%2030-40&version=NRSVA"  target="_blank">2 Cor 1:2–3:8; 5:21, 25, 30–40</a>; <a href="https://www.biblegateway.com/passage/?search=Phlm%202-3&version=NRSVA"  target="_blank">Phlm 2–3</a>.</li>

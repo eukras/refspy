@@ -306,12 +306,12 @@ DC = Library(
             chapters=16,
         ),
         Book(
+            # TODO: Offsets: 11..16? 
             id=3,
             name="Additions to Esther",
             abbrev="Add Esth",
             aliases=["Esg"], # "Esther Greek"
-            chapters=7,
-            # TODO: Offsets: 11..16; or handle 'Greek Esther' (10 chapters).
+            chapters=10,
         ),
         Book(
             id=4,
