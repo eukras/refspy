@@ -14,4 +14,5 @@ from pydantic import BaseModel
 
 class Language(BaseModel):
     verse_markers: List[str]
+    ambiguous_aliases: List[str]
     number_prefixes: Dict[str, List[str]]

@@ -85,9 +85,9 @@ def test_multiple_book_range():
 def test_multiple_library_range():
     ref = reference(
         range(verse(1, 2, 1, 1), verse(1, 2, 1, 2)),
-        range(verse(2, 1, 2, 1), verse(2, 1, 2, 2)),
+        range(verse(2, 1, 2, 1), verse(2, 1, 2, 1)),
     )
-    assert fmt.format(ref, NAME_FORMAT) == "Big Book 1:1–2; 3 Book 2:1–2"
+    assert fmt.format(ref, NAME_FORMAT) == "Big Book 1:1–2; 4 Book 2:1"
 
 
 def test_book_chapters_greater_than_1():

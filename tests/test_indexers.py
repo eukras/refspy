@@ -40,15 +40,6 @@ def test_index_book_aliases():
     assert index["Bk"] == (1, 1)
 
 
-def test_non_strict_index_book_aliases_with_params():
-    index = index_book_aliases([lib_2], url_param_names=True, strict=False)
-    assert len(index) == 5
-    assert index["book"] == (2, 2)
-    assert index["bk"] == (2, 2)
-    assert index["3+book"] == (2, 3)
-    assert index["3+bk"] == (2, 3)
-
-
 def test_index_libraries():
     index = index_libraries([lib_1])
     assert len(index) == 1

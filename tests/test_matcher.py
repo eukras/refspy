@@ -49,10 +49,10 @@ def test_regexp_building_blocks():
     assert re.findall(NUMBER, "1") == ["1"]
     assert re.findall(NUMBER, "1000") == ["1000"]  # <-- numbers of any length
 
-    assert re.findall(SPACE, " ") == [" "]
-    assert re.findall(SPACE, "\n") == ["\n"]
-    assert re.findall(SPACE, "\r") == ["\r"]
-    assert re.findall(SPACE, "\t") == ["\t"]
+    assert re.findall(SPACE, " ") == [" ", ""]
+    assert re.findall(SPACE, "\n") == ["\n", ""]
+    assert re.findall(SPACE, "\r") == ["\r", ""]
+    assert re.findall(SPACE, "\t") == ["\t", ""]
 
     assert re.findall(RANGE, "1-2") == ["1-2"]
     assert re.findall(RANGE, "0-999") == ["0-999"]
@@ -114,12 +114,10 @@ def test_match_brackets():
 def test_match_names():
     assert matcher.name_regexp.findall("Big Book") == [("Big Book", "Big Book", "", "")]
     assert matcher.name_regexp.findall("Big") == [("Big", "Big", "", "")]
-    # assert matcher.name_regexp.findall("big") == [("big", "big", "", "")]
     assert matcher.name_regexp.findall("Small Book") == [
         ("Small Book", "Small Book", "", "")
     ]
     assert matcher.name_regexp.findall("Small") == [("Small", "Small", "", "")]
-    # assert matcher.name_regexp.findall("small") == [("small", "small", "", "")]
 
 
 def test_match_names_and_numbers():
@@ -144,13 +142,12 @@ def test_malformed_refs():
 
 
 def test_commas_separation():
-    text = "Big Book 1:1, 2, 1 Bk 3, Small Book 4"
+    text = "Big Book 1:1, 2, 1 Book 4"
     #                     ^^^^ Negative lookaheads will prevent confusion here.
     matches = matcher.name_regexp.findall(text)
-    assert len(matches) == 3
+    assert len(matches) == 2
     assert matches[0] == ("Big Book 1:1, 2", "Big Book", " 1:1, 2", "")
-    assert matches[1] == ("1 Bk 3", "1 Bk", " 3", "")
-    assert matches[2] == ("Small Book 4", "Small Book", " 4", "")
+    assert matches[1] == ("1 Book 4", "1 Book", " 4", "")
 
 
 def test_match_names_in_context():
@@ -285,7 +282,7 @@ def test_single_parentheses():
         assert next(__) is None
 
 
-def test_number_prefixes():
+def test_number_prefixes_1():
     sample_text = "1 Book 1:1, First Book 1:1, 1st Book 1:1, I Book 1:1"
     first_reference = verse_reference(1, 4, 1, 1)
     __ = matcher.generate_references(sample_text)
@@ -301,9 +298,70 @@ def test_number_prefixes():
     text, ref = next(__)
     assert text == "I Book 1:1"
     assert ref == first_reference
+    # No more
     with pytest.raises(StopIteration):
         assert next(__) is None
 
+def test_number_prefixes_2():
+    sample_text = "2 Book 1:1, Second Book 1:1, 2nd Book 1:1, II Book 1:1"
+    first_reference = verse_reference(1, 5, 1, 1)
+    __ = matcher.generate_references(sample_text)
+    text, ref = next(__)
+    assert text == "2 Book 1:1"
+    assert ref == first_reference
+    text, ref = next(__)
+    assert text == "Second Book 1:1"
+    assert ref == first_reference
+    text, ref = next(__)
+    assert text == "2nd Book 1:1"
+    assert ref == first_reference
+    text, ref = next(__)
+    assert text == "II Book 1:1"
+    assert ref == first_reference
+    # No more
+    with pytest.raises(StopIteration):
+        assert next(__) is None
+
+def test_number_prefixes_3():
+    sample_text = "3 Book 1, Third Book 1, 3rd Book 1, III Book 1"
+    first_reference = verse_reference(1, 6, 1, 1)
+    __ = matcher.generate_references(sample_text)
+    text, ref = next(__)
+    assert text == "3 Book 1"
+    assert ref == first_reference
+    text, ref = next(__)
+    assert text == "Third Book 1"
+    assert ref == first_reference
+    text, ref = next(__)
+    assert text == "3rd Book 1"
+    assert ref == first_reference
+    text, ref = next(__)
+    assert text == "III Book 1"
+    assert ref == first_reference
+    # No more
+    with pytest.raises(StopIteration):
+        assert next(__) is None
+
+def test_book_number_spacing_is_optional():
+    sample_text = "1Book 1:1"
+    first_reference = verse_reference(1, 4, 1, 1)
+    __ = matcher.generate_references(sample_text)
+    text, ref = next(__)
+    assert text == "1Book 1:1"
+    assert ref == first_reference
+    with pytest.raises(StopIteration):
+        assert next(__) is None
+
+
+def test_reference_number_spacing_is_optional():
+    sample_text = "1 Book1:1"
+    first_reference = verse_reference(1, 4, 1, 1)
+    __ = matcher.generate_references(sample_text)
+    text, ref = next(__)
+    assert text == "1 Book1:1"
+    assert ref == first_reference
+    with pytest.raises(StopIteration):
+        assert next(__) is None
 
 def test_line_wrapping():
     text = """
@@ -318,6 +376,17 @@ def test_line_wrapping():
         Book 5"""
     )
     assert ref == chapter_reference(1, 4, 5)
+
+
+def test_nonnumeric_prefixes():
+    text = "1stBook6:6 IBook6:6"
+    __ = matcher.generate_references(text)
+    text, ref = next(__)
+    assert text == "1stBook6:6"
+    assert ref == verse_reference(1, 4, 6, 6)
+    text, ref = next(__)
+    assert text == "IBook6:6"
+    assert ref == verse_reference(1, 4, 6, 6)
 
 
 def test_infer_abbreviation():

@@ -1,13 +1,14 @@
 """Indexing functions for libraries, books, and book aliases."""
 
 from typing import Dict, List, Tuple
+from refspy import language
 from refspy.book import Book
 from refspy.library import Library
-from refspy.utils import url_param
+from refspy.utils import strip_book_number, strip_space_after_book_number, url_param
 from refspy.verse import Number
 
-PARAM_CHAR_LIMIT = 8
-"""The maximum alias length to convert to URL parameter names."""
+PARAM_CHAR_LIMIT = 20
+"""The maximum book name or alias length to convert to URL parameter names."""
 
 
 def index_libraries(libraries: List[Library]) -> Dict[Number, Library]:
@@ -51,14 +52,19 @@ def add_unique_book_alias(
 
 
 def index_book_aliases(
-    libraries: List[Library], url_param_names: bool = False, strict: bool = True
+    libraries: List[Library],
+    include_two_letter_aliases: bool = True,
+    ignore_aliases: List[str] = [],
+    strict: bool = True
 ) -> Dict[str, Tuple[Number, Number]]:
     """Create a lookup table for library and book IDs by book aliases.
 
     Args:
         libraries: A list of `refspy.library.Library` objects to be indexed.
-        url_param_names: Convert aliases to url parameters if they are less
-            than `PARAM_CHAR_LIMIT` in length.
+        include_two_letter_aliases: Allow book aliases of only two letters,
+            i.e. 'Jn' and '1 Ti'.
+        ignore_aliases: A list of alias names to always ignore (e.g. 'Is', 
+            since it's ambiguous).
         strict: Throw a ValueError if any two aliases are the same, or any
             alias is an empty string.
 
@@ -70,30 +76,17 @@ def index_book_aliases(
     index = dict()
     for library in libraries:
         for book in library.books:
-            if not url_param_names or len(book.name) < PARAM_CHAR_LIMIT:
-                add_unique_book_alias(
-                    index,
-                    url_param(book.name) if url_param_names else book.name,
-                    library.id,
-                    book.id,
-                    strict,
-                )
+            aliases = [book.name]
             if book.name != book.abbrev:
-                if not url_param_names or len(book.abbrev) < PARAM_CHAR_LIMIT:
-                    add_unique_book_alias(
-                        index,
-                        url_param(book.abbrev) if url_param_names else book.abbrev,
-                        library.id,
-                        book.id,
-                        strict,
-                    )
+                aliases.append(book.abbrev)
             for alias in book.aliases:
-                if not url_param_names or len(alias) < PARAM_CHAR_LIMIT:
-                    add_unique_book_alias(
-                        index,
-                        url_param(alias) if url_param_names else alias,
-                        library.id,
-                        book.id,
-                        strict,
-                    )
+                if alias not in ignore_aliases:
+                    len_alias = len(strip_book_number(alias))
+                    if (
+                        (len_alias > 2 and len_alias < PARAM_CHAR_LIMIT) or
+                        (include_two_letter_aliases and len_alias == 2)
+                    ):
+                        aliases.append(alias)
+            for alias in aliases:
+                add_unique_book_alias(index, alias, library.id, book.id, strict)
     return index

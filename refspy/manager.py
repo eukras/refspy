@@ -43,7 +43,24 @@ class Manager:
     convenient facade.
     """
 
-    def __init__(self, libraries: List[Library], language: Language):
+    def __init__(
+            self,
+            libraries: List[Library],
+            language: Language,
+            include_two_letter_aliases=True,
+            include_ambiguous_aliases=False
+        ):
+        """
+        Construct a new Manager object.
+
+        Args:
+            libraries: A list of libraries like NT, OT.
+            language: A language object like ENGLISH.
+            include_two_letter_aliases: Whether to allow `len(alias) == 2`
+                (default: True)
+            include_ambiguous_aliases: Whether to allow
+                ENGLISH.ambiguous_aliases (default: False).
+        """
         self.libraries: Dict[Number, Library] = index_libraries(libraries)
         """A lookup dictionary for Libraries by library.id """
 
@@ -51,14 +68,20 @@ class Manager:
         """A lookup dictionary for Books by (library.id, book.id)"""
 
         self.book_aliases: Dict[str, Tuple[Number, Number]] = index_book_aliases(
-            libraries
+            libraries,
+            include_two_letter_aliases=include_two_letter_aliases,
+            ignore_aliases=[] if include_ambiguous_aliases else language.ambiguous_aliases
         )
         """A lookup dictionary for (library.id, book.id) by book alias strings."""
 
         self.language: Language = language
         """Language-specific program data."""
 
-        self.matcher: Matcher = Matcher(self.books, self.book_aliases, self.language)
+        self.matcher: Matcher = Matcher(
+            self.books,
+            self.book_aliases,
+            self.language
+        )
         """Delegate reference matching tasks."""
 
         self.formatter: Formatter = Formatter(self.books, self.book_aliases)

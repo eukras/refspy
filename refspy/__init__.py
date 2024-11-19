@@ -8,7 +8,12 @@ from refspy.init import get_canon, get_language
 from refspy.manager import Manager
 
 
-def refspy(canon_name: str = "protestant", locale_name: str = "en_US") -> Manager:
+def refspy(
+        canon_name: str = "protestant", 
+        locale_name: str = "en_US",
+        include_two_letter_aliases: bool = True,
+        include_ambiguous_aliases: bool = False
+    ) -> Manager:
     """Create a Manager object to access all common package functions.
 
     See: `refspy.manager.Manager`
@@ -20,6 +25,8 @@ def refspy(canon_name: str = "protestant", locale_name: str = "en_US") -> Manage
             - `orthodox` (adds Anagignoskomena)
         locale_name: A valid key for the `refspy.config.LANGUAGES` dict (1).
             - `en_US`
+        include_two_letter_aliases: e.g. 'Ge', '1 Jn'.
+        include_ambiguous_aliases: e.g. 'Am', 'Is'. (See `refspy.languages.*`)
 
     Note:
         Libraries and languages can be created outside the package, and
@@ -28,4 +35,9 @@ def refspy(canon_name: str = "protestant", locale_name: str = "en_US") -> Manage
         using ordinary referencing conventions. This will have to be confirmed
         for each proposed library and language.
     """
-    return Manager(get_canon(canon_name, locale_name), get_language(locale_name[:2]))
+    return Manager(
+        get_canon(canon_name, locale_name),
+        get_language(locale_name[:2]),
+        include_two_letter_aliases=include_two_letter_aliases,
+        include_ambiguous_aliases=include_ambiguous_aliases
+    )

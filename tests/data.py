@@ -33,8 +33,24 @@ BOOK_1 = Book(
     chapters=10,
 )
 
-LAST_BOOK = Book(
+BOOK_2 = Book(
     id=5,
+    name="2 Book",
+    abbrev="2 Bk",
+    aliases=[],
+    chapters=5,
+)
+
+BOOK_3 = Book(
+    id=6,
+    name="3 Book",
+    abbrev="3 Bk",
+    aliases=[],
+    chapters=1,
+)
+
+LAST_BOOK = Book(
+    id=7,
     name="Last Book",
     abbrev="Last",
     aliases=["Finale"],
@@ -45,20 +61,20 @@ TEST_LIBRARY = Library(
     id=1,
     name="Library",
     abbrev="Lib",
-    books=[FIRST_BOOK, BIG_BOOK, SMALL_BOOK, BOOK_1, LAST_BOOK],
+    books=[FIRST_BOOK, BIG_BOOK, SMALL_BOOK, BOOK_1, BOOK_2, BOOK_3, LAST_BOOK],
 )
 
-BOOK_3 = Book(
+BOOK_4 = Book(
     id=1,
-    name="3 Book",
-    abbrev="3 Bk",
+    name="4 Book",
+    abbrev="4 Bk",
     aliases=[],
-    chapters=10,
+    chapters=5,
 )
 
 TEST_LIBRARY_2 = Library(
     id=2,
     name="2 Library",
     abbrev="2 Lib",
-    books=[BOOK_3],
+    books=[BOOK_4],
 )

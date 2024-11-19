@@ -4,6 +4,7 @@ import math
 import re
 from typing import Dict, Generator, List, Match, Tuple
 
+from refspy import language
 from refspy.book import Book
 from refspy.language import Language
 from refspy.range import Range, range, verse_range
@@ -12,14 +13,14 @@ from refspy.reference import (
     book_reference,
     reference,
 )
-from refspy.utils import parse_number, normalize_spacing
+from refspy.utils import add_space_after_book_number, get_unnumbered_book_aliases, parse_number, normalize_spacing
 from refspy.verse import Number, verse
 
 COLON = r":"
 DASH = r"[–-]"
 END = r"\b"
 NUMBER = r"\d+[a-d]?"
-SPACE = r"\s+"
+SPACE = r"\s*"
 RANGE = f"{NUMBER}{DASH}{NUMBER}"
 LIST = f"(?:{RANGE}|{NUMBER})(?:\\,\\s*(?:{RANGE}|{NUMBER}))*"
 
@@ -62,7 +63,7 @@ class Matcher:
         self,
         books: Dict[Tuple[Number, Number], Book],
         book_aliases: Dict[str, Tuple[Number, Number]],
-        language: Language,
+        language: Language
     ):
         self.books = books
         self.language = language
@@ -96,7 +97,7 @@ class Matcher:
         REGEXP = "".join(
             [
                 "(",
-                f"{END}({NAME_PATTERN}){END}",  # Rom
+                f"{END}({NAME_PATTERN})",  # Rom
                 "(",
                 "".join(
                     [
@@ -152,15 +153,15 @@ class Matcher:
 
         Example:
             ```
-            (   (1|First|etc)\\s+(Corinthians|etc)
-              | (2|Second|etc)\\s+(Corinthians|etc)
+            (   (1|First|etc)\\s*(Corinthians|etc)
+              | (2|Second|etc)\\s*(Corinthians|etc)
               |   ...
               | (Galatians|Romans|etc)
             )
             ```
         """
         regexp_parts = []
-        for number in self.numerical_book_prefixes():
+        for number in self.numerical_book_prefixes(reverse=True):
             aliases = [
                 alias[len(number + " ") :]
                 for alias in self.book_alias_keys
@@ -169,7 +170,9 @@ class Matcher:
             regexp_parts.append(
                 r"(?:"
                 + "|".join([number] + self.language.number_prefixes[number])
-                + r")\s+(?:"
+                + r")"
+                + r"\s*"
+                + "(?:"
                 + "|".join([escape_book_name(_) for _ in long_names_first(aliases)])
                 + ")"
             )
@@ -196,9 +199,9 @@ class Matcher:
 
             ```
             (
-                1(?!\\s+(Corinthians|Cor|Thess|etc)))
-              | 2(?!\\s+(Corinthians|Cor|Thess|etc)))
-              | 3(?!\\s+Jn)
+                1(?!\\s*(Corinthians|Cor|Thess|etc)))
+              | 2(?!\\s*(Corinthians|Cor|Thess|etc)))
+              | 3(?!\\s*Jn)
               | 4-999
             )(?!:\\d)
             ```
@@ -215,7 +218,9 @@ class Matcher:
             ]
             regexp_parts.append(
                 number
-                + r"(?!\s+(?:"
+                + r"(?!"
+                + r"\s*"
+                + "(?:"
                 + "|".join([re.escape(key) for key in sorted(set(aliases))])
                 + "))"
             )
@@ -224,13 +229,13 @@ class Matcher:
         REGEXP = f"(?:{RANGE}|{NUMBER})(?:\\,\\s*(?:{RANGE}|(?:{SAFE_NUMBER})(?!:\\d){END}))*"
         return REGEXP
 
-    def numerical_book_prefixes(self) -> List[str]:
+    def numerical_book_prefixes(self, reverse=True) -> List[str]:
         prefixes = set()
         for key in self.book_aliases.keys():
             part_1 = key.split(" ")[0]
             if part_1.isdigit():
                 prefixes.add(part_1)
-        return sorted(prefixes)
+        return sorted(prefixes, reverse=reverse)
 
     def build_brackets_regexp(self) -> str:
         return r"[\(\)]"
@@ -250,6 +255,8 @@ class Matcher:
 
         brackets_match = next(brackets_matches, None)
         reference_match = next(reference_matches, None)
+
+        unnumbered_book_aliases = get_unnumbered_book_aliases(self.book_aliases)
 
         while reference_match or brackets_match:
             # Handle the start or end of a bracket
@@ -277,50 +284,54 @@ class Matcher:
                 )
                 try:
                     if book_name:
-                        library_id, book_id = self.book_aliases[
-                            normalize_spacing(book_name)
-                        ]
-                        book = self.books[library_id, book_id]
-                        last_range = book_reference(library_id, book_id).last_range()
-                        if match_with_book:
-                            if matches := match_chapter_range(match_with_book):
-                                # Rom 1:2-3:4
-                                book_ref = make_chapter_range(last_range, matches)
-                                if book_ref is not None or include_nones:
-                                    yield (match_str, book_ref)
-                            elif matches := match_chapter_verses(match_with_book):
-                                # Rom 3:4,6-9
-                                book_ref = make_chapter_verses(last_range, matches)
-                                if book_ref is not None or include_nones:
-                                    yield (match_str, book_ref)
-                            elif matches := match_number_ranges(match_with_book):
-                                if book.chapters == 1:
-                                    # Phlm 3-4 (verse)
-                                    v = verse_range(
-                                        last_range.start.library,
-                                        last_range.start.book,
-                                        1,
-                                        1,
-                                    )
-                                    book_ref = make_number_ranges(v, matches)
+                        respaced_book_name = add_space_after_book_number(
+                            normalize_spacing(book_name),
+                            unnumbered_book_aliases,
+                            self.language.number_prefixes
+                        )
+                        if respaced_book_name in self.book_aliases:
+                            library_id, book_id = self.book_aliases[respaced_book_name]
+                            book = self.books[library_id, book_id]
+                            last_range = book_reference(library_id, book_id).last_range()
+                            if match_with_book:
+                                if matches := match_chapter_range(match_with_book):
+                                    # Rom 1:2-3:4
+                                    book_ref = make_chapter_range(last_range, matches)
                                     if book_ref is not None or include_nones:
                                         yield (match_str, book_ref)
-                                if book.chapters > 1:
-                                    # Rom 3-4 (chapter)
-                                    book_ref = make_number_ranges(
-                                        last_range, matches, as_chapters=True
-                                    )
+                                elif matches := match_chapter_verses(match_with_book):
+                                    # Rom 3:4,6-9
+                                    book_ref = make_chapter_verses(last_range, matches)
                                     if book_ref is not None or include_nones:
                                         yield (match_str, book_ref)
-                            else:
-                                yield (match_str, None)
-                        else:  # no associated reference
-                            if bracket_stack:
-                                bracket_stack[-1] = last_range
-                            else:
-                                bracket_stack.append(last_range)
-                            if include_books:
-                                yield (match_str, book_reference(library_id, book_id))
+                                elif matches := match_number_ranges(match_with_book):
+                                    if book.chapters == 1:
+                                        # Phlm 3-4 (verse)
+                                        v = verse_range(
+                                            last_range.start.library,
+                                            last_range.start.book,
+                                            1,
+                                            1,
+                                        )
+                                        book_ref = make_number_ranges(v, matches)
+                                        if book_ref is not None or include_nones:
+                                            yield (match_str, book_ref)
+                                    if book.chapters > 1:
+                                        # Rom 3-4 (chapter)
+                                        book_ref = make_number_ranges(
+                                            last_range, matches, as_chapters=True
+                                        )
+                                        if book_ref is not None or include_nones:
+                                            yield (match_str, book_ref)
+                                else:
+                                    yield (match_str, None)
+                            else:  # no associated reference
+                                if bracket_stack:
+                                    bracket_stack[-1] = last_range
+                                else:
+                                    bracket_stack.append(last_range)
+                                if include_books:
+                                    yield (match_str, book_reference(library_id, book_id))
                     elif match_without_book:
                         if bracket_stack:
                             last_range = bracket_stack[-1]

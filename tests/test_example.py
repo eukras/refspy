@@ -72,15 +72,6 @@ def test_books_with_number_prefixes():
     assert refs[1][1] == verse_reference(NT.id, 25, 1, 3)
 
 
-def test_substitute_number_prefixes():
-    refs = __.find_references("I Cor 2:3; First Cor 2:3; 1st Cor 2:3")
-    assert refs[0][1] == refs[1][1] == refs[2][1]
-    refs = __.find_references("II Thess 2:3, Second Thess 2:3, 2nd Thess 2:3")
-    assert refs[0][1] == refs[1][1] == refs[2][1]
-    refs = __.find_references("III John 2; Third John 2; 3rd John 2")
-    assert refs[0][1] == refs[1][1] == refs[2][1]
-
-
 def test_backward_ranges_and_abbreviations():
     refs = __.find_references("Romans 1:4–1, Rom 1:776-77, Rom 1:13-4")
     # No match for first reference
@@ -97,8 +88,8 @@ def test_partial_verses():
 
 def test_brackets():
     refs = __.find_references("Romans (John 1:1–4 (1 Cor 5:24 ()) 3:16) 1:16-17")
-    #                    MATCH:  xxxxxx  ^^^^^^^^^^  ^^^^^^^^^^     ^^^^  ^^^^^^^
-    #                            ^ Don't match this, but use for context: ^^^^^^^
+    #                  MATCH:  xxxxxx  ^^^^^^^^^^  ^^^^^^^^^^     ^^^^  ^^^^^^^
+    #                          ^ Don't match this, but use for context: ^^^^^^^
     assert len(refs) == 4
     assert refs[0][1] == verse_reference(NT.id, 4, 1, 1, 4)
     assert refs[1][1] == verse_reference(NT.id, 7, 5, 24)

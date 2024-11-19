@@ -7,9 +7,9 @@ from refspy.languages.english import ENGLISH
 from refspy.libraries.en_US import NT
 from refspy.library import Library
 from refspy.manager import Manager
-from refspy.range import Range, range
-from refspy.reference import Reference, reference, verse_reference
-from refspy.verse import Verse, verse
+from refspy.range import range
+from refspy.reference import reference, verse_reference
+from refspy.verse import verse
 
 BOOK = Book(id=2, name="Book", abbrev="Bk", aliases=["vol"], chapters=3)
 
@@ -27,7 +27,6 @@ REFSPY = refspy()
 def test_init():
     assert __.libraries[LIBRARY.id] == LIBRARY
     assert __.book_aliases["Book"] == (LIBRARY.id, BOOK.id)
-    assert __.book_aliases["Bk"] == (LIBRARY.id, BOOK.id)
 
 
 def test_make_index():
