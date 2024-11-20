@@ -90,35 +90,32 @@ introduction.</p>
 </span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>        <span class="n">canon_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;protestant&quot;</span><span class="p">,</span> 
 </span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>        <span class="n">locale_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en_US&quot;</span><span class="p">,</span>
 </span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>        <span class="n">include_two_letter_aliases</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>        <span class="n">include_ambiguous_aliases</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Manager</span><span class="p">:</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a Manager object to access all common package functions.</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="sd">    See: `refspy.manager.Manager`</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="sd">    Args:</span>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="sd">        canon_name: A valid key for the `refspy.config.LIBRARIES` dict (3)</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="sd">            - `protestant`</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="sd">            - `catholic` (adds Deuterocanonicals)</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="sd">            - `orthodox` (adds Anagignoskomena)</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="sd">        locale_name: A valid key for the `refspy.config.LANGUAGES` dict (1).</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a><span class="sd">            - `en_US`</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a><span class="sd">        include_two_letter_aliases: e.g. &#39;Ge&#39;, &#39;1 Jn&#39;.</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a><span class="sd">        include_ambiguous_aliases: e.g. &#39;Am&#39;, &#39;Is&#39;. (See `refspy.languages.*`)</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a><span class="sd">    Note:</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="sd">        Libraries and languages can be created outside the package, and</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a><span class="sd">        supplied to the Manager object directly. These can be contributed to</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a><span class="sd">        the library, but the point of the library is to read ordinary text</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a><span class="sd">        using ordinary referencing conventions. This will have to be confirmed</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="sd">        for each proposed library and language.</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>    <span class="k">return</span> <span class="n">Manager</span><span class="p">(</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>        <span class="n">get_canon</span><span class="p">(</span><span class="n">canon_name</span><span class="p">,</span> <span class="n">locale_name</span><span class="p">),</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>        <span class="n">get_language</span><span class="p">(</span><span class="n">locale_name</span><span class="p">[:</span><span class="mi">2</span><span class="p">]),</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>        <span class="n">include_two_letter_aliases</span><span class="o">=</span><span class="n">include_two_letter_aliases</span><span class="p">,</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>        <span class="n">include_ambiguous_aliases</span><span class="o">=</span><span class="n">include_ambiguous_aliases</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>    <span class="p">)</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Manager</span><span class="p">:</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a Manager object to access all common package functions.</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="sd">    See: `refspy.manager.Manager`</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="sd">    Args:</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="sd">        canon_name: A valid key for the `refspy.config.LIBRARIES` dict (3)</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="sd">            - `protestant`</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="sd">            - `catholic` (adds Deuterocanonicals)</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="sd">            - `orthodox` (adds Anagignoskomena)</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="sd">        locale_name: A valid key for the `refspy.config.LANGUAGES` dict (1).</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="sd">            - `en_US`</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a><span class="sd">        include_two_letter_aliases: e.g. &#39;Ge&#39;, &#39;1 Jn&#39;.</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a><span class="sd">    Note:</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="sd">        Libraries and languages can be created outside the package, and</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a><span class="sd">        supplied to the Manager object directly. These can be contributed to</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="sd">        the library, but the point of the library is to read ordinary text</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a><span class="sd">        using ordinary referencing conventions. This will have to be confirmed</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a><span class="sd">        for each proposed library and language.</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>    <span class="k">return</span> <span class="n">Manager</span><span class="p">(</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>        <span class="n">get_canon</span><span class="p">(</span><span class="n">canon_name</span><span class="p">,</span> <span class="n">locale_name</span><span class="p">),</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>        <span class="n">get_language</span><span class="p">(</span><span class="n">locale_name</span><span class="p">[:</span><span class="mi">2</span><span class="p">]),</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>        <span class="n">include_two_letter_aliases</span><span class="o">=</span><span class="n">include_two_letter_aliases</span><span class="p">,</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>    <span class="p">)</span>
 </span></pre></div>
 
 
@@ -128,7 +125,7 @@ introduction.</p>
 <div class="attr function">
             
         <span class="def">def</span>
-        <span class="name">refspy</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">canon_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;protestant&#39;</span>,</span><span class="param">	<span class="n">locale_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;en_US&#39;</span>,</span><span class="param">	<span class="n">include_two_letter_aliases</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>,</span><span class="param">	<span class="n">include_ambiguous_aliases</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span></span><span class="return-annotation">) -> <span class="n"><a href="refspy/manager.html#Manager">refspy.manager.Manager</a></span>:</span></span>
+        <span class="name">refspy</span><span class="signature pdoc-code multiline">(<span class="param">	<span class="n">canon_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;protestant&#39;</span>,</span><span class="param">	<span class="n">locale_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;en_US&#39;</span>,</span><span class="param">	<span class="n">include_two_letter_aliases</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span></span><span class="return-annotation">) -> <span class="n"><a href="refspy/manager.html#Manager">refspy.manager.Manager</a></span>:</span></span>
 
                 <label class="view-source-button" for="refspy-view-source"><span>View Source</span></label>
 
@@ -138,35 +135,32 @@ introduction.</p>
 </span><span id="refspy-13"><a href="#refspy-13"><span class="linenos">13</span></a>        <span class="n">canon_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;protestant&quot;</span><span class="p">,</span> 
 </span><span id="refspy-14"><a href="#refspy-14"><span class="linenos">14</span></a>        <span class="n">locale_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en_US&quot;</span><span class="p">,</span>
 </span><span id="refspy-15"><a href="#refspy-15"><span class="linenos">15</span></a>        <span class="n">include_two_letter_aliases</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="refspy-16"><a href="#refspy-16"><span class="linenos">16</span></a>        <span class="n">include_ambiguous_aliases</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="refspy-17"><a href="#refspy-17"><span class="linenos">17</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Manager</span><span class="p">:</span>
-</span><span id="refspy-18"><a href="#refspy-18"><span class="linenos">18</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a Manager object to access all common package functions.</span>
-</span><span id="refspy-19"><a href="#refspy-19"><span class="linenos">19</span></a>
-</span><span id="refspy-20"><a href="#refspy-20"><span class="linenos">20</span></a><span class="sd">    See: `refspy.manager.Manager`</span>
-</span><span id="refspy-21"><a href="#refspy-21"><span class="linenos">21</span></a>
-</span><span id="refspy-22"><a href="#refspy-22"><span class="linenos">22</span></a><span class="sd">    Args:</span>
-</span><span id="refspy-23"><a href="#refspy-23"><span class="linenos">23</span></a><span class="sd">        canon_name: A valid key for the `refspy.config.LIBRARIES` dict (3)</span>
-</span><span id="refspy-24"><a href="#refspy-24"><span class="linenos">24</span></a><span class="sd">            - `protestant`</span>
-</span><span id="refspy-25"><a href="#refspy-25"><span class="linenos">25</span></a><span class="sd">            - `catholic` (adds Deuterocanonicals)</span>
-</span><span id="refspy-26"><a href="#refspy-26"><span class="linenos">26</span></a><span class="sd">            - `orthodox` (adds Anagignoskomena)</span>
-</span><span id="refspy-27"><a href="#refspy-27"><span class="linenos">27</span></a><span class="sd">        locale_name: A valid key for the `refspy.config.LANGUAGES` dict (1).</span>
-</span><span id="refspy-28"><a href="#refspy-28"><span class="linenos">28</span></a><span class="sd">            - `en_US`</span>
-</span><span id="refspy-29"><a href="#refspy-29"><span class="linenos">29</span></a><span class="sd">        include_two_letter_aliases: e.g. &#39;Ge&#39;, &#39;1 Jn&#39;.</span>
-</span><span id="refspy-30"><a href="#refspy-30"><span class="linenos">30</span></a><span class="sd">        include_ambiguous_aliases: e.g. &#39;Am&#39;, &#39;Is&#39;. (See `refspy.languages.*`)</span>
-</span><span id="refspy-31"><a href="#refspy-31"><span class="linenos">31</span></a>
-</span><span id="refspy-32"><a href="#refspy-32"><span class="linenos">32</span></a><span class="sd">    Note:</span>
-</span><span id="refspy-33"><a href="#refspy-33"><span class="linenos">33</span></a><span class="sd">        Libraries and languages can be created outside the package, and</span>
-</span><span id="refspy-34"><a href="#refspy-34"><span class="linenos">34</span></a><span class="sd">        supplied to the Manager object directly. These can be contributed to</span>
-</span><span id="refspy-35"><a href="#refspy-35"><span class="linenos">35</span></a><span class="sd">        the library, but the point of the library is to read ordinary text</span>
-</span><span id="refspy-36"><a href="#refspy-36"><span class="linenos">36</span></a><span class="sd">        using ordinary referencing conventions. This will have to be confirmed</span>
-</span><span id="refspy-37"><a href="#refspy-37"><span class="linenos">37</span></a><span class="sd">        for each proposed library and language.</span>
-</span><span id="refspy-38"><a href="#refspy-38"><span class="linenos">38</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="refspy-39"><a href="#refspy-39"><span class="linenos">39</span></a>    <span class="k">return</span> <span class="n">Manager</span><span class="p">(</span>
-</span><span id="refspy-40"><a href="#refspy-40"><span class="linenos">40</span></a>        <span class="n">get_canon</span><span class="p">(</span><span class="n">canon_name</span><span class="p">,</span> <span class="n">locale_name</span><span class="p">),</span>
-</span><span id="refspy-41"><a href="#refspy-41"><span class="linenos">41</span></a>        <span class="n">get_language</span><span class="p">(</span><span class="n">locale_name</span><span class="p">[:</span><span class="mi">2</span><span class="p">]),</span>
-</span><span id="refspy-42"><a href="#refspy-42"><span class="linenos">42</span></a>        <span class="n">include_two_letter_aliases</span><span class="o">=</span><span class="n">include_two_letter_aliases</span><span class="p">,</span>
-</span><span id="refspy-43"><a href="#refspy-43"><span class="linenos">43</span></a>        <span class="n">include_ambiguous_aliases</span><span class="o">=</span><span class="n">include_ambiguous_aliases</span>
-</span><span id="refspy-44"><a href="#refspy-44"><span class="linenos">44</span></a>    <span class="p">)</span>
+</span><span id="refspy-16"><a href="#refspy-16"><span class="linenos">16</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Manager</span><span class="p">:</span>
+</span><span id="refspy-17"><a href="#refspy-17"><span class="linenos">17</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a Manager object to access all common package functions.</span>
+</span><span id="refspy-18"><a href="#refspy-18"><span class="linenos">18</span></a>
+</span><span id="refspy-19"><a href="#refspy-19"><span class="linenos">19</span></a><span class="sd">    See: `refspy.manager.Manager`</span>
+</span><span id="refspy-20"><a href="#refspy-20"><span class="linenos">20</span></a>
+</span><span id="refspy-21"><a href="#refspy-21"><span class="linenos">21</span></a><span class="sd">    Args:</span>
+</span><span id="refspy-22"><a href="#refspy-22"><span class="linenos">22</span></a><span class="sd">        canon_name: A valid key for the `refspy.config.LIBRARIES` dict (3)</span>
+</span><span id="refspy-23"><a href="#refspy-23"><span class="linenos">23</span></a><span class="sd">            - `protestant`</span>
+</span><span id="refspy-24"><a href="#refspy-24"><span class="linenos">24</span></a><span class="sd">            - `catholic` (adds Deuterocanonicals)</span>
+</span><span id="refspy-25"><a href="#refspy-25"><span class="linenos">25</span></a><span class="sd">            - `orthodox` (adds Anagignoskomena)</span>
+</span><span id="refspy-26"><a href="#refspy-26"><span class="linenos">26</span></a><span class="sd">        locale_name: A valid key for the `refspy.config.LANGUAGES` dict (1).</span>
+</span><span id="refspy-27"><a href="#refspy-27"><span class="linenos">27</span></a><span class="sd">            - `en_US`</span>
+</span><span id="refspy-28"><a href="#refspy-28"><span class="linenos">28</span></a><span class="sd">        include_two_letter_aliases: e.g. &#39;Ge&#39;, &#39;1 Jn&#39;.</span>
+</span><span id="refspy-29"><a href="#refspy-29"><span class="linenos">29</span></a>
+</span><span id="refspy-30"><a href="#refspy-30"><span class="linenos">30</span></a><span class="sd">    Note:</span>
+</span><span id="refspy-31"><a href="#refspy-31"><span class="linenos">31</span></a><span class="sd">        Libraries and languages can be created outside the package, and</span>
+</span><span id="refspy-32"><a href="#refspy-32"><span class="linenos">32</span></a><span class="sd">        supplied to the Manager object directly. These can be contributed to</span>
+</span><span id="refspy-33"><a href="#refspy-33"><span class="linenos">33</span></a><span class="sd">        the library, but the point of the library is to read ordinary text</span>
+</span><span id="refspy-34"><a href="#refspy-34"><span class="linenos">34</span></a><span class="sd">        using ordinary referencing conventions. This will have to be confirmed</span>
+</span><span id="refspy-35"><a href="#refspy-35"><span class="linenos">35</span></a><span class="sd">        for each proposed library and language.</span>
+</span><span id="refspy-36"><a href="#refspy-36"><span class="linenos">36</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="refspy-37"><a href="#refspy-37"><span class="linenos">37</span></a>    <span class="k">return</span> <span class="n">Manager</span><span class="p">(</span>
+</span><span id="refspy-38"><a href="#refspy-38"><span class="linenos">38</span></a>        <span class="n">get_canon</span><span class="p">(</span><span class="n">canon_name</span><span class="p">,</span> <span class="n">locale_name</span><span class="p">),</span>
+</span><span id="refspy-39"><a href="#refspy-39"><span class="linenos">39</span></a>        <span class="n">get_language</span><span class="p">(</span><span class="n">locale_name</span><span class="p">[:</span><span class="mi">2</span><span class="p">]),</span>
+</span><span id="refspy-40"><a href="#refspy-40"><span class="linenos">40</span></a>        <span class="n">include_two_letter_aliases</span><span class="o">=</span><span class="n">include_two_letter_aliases</span><span class="p">,</span>
+</span><span id="refspy-41"><a href="#refspy-41"><span class="linenos">41</span></a>    <span class="p">)</span>
 </span></pre></div>
 
 
@@ -188,7 +182,6 @@ introduction.</p>
 <li><code>en_US</code></li>
 </ul></li>
 <li><strong>include_two_letter_aliases:</strong>  e.g. 'Ge', '1 Jn'.</li>
-<li><strong>include_ambiguous_aliases:</strong>  e.g. 'Am', 'Is'. (See <code><a href="refspy/languages.html">refspy.languages</a>.*</code>)</li>
 </ul>
 
 <h6 id="note">Note:</h6>

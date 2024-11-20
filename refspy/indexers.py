@@ -1,10 +1,9 @@
 """Indexing functions for libraries, books, and book aliases."""
 
 from typing import Dict, List, Tuple
-from refspy import language
 from refspy.book import Book
 from refspy.library import Library
-from refspy.utils import strip_book_number, strip_space_after_book_number, url_param
+from refspy.utils import strip_book_number
 from refspy.verse import Number
 
 PARAM_CHAR_LIMIT = 20
@@ -54,7 +53,6 @@ def add_unique_book_alias(
 def index_book_aliases(
     libraries: List[Library],
     include_two_letter_aliases: bool = True,
-    ignore_aliases: List[str] = [],
     strict: bool = True
 ) -> Dict[str, Tuple[Number, Number]]:
     """Create a lookup table for library and book IDs by book aliases.
@@ -63,8 +61,6 @@ def index_book_aliases(
         libraries: A list of `refspy.library.Library` objects to be indexed.
         include_two_letter_aliases: Allow book aliases of only two letters,
             i.e. 'Jn' and '1 Ti'.
-        ignore_aliases: A list of alias names to always ignore (e.g. 'Is', 
-            since it's ambiguous).
         strict: Throw a ValueError if any two aliases are the same, or any
             alias is an empty string.
 
@@ -80,13 +76,12 @@ def index_book_aliases(
             if book.name != book.abbrev:
                 aliases.append(book.abbrev)
             for alias in book.aliases:
-                if alias not in ignore_aliases:
-                    len_alias = len(strip_book_number(alias))
-                    if (
-                        (len_alias > 2 and len_alias < PARAM_CHAR_LIMIT) or
-                        (include_two_letter_aliases and len_alias == 2)
-                    ):
-                        aliases.append(alias)
+                len_alias = len(strip_book_number(alias))
+                if (
+                    (len_alias > 2 and len_alias < PARAM_CHAR_LIMIT) or
+                    (include_two_letter_aliases and len_alias == 2)
+                ):
+                    aliases.append(alias)
             for alias in aliases:
                 add_unique_book_alias(index, alias, library.id, book.id, strict)
     return index
