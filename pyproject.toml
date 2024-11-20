@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "refspy"
-version = "0.9.17"
+version = "0.9.18"
 authors = [
   { name="Nigel Chapman", email="nigel@chapman.id.au" },
 ]
