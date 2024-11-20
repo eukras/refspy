@@ -14,8 +14,9 @@ book name, such as Second Corinthians, provides context for references that
 follow, such as 5:21 or vv.25,37-38. If we cite Romans (but then add a
 reference to 2ndCo 3:5-8 in parentheses), a subsequent reference like 12:16
 will still be to Romans. Using letters for partial verses, as in II Cor
-5:30a-40d, has no consistent meaning, so the letters are ignored. Ambiguous
-aliases ({AMBIGUOUS}) are not enabled by default.
+5:30a-40d, has no consistent meaning, so the letters are ignored. Book 
+aliases that are common words will be ignored except in references, e.g. Am
+3:1, but not Am.
 """
 
 TEXT = text_template.replace('{AMBIGUOUS}', ', '.join(ENGLISH.ambiguous_aliases))
@@ -67,7 +68,7 @@ print(f"""
         references in ordinary text.</i></p>
         <p>In the demonstration text below, references are highlighted in <span
         class="green">green</span>, and identified in superscript<sup>Like
-        This</sup>. Book names that aren't themselves references but provide
+        This</sup>. Book names which aren't themselves references but provide
         context are highlighted in <span class="yellow">yellow</span>.
         Malformed references are highlighted in <span
         class="purple">purple</span>.</p>

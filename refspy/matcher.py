@@ -348,7 +348,9 @@ class Matcher:
                                     bracket_stack[-1] = last_range
                                 else:
                                     bracket_stack.append(last_range)
-                                if include_books:
+                                if include_books and (
+                                    trim_trailing_period(match_str) not in self.language.ambiguous_aliases
+                                ):
                                     yield (match_str, book_reference(library_id, book_id))
                     elif match_without_book:
                         if bracket_stack:

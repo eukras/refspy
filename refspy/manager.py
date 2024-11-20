@@ -48,7 +48,6 @@ class Manager:
             libraries: List[Library],
             language: Language,
             include_two_letter_aliases=True,
-            include_ambiguous_aliases=False
         ):
         """
         Construct a new Manager object.
@@ -58,8 +57,6 @@ class Manager:
             language: A language object like ENGLISH.
             include_two_letter_aliases: Whether to allow `len(alias) == 2`
                 (default: True)
-            include_ambiguous_aliases: Whether to allow
-                ENGLISH.ambiguous_aliases (default: False).
         """
         self.libraries: Dict[Number, Library] = index_libraries(libraries)
         """A lookup dictionary for Libraries by library.id """
@@ -69,8 +66,7 @@ class Manager:
 
         self.book_aliases: Dict[str, Tuple[Number, Number]] = index_book_aliases(
             libraries,
-            include_two_letter_aliases=include_two_letter_aliases,
-            ignore_aliases=[] if include_ambiguous_aliases else language.ambiguous_aliases
+            include_two_letter_aliases=include_two_letter_aliases
         )
         """A lookup dictionary for (library.id, book.id) by book alias strings."""
 

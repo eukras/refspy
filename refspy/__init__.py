@@ -12,7 +12,6 @@ def refspy(
         canon_name: str = "protestant", 
         locale_name: str = "en_US",
         include_two_letter_aliases: bool = True,
-        include_ambiguous_aliases: bool = False
     ) -> Manager:
     """Create a Manager object to access all common package functions.
 
@@ -26,7 +25,6 @@ def refspy(
         locale_name: A valid key for the `refspy.config.LANGUAGES` dict (1).
             - `en_US`
         include_two_letter_aliases: e.g. 'Ge', '1 Jn'.
-        include_ambiguous_aliases: e.g. 'Am', 'Is'. (See `refspy.languages.*`)
 
     Note:
         Libraries and languages can be created outside the package, and
@@ -39,5 +37,4 @@ def refspy(
         get_canon(canon_name, locale_name),
         get_language(locale_name[:2]),
         include_two_letter_aliases=include_two_letter_aliases,
-        include_ambiguous_aliases=include_ambiguous_aliases
     )

@@ -33,28 +33,12 @@ def test_exclude_two_letter_aliases():
     assert ref == None
 
 
-def test_include_ambiguous_aliases():
-    __ = refspy(include_ambiguous_aliases=True)
-
-    match, ref = __.first_reference("1Ti 2")
-    assert match == "1Ti 2"
-    assert ref == __.bcv('1 Tim', 2)
-    match, ref = __.first_reference("Ob 2:1")
-    assert match == "Ob 2:1"
-    assert ref == __.bcv('Obadiah', 2, 1)
-    match, ref = __.first_reference("Am 2")
-    assert match == "Am 2"
-    assert ref == __.bcv('Amos', 2)
-    match, ref = __.first_reference("Is 1:1")
-    assert match == "Is 1:1"
-    assert ref == __.bcv('Isaiah', 1, 1)
-
-
-def test_not_matching_parts_of_words():
-    __ = refspy(include_two_letter_aliases=True, include_ambiguous_aliases=True)
-
-    match, ref = __.first_reference("Test test test. Especially the last part.")
-    #                                          ^^  Match Esther?
-    assert match == None
-    assert ref == None
-
+def test_skips_ambiguous_aliases_for_context_references():
+    """See `refspy.languages` for ambiguous_aliases.
+    """
+    __ = refspy()
+    refs = __.find_references("Am. Am 3:1.")
+    #                          ^^  Only match the second reference.
+    assert len(refs) == 1
+    assert refs[0][0] == 'Am 3:1'
+    assert refs[0][1] == __.bcv('Amos', 3, 1)
