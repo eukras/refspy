@@ -10,6 +10,8 @@
 
 Refspy is a Python package for working with biblical references in ordinary text.
 
+This fork is adjusted to work with Python 3.10.
+
 [![Github Stars](https://img.shields.io/github/stars/eukras/refspy)](https://img.shields.io/github/stars/eukras/refspy)
 
 
