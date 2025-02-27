@@ -27,8 +27,10 @@ refspy.egg-info/requires.txt
 refspy.egg-info/top_level.txt
 refspy/languages/__init__.py
 refspy/languages/english.py
+refspy/languages/spanish.py
 refspy/libraries/__init__.py
 refspy/libraries/en_US.py
+refspy/libraries/es_ES.py
 tests/test_debugging.py
 tests/test_en_US.py
 tests/test_formatter.py

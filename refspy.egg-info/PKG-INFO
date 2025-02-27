@@ -1,6 +1,6 @@
 Metadata-Version: 2.2
 Name: refspy
-Version: 0.9.18
+Version: 0.9.19
 Summary: A Python package for working with biblical references in ordinary text.
 Author-email: Nigel Chapman <nigel@chapman.id.au>
 Project-URL: Homepage, https://github.com/eukras/refspy
