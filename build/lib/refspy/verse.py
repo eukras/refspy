@@ -9,6 +9,7 @@ Attributes:
 
 # from typing import Tuple, Self
 from typing import Tuple, TypeVar
+from typing_extensions import Self
 
 from pydantic import BaseModel
 
@@ -17,7 +18,6 @@ from refspy.number import Number
 
 
 VerseTuple = Tuple[Number, Number, Number, Number]
-T = TypeVar("T", bound="Range")
 
 
 class Verse(BaseModel):
@@ -34,24 +34,24 @@ class Verse(BaseModel):
         """A sortable tuple for comparison operations."""
         return (self.library, self.book, self.chapter, self.verse)
 
-    def __lt__(self, other: T) -> bool:
+    def __lt__(self, other: Self) -> bool:
         """Compare verses by comparing tuples."""
         return self.tuple() < other.tuple()
 
-    def __le__(self, other: T) -> bool:
+    def __le__(self, other: Self) -> bool:
         """Compare verses by comparing tuples."""
         return self.tuple() <= other.tuple()
 
-    def __gt__(self, other: T) -> bool:
+    def __gt__(self, other: Self) -> bool:
         """Compare verses by comparing tuples."""
         return self.tuple() > other.tuple()
 
-    def __ge__(self, other: T) -> bool:
+    def __ge__(self, other: Self) -> bool:
         """Compare verses by comparing tuples."""
         return self.tuple() >= other.tuple()
 
     @classmethod
-    def from_index(cls, index: Index) -> T:
+    def from_index(cls, index: Index) -> Self:
         """
         Convert a verse's index number to its tuple form.
 

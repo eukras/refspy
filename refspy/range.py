@@ -1,13 +1,12 @@
 """Data object for verse ranges."""
 
 # from typing import List, Self, Tuple
-from typing import List, TypeVar, Tuple
+from typing import List, Tuple
+from typing_extensions import Self
 from pydantic import BaseModel, model_validator
 
 from refspy.number import Number
 from refspy.verse import verse, Verse
-
-T = TypeVar("T", bound="Range")
 
 class Range(BaseModel):
     start: Verse
@@ -17,7 +16,7 @@ class Range(BaseModel):
         return (self.start, self.end)
 
     @model_validator(mode="after")
-    def check_verse_order(self: T) -> T:
+    def check_verse_order(self) -> Self:
         """Enforce verse order within the Range.
 
         Raises:
@@ -26,10 +25,10 @@ class Range(BaseModel):
         assert tuple(self.start) <= tuple(self.end)
         return self
 
-    def __lt__(self, other: T) -> bool:
+    def __lt__(self, other: Self) -> bool:
         return tuple(self) < tuple(other)
 
-    def overlaps(self, other: T) -> bool:
+    def overlaps(self, other: Self) -> bool:
         """Determine whether this reference overlaps the other.
 
         Overlap is when either's start or end falls within the other's range.
@@ -45,7 +44,7 @@ class Range(BaseModel):
             ]
         )
 
-    def contains(self, other: T) -> bool:
+    def contains(self, other: Self) -> bool:
         """Determine whether this reference contains the other.
 
         Containment is when this reference's range includes the other's start
@@ -55,7 +54,7 @@ class Range(BaseModel):
         """
         return self.start <= other.start and self.end >= other.end
 
-    def adjoins(self, other: T) -> bool:
+    def adjoins(self, other: Self) -> bool:
         """Determine whether this reference is adjacent to the other.
 
         Adjacency determines whether two ranges can be joined by
@@ -103,7 +102,7 @@ class Range(BaseModel):
         else:
             return False
 
-    def merge(self, other: T) -> T:
+    def merge(self, other: Self) -> Self:
         """Combine two overlapping ranges."""
         min_start_c, min_start_v = min(
             (self.start.chapter, self.start.verse),
@@ -128,7 +127,7 @@ class Range(BaseModel):
             ),
         )
 
-    def join(self, other: T):
+    def join(self, other: Self):
         """Combine two adjacent ranges."""
         if self.start < other.start:
             return self.__class__(start=self.start, end=other.end)
@@ -138,7 +137,7 @@ class Range(BaseModel):
     def is_same_library(self) -> bool:
         return self.start.library == self.end.library
 
-    def same_library_as(self, other: T) -> bool:
+    def same_library_as(self, other: Self) -> bool:
         """Determine if two ranges are in the same library."""
         ids = set(
             [
@@ -153,7 +152,7 @@ class Range(BaseModel):
     def is_same_book(self) -> bool:
         return self.is_same_library() and self.start.book == self.end.book
 
-    def same_book_as(self, other: T) -> bool:
+    def same_book_as(self, other: Self) -> bool:
         """Determine if two references are in the same book.
 
         To be in the same book they must also be in the same library.
@@ -168,7 +167,7 @@ class Range(BaseModel):
             and self.start.chapter == self.end.chapter
         )
 
-    def same_chapter_as(self, other: T) -> bool:
+    def same_chapter_as(self, other: Self) -> bool:
         """Determine if two references are in the same book.
 
         To be in the same book they must also be in the same library.

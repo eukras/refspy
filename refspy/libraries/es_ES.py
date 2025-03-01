@@ -15,14 +15,14 @@ OT_es = Library(
             id=1,
             name="Génesis",
             abbrev="Gén",
-            aliases=["Gé", "Gn"],
+            aliases=["Gé", "Ge", "Gn"],
             chapters=50,
         ),
         Book(
             id=2,
             name="Éxodo",
             abbrev="Éxod",
-            aliases=["Éx"],
+            aliases=["Éx", "Ex"],
             chapters=40,
         ),
         Book(
@@ -36,7 +36,7 @@ OT_es = Library(
             id=4,
             name="Números",
             abbrev="Núm",
-            aliases=["Nm", "Nú"],
+            aliases=["Nm", "Nú", "Nu"],
             chapters=36,
         ),
         Book(
@@ -507,7 +507,7 @@ NT_es = Library(
             id=9,
             name="Gálatas",
             abbrev="Gál",
-            aliases=["Gá", "Gl"],
+            aliases=["Gá", "Ga", "Gl"],
             chapters=6,
         ),
         Book(
@@ -626,7 +626,7 @@ NT_es = Library(
             id=26,
             name="Judas",
             abbrev="Judas",
-            aliases=["Jds"],
+            aliases=["Jds", "Jd"],
             chapters=1,
         ),
         Book(

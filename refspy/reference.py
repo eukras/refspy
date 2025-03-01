@@ -6,13 +6,12 @@ They can be set to sort, merge, and join references when added together.
 """
 
 # from typing import Any, List, Self
-from typing import Any, List, TypeVar
+from typing import Any, List
+from typing_extensions import Self
 from pydantic import BaseModel, Field
 
 from refspy.range import Range, combine, merge, range
 from refspy.verse import Number, Verse, verse
-
-T = TypeVar("T", bound="Range")
 
 
 class Reference(BaseModel):
@@ -44,7 +43,7 @@ class Reference(BaseModel):
         ValueError: If ranges is empty
     """
 
-    def __add__(self, other: T) -> T:
+    def __add__(self, other: Self) -> Self:
         """Overload the addition operator to combine reference ranges into a new object.
 
         The most aggressive sort/merge/join settings from the two References will
@@ -52,7 +51,7 @@ class Reference(BaseModel):
         """
         return self.__class__(ranges=[*self.ranges, *other.ranges])
 
-    def __lt__(self, other: T) -> bool:
+    def __lt__(self, other: Self) -> bool:
         """
         A simple implementation of '<' allows sorting and min/max.
 
@@ -61,7 +60,7 @@ class Reference(BaseModel):
         """
         return self.ranges[0].start < other.ranges[0].start
 
-    def equals(self, other: T) -> bool:
+    def equals(self, other: Self) -> bool:
         """
         Reference equality means that two references have identical ranges.
 
@@ -74,7 +73,7 @@ class Reference(BaseModel):
         """
         return self.ranges == other.ranges
 
-    def overlaps(self, other: T) -> bool:
+    def overlaps(self, other: Self) -> bool:
         """
         Two references overlap if ANY of their ranges overlap.
         """
@@ -86,7 +85,7 @@ class Reference(BaseModel):
             ]
         )
 
-    def contains(self, other: T) -> bool:
+    def contains(self, other: Self) -> bool:
         """
         A reference contains another if ALL the other's ranges are contained by
         ANY of it's own ranges.
@@ -98,7 +97,7 @@ class Reference(BaseModel):
             ]
         )
 
-    def adjoins(self, other: T) -> bool:
+    def adjoins(self, other: Self) -> bool:
         """Determine adjacency for ranges.
 
         A reference adjoins another if its maximum range adjoins the other's
@@ -125,11 +124,11 @@ class Reference(BaseModel):
             library_books.add(tuple([_.end.library, _.end.book]))
         return len(library_books)
 
-    def is_book(self: T) -> bool:
+    def is_book(self: Self) -> bool:
         """Determine if reference is a whole book."""
         return self.ranges[0].is_book()
 
-    def is_chapter(self: T) -> bool:
+    def is_chapter(self: Self) -> bool:
         """Determine if reference is a whole chapter."""
         return self.ranges[0].is_chapter()
 
@@ -163,18 +162,18 @@ class Reference(BaseModel):
         """
         return self.ranges[-1]
 
-    def sort(self) -> T:
+    def sort(self) -> Self:
         """Return a sorted reference."""
         return self.__class__(ranges=sorted(self.ranges))
 
-    def merge(self) -> T:
+    def merge(self) -> Self:
         """Return a merged reference.
 
         A merged reference is sorted, and has any overlapping ranges merged.
         """
         return self.__class__(ranges=merge(self.ranges))
 
-    def combine(self) -> T:
+    def combine(self) -> Self:
         """Return a combined reference.
 
         A combined reference is sorted, merged, and has any adjacent ranges combined.
