@@ -37,6 +37,14 @@ from refspy.utils import pluralize, url_param, url_escape
 from refspy.verse import Number, verse
 
 
+"""
+References can always be formatted with Manager.template(ref). If no
+pattern argument is supplied, the default short format will be used, e.g.
+'Rom 12:1-7'. or ref.abbrev_name()
+"""
+DEFAULT_TEMPLATE_PATTERN = '{ABBREV_NAME}'
+
+
 class Manager:
     """
     The manager object integrates the main library features into a single
@@ -90,18 +98,10 @@ class Manager:
     # Index and summary functions
     # -----------------------------------
 
-    def make_index(
-        self, references: List[Reference], pattern: str | None = None
-    ) -> str:
-        """Write a one-line index of references.
-
-        Args:
-            pattern: a formatting string suitable for links, see
-                `refspy.manager.Manager.template()`.
-
-        Note:
-            If no template pattern is provided, reference formatting
-            will default to `refspy.manager.Manager.abbrev_name()`
+    def make_index_references(
+        self, references: List[Reference]
+    ) -> List[Reference]:
+        """Return a sorted list of References; no combining or simplifying.
         """
         index = []
         collation = self.collate(
@@ -110,16 +110,54 @@ class Manager:
         for _, book_collation in collation:
             for _, reference_list in book_collation:
                 sorted_ref = self.sort_references(reference_list)
-                if pattern:
-                    index.append(self.template(sorted_ref, pattern))
-                else:
-                    index.append(self.abbrev_name(sorted_ref))
-        return "; ".join(index)
+                index.append(sorted_ref)
+        return index
+
+    def make_index(
+        self,
+        references: List[Reference],
+        pattern: str|None = None,
+    ) -> str | None:
+        """
+        Return a one-line list of references in order of appearance.
+
+        Args:
+            pattern: a formatting string suitable for links, see 
+                `refspy.manager.Manager.template()`.
+
+        Note:
+            If no template pattern is provided, reference formatting
+            will default to `refspy.manager.Manager.abbrev_name()`
+        """
+        if indexes := self.make_index_references(references):
+            return ", ".join([self.template(ref, pattern) for ref in indexes])
+        else:
+            return None
+
+
+    def make_summary_references(
+        self, references: List[Reference]
+    ) -> List[Reference]:
+        """Return a sorted, combined, simplified list of References.
+        """
+        collation = self.collate(
+            sorted([ref for ref in references if ref and not ref.is_book()])
+        )
+        summary = []
+        for _, book_collation in collation:
+            for _, reference_list in book_collation:
+                compact_ref = self.combine_references(reference_list)
+                summary.append(compact_ref)
+        return summary
+
 
     def make_summary(
-        self, references: List[Reference], pattern: str | None = None
-    ) -> str:
-        """Write a one-line summary, like for index, but merge and join ranges.
+        self,
+        references: List[Reference],
+        pattern: str | None = None
+    ) -> str | None:
+        """
+        Return a string showing a sorted, combined, list of References. 
 
         Args:
             pattern: a formatting string suitable for links, see
@@ -128,41 +166,35 @@ class Manager:
         Note:
             If no template pattern is provided, reference formatting
             will default to `refspy.manager.Manager.abbrev_name()`.
-        """
-        summary = []
-        count_nones = len([ref for ref in references if ref is None])
-        if count_nones > 0:
-            error_msg = f'; <span class="wiki-error">{pluralize(count_nones, "bad reference")}</span>'
-        else:
-            error_msg = ""
-        collation = self.collate(
-            sorted([ref for ref in references if ref and not ref.is_book()])
-        )
-        for _, book_collation in collation:
-            for _, reference_list in book_collation:
-                compact_ref = self.combine_references(reference_list)
-                if pattern:
-                    summary.append(self.template(compact_ref, pattern))
-                else:
-                    summary.append(self.abbrev_name(compact_ref))
-        return "; ".join(summary) + error_msg
 
-    def make_hotspots(
+        Args:
+            max_chapters: The maximum number of chapter hotspots to return.
+            min_references: The minimal references per chapter that qualifies as a hotspot.
+        """
+        if summaries := self.make_summary_references(references):
+            return ", ".join([self.template(ref, pattern) for ref in summaries])
+        else:
+            return None
+
+    def make_hotspot_tuples(
         self,
         references: List[Reference],
         max_chapters: int = 7,
         min_references: int = 2,
-    ) -> List[Tuple[str, int]] | None:
+    ) -> List[Tuple[Reference, int]]:
         """
         Find the most referenced chapters in a set of references.
 
         Args:
             max_chapters: The maximum number of chapter hotspots to return.
             min_references: The minimal references per chapter that qualifies as a hotspot.
+
+        Return:
+            a list of tuples of (chapter reference, count) in descending frequency
         """
-        totals = dict()
         if not references:
-            return None
+            return []
+        totals = dict()
         for _ in self.sort_references(references).ranges:
             for tuple in [
                 (_.start.library, _.start.book, _.start.chapter),
@@ -172,32 +204,50 @@ class Manager:
                     totals[tuple] += 1
                 else:
                     totals[tuple] = 1
-        hotspots = {
-            self.abbrev_name(chapter_reference(*tuple)): int(total / 2)
+        hotspots = [
+            (chapter_reference(*tuple), int(total / 2))
             for tuple, total in totals.items()
             if total / 2 >= min_references
-        }
-        hotspots_desc = sorted(hotspots.items(), key=lambda item: item[1], reverse=True)
+        ]
+        hotspots_desc = sorted(hotspots, key=lambda item: item[1], reverse=True)
         return hotspots_desc[:max_chapters]
 
-    def make_hotspots_text(
+    def make_hotspot_references(
         self,
         references: List[Reference],
         max_chapters: int = 7,
         min_references: int = 2,
-    ) -> str | None:
+    ) -> List[Reference]:
         """
-        Return most referenced chapters as a text string: "Rom 3, 1 Cor 6" in
-        descending order of frequency.
+        Return chapter references in descending order of frequency.
 
         Args:
             max_chapters: The maximum number of chapter hotspots to return.
             min_references: The minimal references per chapter that qualifies as a hotspot.
         """
-        if hotspots := self.make_hotspots(
+        tuples = self.make_hotspot_tuples(references, max_chapters, min_references) 
+        return [ref for ref, _  in tuples]
+
+    def make_hotspots(
+        self,
+        references: List[Reference],
+        max_chapters: int = 7,
+        min_references: int = 2,
+        pattern: str | None = None,
+    ) -> str | None:
+        """
+        Return chapter references in descending order of frequency, as a text
+        string, e.g. "Rom 3, 1 Cor 6", or None.
+
+        Args:
+            max_chapters: The maximum number of chapter hotspots to return.
+            min_references: The minimal references per chapter that qualifies as a hotspot.
+            pattern: an optional template pattern for formatting references
+        """
+        if refs := self.make_hotspot_references(
             references, max_chapters=max_chapters, min_references=min_references
         ):
-            return ", ".join([chapter for chapter, _ in hotspots])
+            return ", ".join([self.template(ref, pattern) for ref in refs])
         else:
             return None
 
@@ -300,7 +350,7 @@ class Manager:
         self, text: str, include_books: bool = False, include_nones: bool = False
     ) -> Generator[Tuple[str, Reference | None], None, None]:
         """
-        Generate tuples of (match_str, reference) for provided text.
+        Generate tuples of (match_str, reference) for provided text.manager
 
         Task delegated to `refspy.matcher.Matcher.generate_references()`.
 
@@ -488,7 +538,7 @@ class Manager:
     # Template formatting functions
     # -----------------------------------
 
-    def template(self, reference: Reference, pattern: str) -> str:
+    def template(self, reference: Reference | None, pattern: str | None = None) -> str:
         """
         Substitute formatting values in a string:
 
@@ -508,11 +558,16 @@ class Manager:
             * `{PARAM_BOOK}` -> "1cor"
             * `{PARAM_NUMBERS}` -> "2.3-4"
 
-        We calculate only the values required by the template string.
+        For efficiency, we calculate only the values required by the template
+        string.
         """
-        out = pattern
+        if reference is None:
+            return ''
+
+        out = pattern if pattern else DEFAULT_TEMPLATE_PATTERN
+
         regexp = re.compile(r"\{[A-Z_]+\}")
-        matches = regexp.findall(pattern)
+        matches = regexp.findall(out)
         numbers = self.numbers(reference)
         for _ in matches:
             if _ == "{NAME}":

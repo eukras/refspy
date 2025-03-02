@@ -32,6 +32,9 @@ def refspy(
         the library, but the point of the library is to read ordinary text
         using ordinary referencing conventions. This will have to be confirmed
         for each proposed library and language.
+
+    To Do:
+        Load languages and libraries only on demand when there are more of them. 
     """
     return Manager(
         get_canon(canon_name, locale_name),

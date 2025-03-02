@@ -28,6 +28,10 @@ def test_init():
     assert __.libraries[LIBRARY.id] == LIBRARY
     assert __.book_aliases["Book"] == (LIBRARY.id, BOOK.id)
 
+def test_make_index_references():
+    tuples = __.find_references("Book 1:2, 2:1, 3:4, 1:4-5, 7, 3:6")
+    refs = __.make_index_references([ref for _, ref in tuples if ref])
+    assert ','.join([__.template(ref) for ref in refs if ref is not None]) == "Bk 1:2, 4–5, 7; 2:1; 3:4, 6"
 
 def test_make_index():
     tuples = __.find_references("Book 1:2, 2:1, 3:4, 1:4-5, 7, 3:6")
@@ -35,26 +39,25 @@ def test_make_index():
     assert text == "Bk 1:2, 4–5, 7; 2:1; 3:4, 6"
 
 
+# MEMO: Should return [(chapter_reference, total), ...] for hotspots.
 def test_make_hotspots():
     tuples = __.find_references("Book 1:2, 2:1, 3:4, 1:4-5, 7, 3:6")
-    text = __.make_hotspots_text(
+    out = __.make_hotspots(
         [ref for _, ref in tuples if ref], max_chapters=2, min_references=2
     )
-    assert text is not None
-    assert "Bk 1, Bk 3" in text
+    assert out == 'Bk 1, Bk 3'
 
 
 def test_make_hotspots_lots():
     tuples = __.find_references("Book 1:2, 2:1, 3:4, 1:4-5, 7, 3:6, " * 100)
-    text = __.make_hotspots_text(
+    out = __.make_hotspots(
         [ref for _, ref in tuples if ref], max_chapters=2, min_references=2
     )
-    assert text is not None
-    assert "Bk 1, Bk 3" in text
+    assert out == 'Bk 1, Bk 3'
 
 
 def test_make_hotspots_empty():
-    text = __.make_hotspots_text([], max_chapters=2, min_references=2)
+    text = __.make_hotspots([], max_chapters=2, min_references=2)
     assert text is None
 
 
