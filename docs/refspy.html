@@ -110,12 +110,15 @@ introduction.</p>
 </span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="sd">        the library, but the point of the library is to read ordinary text</span>
 </span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a><span class="sd">        using ordinary referencing conventions. This will have to be confirmed</span>
 </span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a><span class="sd">        for each proposed library and language.</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>    <span class="k">return</span> <span class="n">Manager</span><span class="p">(</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>        <span class="n">get_canon</span><span class="p">(</span><span class="n">canon_name</span><span class="p">,</span> <span class="n">locale_name</span><span class="p">),</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>        <span class="n">get_language</span><span class="p">(</span><span class="n">locale_name</span><span class="p">[:</span><span class="mi">2</span><span class="p">]),</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>        <span class="n">include_two_letter_aliases</span><span class="o">=</span><span class="n">include_two_letter_aliases</span><span class="p">,</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>    <span class="p">)</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="sd">    To Do:</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a><span class="sd">        Load languages and libraries only on demand when there are more of them. </span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>    <span class="k">return</span> <span class="n">Manager</span><span class="p">(</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>        <span class="n">get_canon</span><span class="p">(</span><span class="n">canon_name</span><span class="p">,</span> <span class="n">locale_name</span><span class="p">),</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>        <span class="n">get_language</span><span class="p">(</span><span class="n">locale_name</span><span class="p">[:</span><span class="mi">2</span><span class="p">]),</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>        <span class="n">include_two_letter_aliases</span><span class="o">=</span><span class="n">include_two_letter_aliases</span><span class="p">,</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>    <span class="p">)</span>
 </span></pre></div>
 
 
@@ -155,12 +158,15 @@ introduction.</p>
 </span><span id="refspy-33"><a href="#refspy-33"><span class="linenos">33</span></a><span class="sd">        the library, but the point of the library is to read ordinary text</span>
 </span><span id="refspy-34"><a href="#refspy-34"><span class="linenos">34</span></a><span class="sd">        using ordinary referencing conventions. This will have to be confirmed</span>
 </span><span id="refspy-35"><a href="#refspy-35"><span class="linenos">35</span></a><span class="sd">        for each proposed library and language.</span>
-</span><span id="refspy-36"><a href="#refspy-36"><span class="linenos">36</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="refspy-37"><a href="#refspy-37"><span class="linenos">37</span></a>    <span class="k">return</span> <span class="n">Manager</span><span class="p">(</span>
-</span><span id="refspy-38"><a href="#refspy-38"><span class="linenos">38</span></a>        <span class="n">get_canon</span><span class="p">(</span><span class="n">canon_name</span><span class="p">,</span> <span class="n">locale_name</span><span class="p">),</span>
-</span><span id="refspy-39"><a href="#refspy-39"><span class="linenos">39</span></a>        <span class="n">get_language</span><span class="p">(</span><span class="n">locale_name</span><span class="p">[:</span><span class="mi">2</span><span class="p">]),</span>
-</span><span id="refspy-40"><a href="#refspy-40"><span class="linenos">40</span></a>        <span class="n">include_two_letter_aliases</span><span class="o">=</span><span class="n">include_two_letter_aliases</span><span class="p">,</span>
-</span><span id="refspy-41"><a href="#refspy-41"><span class="linenos">41</span></a>    <span class="p">)</span>
+</span><span id="refspy-36"><a href="#refspy-36"><span class="linenos">36</span></a>
+</span><span id="refspy-37"><a href="#refspy-37"><span class="linenos">37</span></a><span class="sd">    To Do:</span>
+</span><span id="refspy-38"><a href="#refspy-38"><span class="linenos">38</span></a><span class="sd">        Load languages and libraries only on demand when there are more of them. </span>
+</span><span id="refspy-39"><a href="#refspy-39"><span class="linenos">39</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="refspy-40"><a href="#refspy-40"><span class="linenos">40</span></a>    <span class="k">return</span> <span class="n">Manager</span><span class="p">(</span>
+</span><span id="refspy-41"><a href="#refspy-41"><span class="linenos">41</span></a>        <span class="n">get_canon</span><span class="p">(</span><span class="n">canon_name</span><span class="p">,</span> <span class="n">locale_name</span><span class="p">),</span>
+</span><span id="refspy-42"><a href="#refspy-42"><span class="linenos">42</span></a>        <span class="n">get_language</span><span class="p">(</span><span class="n">locale_name</span><span class="p">[:</span><span class="mi">2</span><span class="p">]),</span>
+</span><span id="refspy-43"><a href="#refspy-43"><span class="linenos">43</span></a>        <span class="n">include_two_letter_aliases</span><span class="o">=</span><span class="n">include_two_letter_aliases</span><span class="p">,</span>
+</span><span id="refspy-44"><a href="#refspy-44"><span class="linenos">44</span></a>    <span class="p">)</span>
 </span></pre></div>
 
 
@@ -192,6 +198,12 @@ introduction.</p>
   the library, but the point of the library is to read ordinary text
   using ordinary referencing conventions. This will have to be confirmed
   for each proposed library and language.</p>
+</blockquote>
+
+<h6 id="to-do">To Do:</h6>
+
+<blockquote>
+  <p>Load languages and libraries only on demand when there are more of them.</p>
 </blockquote>
 </div>
 

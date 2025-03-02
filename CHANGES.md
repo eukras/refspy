@@ -4,6 +4,13 @@
 
 (Future)
 
+## 0.10.1 -- BETA -- BREAKING CHANGE
+
+* make_index, make_summary, make_hotspots now return `str`,
+while make_index_references, make_summary_references, make_hotspots_references
+return `List[Reference]`. This is a consistent way to access the Reference
+objects in all cases.
+
 ### 0.9.14 -- BETA
 
 * fix: make_hotposts_text() arg names; affecting demo.py
