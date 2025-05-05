@@ -63,19 +63,20 @@ Or, to create specific canons:
 ```python
 from refspy.language.english import ENGLISH
 from refspy.libraries.en_US import DC, DC_ORTHODOX, NT, OT
+from refspy.formats.en_US import FORMATS
 from refspy.manager import Manager 
 
 # Protestant
 __ = refspy('protestant', 'en_US')
-__ = Manager(libraries=[OT, NT], language=ENGLISH)
+__ = Manager(libraries=[OT, NT], language=ENGLISH, formats=FORMATS)
 
 # Catholic
 __ = refspy('catholic', 'en_US')
-__ = Manager(libraries=[OT, DC, NT], language=ENGLISH)
+__ = Manager(libraries=[OT, DC, NT], language=ENGLISH, formats=FORMATS)
 
 # Orthodox
 __ = refspy('orthodox', 'en_US')
-__ = Manager(libraries=[OT, DC, DC_ORTHODOX, NT], language=ENGLISH)
+__ = Manager(libraries=[OT, DC, DC_ORTHODOX, NT], language=ENGLISH, formats=FORMATS)
 ```
 
 The file `refspy/setup.py` shows valid names for libraries and languages.
