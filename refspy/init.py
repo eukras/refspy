@@ -6,7 +6,7 @@ from refspy.library import Library
 from refspy.format import Formats
 
 def get_language(language_name: str) -> Language:
-    """Dynamically loads language specifities.
+    """Dynamically loads language specificities.
 
     Language names use the first two chars of locale names, e.g. 'en_US' is 'en'.
     """
@@ -23,12 +23,12 @@ def get_canon(canon_name: str, locale_name: str) -> List[Library]:
     """Dynamically loads canon
 
     Args:
-        canon_name:
-            - 'protestant'
-            - 'catholic' (adds Deuterocanonicals)
-            - 'orthodox' (adds Anagignoskomena)
-        locale_name: An available locale (see the 'librairies' directory)
-            (eg. 'en_US', 'fr_FR')
+        canon_name: A valid key from...
+            - `protestant`
+            - `catholic` (adds Deuterocanonicals)
+            - `orthodox` (adds Anagignoskomena)
+        locale_name: An available locale (see the 'librairies' submodule)
+            (eg. `en_US`, `fr_FR`)
     """
     if locale_name == "en_US":
         from refspy.libraries.en_US import DC, DC_ORTHODOX, NT, OT
@@ -47,7 +47,11 @@ def get_canon(canon_name: str, locale_name: str) -> List[Library]:
         raise ValueError(f"Canon '{canon_name}' not found for locale '{locale_name}'.")
 
 def get_formats(locale_name: str) -> Formats:
-    """
+    """Dynamically loads locale formatting specificities.
+
+    Args:
+        locale_name: An available locale (see the 'formats' submodule)
+            (eg. `en_US`, `fr_FR`)
     """
     if locale_name == "en_US":
         from refspy.formats.en_US import FORMATS

@@ -19,11 +19,11 @@ def refspy(
 
     Args:
         canon_name: A valid key for `refspy.init.get_canon()`
-            - 'protestant'
-            - 'catholic' (adds Deuterocanonicals)
-            - 'orthodox' (adds Anagignoskomena)
+            - `protestant`
+            - `catholic` (adds Deuterocanonicals)
+            - `orthodox` (adds Anagignoskomena)
         locale_name: An available locale (see the 'librairies' directory)
-            (eg. 'en_US', 'fr_FR')
+            (eg. `en_US`, `fr_FR`)
         include_two_letter_aliases: e.g. 'Ge', '1 Jn'.
 
     Note:
