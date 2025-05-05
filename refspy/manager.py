@@ -8,13 +8,7 @@ from typing import Dict, Generator, List, Tuple
 
 from pydantic import TypeAdapter
 from refspy.book import Book
-from refspy.format import (
-    ABBREV_BOOK_FORMAT,
-    ABBREV_NAME_FORMAT,
-    BOOK_FORMAT,
-    NAME_FORMAT,
-    NUMBER_FORMAT,
-)
+from refspy.format import Formats
 from refspy.formatter import Formatter
 from refspy.indexers import (
     index_book_aliases,
@@ -55,6 +49,7 @@ class Manager:
             self,
             libraries: List[Library],
             language: Language,
+            formats: Formats,
             include_two_letter_aliases=True,
         ):
         """
@@ -87,6 +82,9 @@ class Manager:
             self.language
         )
         """Delegate reference matching tasks."""
+
+        self.formats: Formats = formats
+        """Format-specific program data."""
 
         self.formatter: Formatter = Formatter(self.books, self.book_aliases)
         """Delegate formatting tasks."""
@@ -513,26 +511,26 @@ class Manager:
 
     def name(self, ref: Reference) -> str:
         """Format a reference."""
-        return self.formatter.format(ref, NAME_FORMAT)
+        return self.formatter.format(ref, self.formats.NAME_FORMAT)
 
     def book(self, ref: Reference) -> str:
         """Format a reference using only the book part of its name."""
-        return self.formatter.format(ref, BOOK_FORMAT)
+        return self.formatter.format(ref, self.formats.BOOK_FORMAT)
 
     def abbrev_name(self, ref: Reference) -> str:
         """Format an abbreviated reference."""
-        return self.formatter.format(ref, ABBREV_NAME_FORMAT)
+        return self.formatter.format(ref, self.formats.ABBREV_NAME_FORMAT)
 
     def abbrev_book(self, ref: Reference) -> str:
         """Format an abbreviated reference using only the book part of its name."""
-        return self.formatter.format(ref, ABBREV_BOOK_FORMAT)
+        return self.formatter.format(ref, self.formats.ABBREV_BOOK_FORMAT)
 
     def numbers(self, ref: Reference) -> str:
         """Format a reference using only the number part of its name.
 
         The number part is the same for full names and abreviated names.
         """
-        return self.formatter.format(ref, NUMBER_FORMAT)
+        return self.formatter.format(ref, self.formats.NUMBER_FORMAT)
 
     # -----------------------------------
     # Template formatting functions

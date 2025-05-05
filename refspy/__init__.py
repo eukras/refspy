@@ -4,7 +4,7 @@ See the [README.md](https://github.com/eukras/refspy) for a more accessible
 introduction.
 """
 
-from refspy.init import get_canon, get_language
+from refspy.init import get_canon, get_language, get_formats
 from refspy.manager import Manager
 
 
@@ -18,12 +18,12 @@ def refspy(
     See: `refspy.manager.Manager`
 
     Args:
-        canon_name: A valid key for the `refspy.config.LIBRARIES` dict (3)
+        canon_name: A valid key for `refspy.init.get_canon()`
             - `protestant`
             - `catholic` (adds Deuterocanonicals)
             - `orthodox` (adds Anagignoskomena)
-        locale_name: A valid key for the `refspy.config.LANGUAGES` dict (1).
-            - `en_US`
+        locale_name: An available locale (see the 'librairies' directory)
+            (eg. `en_US`, `fr_FR`)
         include_two_letter_aliases: e.g. 'Ge', '1 Jn'.
 
     Note:
@@ -32,12 +32,10 @@ def refspy(
         the library, but the point of the library is to read ordinary text
         using ordinary referencing conventions. This will have to be confirmed
         for each proposed library and language.
-
-    To Do:
-        Load languages and libraries only on demand when there are more of them. 
     """
     return Manager(
         get_canon(canon_name, locale_name),
         get_language(locale_name[:2]),
+        get_formats(locale_name),
         include_two_letter_aliases=include_two_letter_aliases,
     )

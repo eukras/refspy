@@ -1,22 +1,63 @@
 """Initialisation helpers for Refspy package."""
 
 from typing import List
-from refspy.config import LANGUAGES, LIBRARIES
 from refspy.language import Language
 from refspy.library import Library
-
+from refspy.format import Formats
 
 def get_language(language_name: str) -> Language:
-    """Lookup key in `refspy.config.LANGUAGES` dict."""
-    if language_name in LANGUAGES:
-        return LANGUAGES[language_name]
+    """Dynamically loads language specificities.
+
+    Language names use the first two chars of locale names, e.g. 'en_US' is 'en'.
+    """
+    if language_name == "en":
+        from refspy.languages.english import ENGLISH
+        return ENGLISH
+    elif language_name == "fr":
+        from refspy.languages.french import FRENCH
+        return FRENCH
     else:
         raise ValueError(f"Language '{language_name}' not found.")
 
-
 def get_canon(canon_name: str, locale_name: str) -> List[Library]:
-    """Lookup keys in `refspy.config.LIBRARIES` dict."""
-    if canon_name in LIBRARIES:
-        if locale_name in LIBRARIES[canon_name]:
-            return LIBRARIES[canon_name][locale_name]
-    raise ValueError(f"Canon '{canon_name}' not found for locale '{locale_name}'.")
+    """Dynamically loads canon
+
+    Args:
+        canon_name: A valid key from...
+            - `protestant`
+            - `catholic` (adds Deuterocanonicals)
+            - `orthodox` (adds Anagignoskomena)
+        locale_name: An available locale (see the 'librairies' submodule)
+            (eg. `en_US`, `fr_FR`)
+    """
+    if locale_name == "en_US":
+        from refspy.libraries.en_US import DC, DC_ORTHODOX, NT, OT
+    elif locale_name == "fr_FR":
+        from refspy.libraries.fr_FR import DC, DC_ORTHODOX, NT, OT
+    else:
+        raise ValueError(f"Locale '{locale_name}' not available.")
+    
+    if canon_name == "protestant":
+        return [OT, NT]
+    elif canon_name == "catholic":
+        return [OT, DC, NT]
+    elif canon_name == "orthodox":
+        return [OT, DC, DC_ORTHODOX, NT]
+    else:
+        raise ValueError(f"Canon '{canon_name}' not found for locale '{locale_name}'.")
+
+def get_formats(locale_name: str) -> Formats:
+    """Dynamically loads locale formatting specificities.
+
+    Args:
+        locale_name: An available locale (see the 'formats' submodule)
+            (eg. `en_US`, `fr_FR`)
+    """
+    if locale_name == "en_US":
+        from refspy.formats.en_US import FORMATS
+        return FORMATS
+    elif locale_name == "fr_FR":
+        from refspy.formats.fr_FR import FORMATS
+        return FORMATS
+    else:
+        raise ValueError(f"Format not found for local '{locale_name}'.")

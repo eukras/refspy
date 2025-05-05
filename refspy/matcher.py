@@ -16,13 +16,15 @@ from refspy.reference import (
 from refspy.utils import add_space_after_book_number, get_unnumbered_book_aliases, parse_number, normalize_spacing, trim_trailing_period
 from refspy.verse import Number, verse
 
-COLON = r"[:\.]"
+COLON = r"[:\.]\s*"     # en_EN
+#COLON = r"[:,]\s*"     # fr_FR
 DASH = r"[–-]"
 END = r"\b"
 NUMBER = r"\d+[a-d]?"
 SPACE = r"\s*"
 RANGE = f"{NUMBER}{DASH}{NUMBER}"
-LIST = f"(?:{RANGE}|{NUMBER})(?:\\,\\s*(?:{RANGE}|{NUMBER}))*"
+LIST = f"(?:{RANGE}|{NUMBER})(?:\\,\\s*(?:{RANGE}|{NUMBER}))*"      # en_EN
+#LIST = f"(?:{RANGE}|{NUMBER})(?:\\.\\s*(?:{RANGE}|{NUMBER}))*"     # fr_FR
 
 RANGE_OR_NUMBER_COMPILED = re.compile(f"({RANGE}|{NUMBER})")
 

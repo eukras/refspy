@@ -5,6 +5,7 @@ from refspy import refspy
 from refspy.book import Book
 from refspy.languages.english import ENGLISH
 from refspy.libraries.en_US import NT
+from refspy.formats.en_US import FORMATS
 from refspy.library import Library
 from refspy.manager import Manager
 from refspy.range import range
@@ -20,7 +21,7 @@ REFERENCES = [
     reference(range(verse(LIBRARY.id, BOOK.id, 1, 1), verse(LIBRARY.id, BOOK.id, 1, 2)))
 ]
 
-__ = Manager([LIBRARY], ENGLISH)
+__ = Manager([LIBRARY], ENGLISH, FORMATS)
 REFSPY = refspy()
 
 
@@ -66,7 +67,7 @@ def test_non_unique():
     Repeating any name/alias values raise an error.
     """
     with pytest.raises(ValueError):
-        _ = Manager([LIBRARY, LIBRARY], ENGLISH)
+        _ = Manager([LIBRARY, LIBRARY], ENGLISH, FORMATS)
 
 
 def test_sort_references():
@@ -135,14 +136,14 @@ def test_find_all():
 
 
 def test_next_chapter():
-    __ = Manager([LIBRARY], ENGLISH)
+    __ = Manager([LIBRARY], ENGLISH, FORMATS)
     ch_1 = __.bcv("Book", 1)
     ch_2 = __.bcv("Book", 2)
     assert __.next_chapter(ch_1) == ch_2
 
 
 def test_prev_chapter():
-    __ = Manager([LIBRARY], ENGLISH)
+    __ = Manager([LIBRARY], ENGLISH, FORMATS)
     ch_2 = __.bcv("Book", 2)
     ch_1 = __.bcv("Book", 1)
     assert __.prev_chapter(ch_2) == ch_1

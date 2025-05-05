@@ -21,7 +21,6 @@ Note:
 
 from pydantic import BaseModel
 
-
 class Format(BaseModel):
     book_only: bool
     colon: str
@@ -33,64 +32,10 @@ class Format(BaseModel):
     semicolon: str
     space: str
 
-
-NAME_FORMAT = Format(
-    colon=":",
-    comma=", ",
-    dash="–",
-    book_only=False,
-    number_only=False,
-    property="name",
-    semicolon="; ",
-    space=" ",
-)
-BOOK_FORMAT = Format(
-    colon=":",
-    comma=", ",
-    dash="–",
-    book_only=True,
-    number_only=False,
-    property="name",
-    semicolon="; ",
-    space=" ",
-)
-NUMBER_FORMAT = Format(
-    colon=":",
-    comma=", ",
-    dash="–",
-    book_only=False,
-    number_only=True,
-    property=None,
-    semicolon="; ",
-    space=" ",
-)
-ABBREV_NAME_FORMAT = Format(
-    colon=":",
-    comma=", ",
-    dash="–",
-    book_only=False,
-    number_only=False,
-    property="abbrev",
-    semicolon="; ",
-    space=" ",
-)
-ABBREV_BOOK_FORMAT = Format(
-    colon=":",
-    comma=", ",
-    dash="–",
-    book_only=True,
-    number_only=False,
-    property="abbrev",
-    semicolon="; ",
-    space=" ",
-)
-ABBREV_NUMBER_FORMAT = Format(
-    colon=":",
-    comma=", ",
-    dash="–",
-    book_only=False,
-    number_only=True,
-    property="abbrev",
-    semicolon="; ",
-    space=" ",
-)
+class Formats(BaseModel):
+    NAME_FORMAT: Format
+    BOOK_FORMAT: Format
+    NUMBER_FORMAT: Format
+    ABBREV_NAME_FORMAT: Format
+    ABBREV_BOOK_FORMAT: Format
+    ABBREV_NUMBER_FORMAT: Format
