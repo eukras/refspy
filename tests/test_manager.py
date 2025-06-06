@@ -21,7 +21,6 @@ REFERENCES = [
 ]
 
 __ = Manager([LIBRARY], ENGLISH)
-REFSPY = refspy()
 
 
 def test_init():
