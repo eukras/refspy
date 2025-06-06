@@ -1,93 +1,104 @@
+# The demo/ directory contains language files of the form en_US.txt.
+# These can be used to generate demonstration HTML files for supported languages, of the form en_US.html.
+# These can be screenshotted and stored in media/refspy-demo-en_US.png or similar, and included in README.md.
+
+import os
 from refspy import refspy
+from refspy.constants import DEMO_DIR
 from refspy.utils import sequential_replace
-from refspy.languages.english import ENGLISH
 
-__ = refspy()
+# Must add a way to format links as EN_US while showing the titles in the
+# preferred language
 
-text_template = """
-Human-written Bible references look like Rom 12.1, 6-17, 2 Cor. 1:2-3:4, or
-Philemon 2-3. They wrap lines, use spaces inconsistently, use colons and
-periods interchangeably, indicate abbreviations with periods (or not), and have
-commas both between and within references. They are sometimes malformed, like Mt
-1.10000 or 1:3-2, but might also use number abbreviations like Ps 119:122-24. A
-book name, such as Second Corinthians, provides context for references that
-follow, such as 5:21 or vv.25,37-38. If we cite Romans (but then add a
-reference to 2ndCo 3:5-8 in parentheses), a subsequent reference like 12:16
-will still be to Romans. Using letters for partial verses, as in II Cor
-5:30a-40d, has no consistent meaning, so the letters are ignored. Book 
-aliases that are common words will be ignored except in references, e.g. Am
-3:1, but not Am.
-"""
 
-TEXT = text_template.replace('{AMBIGUOUS}', ', '.join(ENGLISH.ambiguous_aliases))
+def generate_demo(name):
+    lang = os.path.basename(name).replace(".txt", "")
 
-matches = __.find_references(TEXT, include_books=True, include_nones=True)
-strs, tags = [], []
-for match_str, ref in matches:
-    strs.append(match_str)
-    if ref is None:
-        tags.append(f'<span class="purple">{match_str}</span>')
-    elif ref.is_book():
-        tags.append(f'<span class="yellow">{match_str}</span>')
-    else:
-        tags.append(
-            f'<span class="green">{match_str}</span><sup>{__.abbrev_name(ref)}</sup>'
-        )
+    __ = refspy("orthodox", lang)
 
-references = [ref for _, ref in matches if ref and not ref.is_book()]
-INDEX = __.make_index(references)
+    with open(name) as f:
+        TEXT = f.read()
 
-bible_gateway = (
-    '<a href="https://www.biblegateway.com/passage/'
-    + '?search={ESC_ABBREV_NAME}&version=NRSVA" '
-    + ' target="_blank">{ABBREV_NAME}</a>'
-)
+        # TEXT = demo_text.replace('{AMBIGUOUS}', ', '.join(ENGLISH.ambiguous_aliases))
 
-SUMMARY = __.make_summary(references, pattern=bible_gateway)
-HOTSPOTS = __.make_hotspots(references, max_chapters=7, min_references=2)
+        matches = __.find_references(
+            TEXT, include_books=True, include_nones=True)
+        strs, tags = [], []
+        for match_str, ref in matches:
+            strs.append(match_str)
+            if ref is None:
+                tags.append(f'<span class="purple">{match_str}</span>')
+            elif ref.is_book():
+                tags.append(f'<span class="yellow">{match_str}</span>')
+            else:
+                tags.append(
+                    f'<span class="green">{match_str}</span><sup>{
+                        __.abbrev_name(ref)
+                    }</sup>'
+                )
 
-GENERATOR = "https://github.com/eukras/refspy/blob/master/demo.py"
+        references = [ref for _, ref in matches if ref and not ref.is_book()]
 
-print("""
-<html>
-    <head>
-        <style>
-            a { text-decoration: none; }
-            sup { font-family: sans-serif; font-size: xx-small;
-                  color: purple; padding: 1px 3px; border: 1px solid purple;
-                  border-radius: 3px; margin-left: 2px; white-space: nowrap; }
-            .green { background-color: #aaffaa; white-space: nowrap; }
-            .purple { background-color: #ffaaff; white-space: nowrap; }
-            .yellow { background-color: #ffffaa; white-space: nowrap; }
-        </style>
-    </head>
-""")
-print(f"""
-    <body>
-        <p><b>REFSPY</b>. <i>A Python library for working with biblical
-        references in ordinary text.</i></p>
-        <p>In the demonstration text below, references are highlighted in <span
-        class="green">green</span>, and identified in superscript<sup>Like
-        This</sup>. Book names which aren't themselves references but provide
-        context are highlighted in <span class="yellow">yellow</span>.
-        Malformed references are highlighted in <span
-        class="purple">purple</span>.</p>
-        <blockquote><pre>{TEXT}</pre></blockquote>
-        <blockquote>{sequential_replace(TEXT, strs, tags)}</blockquote>
-        <p>Refspy will sort and collate references into an index; combine
-        overlapping and adjacent references into a summary; list the 
-        busiest chapters as 'hotspots'; and add links to any of these.</p>
-        <ul>
-            <li><b>Index</b>. {INDEX}.</li>
-            <li><b>Summary</b>. {SUMMARY}.</li>
-            <li><b>Hotspots</b>. {HOTSPOTS}.</li>
-        </ul>
-        <p> Because a number or a range ('1' or '2-3') could refer to either
-        verses or chapters, or other regular numbers having nothing to do with
-        biblical referencing ('ch.8'), we only match references that are
-        preceded by a book name, a chapter number and colon ('4:'), or a verse
-        marker ('v.', 'vv.').</p>
-        <p>Generated by: <a href="{GENERATOR}">{GENERATOR}</a><p>
-    </body>
-</html>
-""")
+        INDEX = __.make_index(references)
+        SUMMARY = __.make_summary(
+            references, pattern=__.language.default_link_pattern)
+        HOTSPOTS = __.make_hotspots(
+            references, max_chapters=7, min_references=2)
+
+        GENERATOR = "https://github.com/eukras/refspy/blob/master/demo.py"
+
+        html_text = r"""
+        <html>
+            <head>
+                <style>
+                    a { text-decoration: none; }
+                    sup { font-family: sans-serif; font-size: xx-small;
+                        color: purple; padding: 1px 3px; border: 1px solid purple;
+                        border-radius: 3px; margin-left: 2px; white-space: nowrap; }
+                    .green { background-color: #aaffaa; white-space: nowrap; }
+                    .purple { background-color: #ffaaff; white-space: nowrap; }
+                    .yellow { background-color: #ffffaa; white-space: nowrap; }
+                </style>
+            </head>
+            """
+
+        html_text += f"""
+            <body>
+                <p><b>REFSPY</b>. <i>A Python library for working with biblical
+                references in ordinary text.</i></p>
+                <p>In the demonstration text below, references are highlighted in <span
+                class="green">green</span>, and identified in superscript<sup>Like
+                This</sup>. Book names which aren't themselves references but provide
+                context are highlighted in <span class="yellow">yellow</span>.
+                Malformed references are highlighted in <span
+                class="purple">purple</span>.</p>
+                <blockquote><pre>{TEXT}</pre></blockquote>
+                <blockquote>{sequential_replace(TEXT, strs, tags)}</blockquote>
+                <p>Refspy will sort and collate references into an index; combine
+                overlapping and adjacent references into a summary; list the
+                busiest chapters as 'hotspots'; and add links to any of these.</p>
+                <ul>
+                    <li><b>Index</b>. {INDEX}.</li>
+                    <li><b>Summary</b>. {SUMMARY}.</li>
+                    <li><b>Hotspots</b>. {HOTSPOTS}.</li>
+                </ul>
+                <p> Because a number or a range ('1' or '2-3') could refer to either
+                verses or chapters, or other regular numbers having nothing to do with
+                biblical referencing ('ch.8'), we only match references that are
+                preceded by a book name, a chapter number and colon ('4:'), or a verse
+                marker ('v.', 'vv.').</p>
+                <p>Generated by: <a href="{GENERATOR}">{GENERATOR}</a><p>
+            </body>
+        </html>
+        """
+
+        html_name = name.replace(".txt", ".html")
+
+        with open(html_name, "w") as html_file:
+            html_file.write(html_text)
+
+
+with os.scandir(DEMO_DIR) as entries:
+    for entry in entries:
+        if entry.name.endswith(".txt") and entry.is_file():
+            generate_demo(entry.path)
