@@ -20,11 +20,13 @@ Refspy is a Python package for working with biblical references in ordinary text
 * [refspy on ReadTheDocs](https://refspy.readthedocs.io/en/latest/refspy.html) &rarr; See `docs/` dir.
 * [CHANGES.md](https://github.com/eukras/refspy/blob/master/CHANGES.md) | [TODO.md](https://github.com/eukras/refspy/blob/master/TODO.md)
 
-## Demonstration
+## Multi-language Demonstration
 
-[![RefSpy Demo](https://github.com/eukras/refspy/raw/master/media/refspy-demo.png)](https://github.com/eukras/refspy/raw/master/media/refspy-demo.png)
+The script [demo.py](https://github.com/eukras/refspy/blob/master/demo.py) will turn `demo/en_US.txt` into `demo/en_US.html`, which is used to make the following screenshots. 
 
-([demo.py](https://github.com/eukras/refspy/blob/master/demo.py) will generate this as HTML)
+`en_US` ([@eukras](https://github.com/eukras)) | `fr_FR` ([@a2ohm](https://www.github.com/a2ohm))
+:--------------:|:--------------:
+[![RefSpy Demo: en_US](https://github.com/eukras/refspy/raw/master/media/refspy-demo-en_US.png)](https://github.com/eukras/refspy/raw/master/media/refspy-demo-en_US.png) | [![RefSpy Demo: fr_FR](https://github.com/eukras/refspy/raw/master/media/refspy-demo-fr_FR.png)](https://github.com/eukras/refspy/raw/master/media/refspy-demo-fr_FR.png)
 
 
 ## Features
@@ -61,7 +63,7 @@ __ = refspy()
 Or, to create specific canons:
 
 ```python
-from refspy.language.english import ENGLISH
+from refspy.languages.english import ENGLISH
 from refspy.libraries.en_US import DC, DC_ORTHODOX, NT, OT
 from refspy.manager import Manager 
 
@@ -165,7 +167,7 @@ In general, though, templating is a better way to make links.
 ```python
 bible_gateway = (
     '<a href="https://www.biblegateway.com/passage/'
-  + '?search={ESC_ABBREV_NAME}&version=NRSVA">'
+  + '?search={LINK}&version=NRSVA">'
   + '{NAME}'
   + '</a>'
 )
@@ -180,6 +182,7 @@ The full list of template fields is:
 
 | Field | Output |
 | --- | --- |
+| `{LINK}` | `1%20Cor%202%3A3-4` |
 | `{NAME}` | `1 Corinthians 2:3–4` |
 | `{BOOK}` | `1 Corinthians` |
 | `{NUMBERS}` | `2:3–4` |
@@ -196,6 +199,10 @@ The full list of template fields is:
 | `{PARAM_NAME}` | `1+cor+2.3-4` |
 | `{PARAM_BOOK}` | `1+cor` |
 | `{PARAM_NUMBERS}` | `2.3-4` |
+
+The `{LINK}` field is like `{ESC_ABBREV_NAME}`, but will use English-style
+verse formatting with any language, which suits linking to sites like
+Bible Gateway.
 
 Templates can be passed as optional arguments to other rendering functions, say
 to generate links within indexes. 

@@ -5,12 +5,12 @@ To publish a set of changes, check:
 ```
 pytest
 pdoc refspy/ -d google -o docs
-python demo.py > demo.html
+python demo.py
 ```
 
-Review `/docs` and `demo.html`.
+Review `/docs` and `demo/{LOCALE}.html`.
 
-Screenshot `demo.html` and save to `media/refspy-demo.png`.
+Screenshot `demo/{LOCALE}.html` and save to `media/refspy-demo-{LOCALE}.png`.
 
 If all OK, update version numbers in config and docs:
 
