@@ -48,12 +48,6 @@
                         <li>
                                 <a class="variable" href="#Library.model_config">model_config</a>
                         </li>
-                        <li>
-                                <a class="variable" href="#Library.model_fields">model_fields</a>
-                        </li>
-                        <li>
-                                <a class="variable" href="#Library.model_computed_fields">model_computed_fields</a>
-                        </li>
                 </ul>
 
             </li>
@@ -108,15 +102,15 @@ contain.</p>
 </span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="sd">See `refspy.libraries.en_US` for a complete example.</span>
 </span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
 </span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 </span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="kn">from</span> <span class="nn">refspy.book</span> <span class="kn">import</span> <span class="n">Book</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="kn">from</span> <span class="nn">refspy.number</span> <span class="kn">import</span> <span class="n">Number</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">refspy.book</span><span class="w"> </span><span class="kn">import</span> <span class="n">Book</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">refspy.number</span><span class="w"> </span><span class="kn">import</span> <span class="n">Number</span>
 </span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>
 </span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="k">class</span> <span class="nc">Library</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Library</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 </span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>    <span class="nb">id</span><span class="p">:</span> <span class="n">Number</span>
 </span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 </span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>    <span class="n">abbrev</span><span class="p">:</span> <span class="nb">str</span>
@@ -136,7 +130,7 @@ contain.</p>
 
     </div>
     <a class="headerlink" href="#Library"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Library-24"><a href="#Library-24"><span class="linenos">24</span></a><span class="k">class</span> <span class="nc">Library</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Library-24"><a href="#Library-24"><span class="linenos">24</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Library</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 </span><span id="Library-25"><a href="#Library-25"><span class="linenos">25</span></a>    <span class="nb">id</span><span class="p">:</span> <span class="n">Number</span>
 </span><span id="Library-26"><a href="#Library-26"><span class="linenos">26</span></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 </span><span id="Library-27"><a href="#Library-27"><span class="linenos">27</span></a>    <span class="n">abbrev</span><span class="p">:</span> <span class="nb">str</span>
@@ -144,18 +138,19 @@ contain.</p>
 </span></pre></div>
 
 
-            <div class="docstring"><p>Usage docs: <a href="https://docs.pydantic.dev/2.8/concepts/models/">https://docs.pydantic.dev/2.8/concepts/models/</a></p>
+            <div class="docstring"><p>!!! abstract "Usage Documentation"
+    <a href="../concepts/models.md">Models</a></p>
 
 <p>A base class for creating Pydantic models.</p>
 
 <h6 id="attributes">Attributes:</h6>
 
 <ul>
-<li><strong>__class_vars__:</strong>  The names of classvars defined on the model.</li>
+<li><strong>__class_vars__:</strong>  The names of the class variables defined on the model.</li>
 <li><strong>__private_attributes__:</strong>  Metadata about the private attributes of the model.</li>
-<li><strong>__signature__:</strong>  The signature for instantiating the model.</li>
+<li><strong>__signature__:</strong>  The synthesized <code><a href="#Library.__init__">__init__</a></code> [<code>Signature</code>][inspect.Signature] of the model.</li>
 <li><strong>__pydantic_complete__:</strong>  Whether model building is completed, or if there are still undefined fields.</li>
-<li><strong>__pydantic_core_schema__:</strong>  The pydantic-core schema used to build the SchemaValidator and SchemaSerializer.</li>
+<li><strong>__pydantic_core_schema__:</strong>  The core schema of the model.</li>
 <li><strong>__pydantic_custom_init__:</strong>  Whether the model has a custom <code><a href="#Library.__init__">__init__</a></code> function.</li>
 <li><strong>__pydantic_decorators__:</strong>  Metadata containing the decorators defined on the model.
 This replaces <code>Model.__validators__</code> and <code>Model.__root_validators__</code> from Pydantic V1.</li>
@@ -163,13 +158,15 @@ This replaces <code>Model.__validators__</code> and <code>Model.__root_validator
 __args__, __origin__, __parameters__ in typing-module generics. May eventually be replaced by these.</li>
 <li><strong>__pydantic_parent_namespace__:</strong>  Parent namespace of the model, used for automatic rebuilding of models.</li>
 <li><strong>__pydantic_post_init__:</strong>  The name of the post-init method for the model, if defined.</li>
-<li><strong>__pydantic_root_model__:</strong>  Whether the model is a <code>RootModel</code>.</li>
-<li><strong>__pydantic_serializer__:</strong>  The pydantic-core SchemaSerializer used to dump instances of the model.</li>
-<li><strong>__pydantic_validator__:</strong>  The pydantic-core SchemaValidator used to validate instances of the model.</li>
-<li><strong>__pydantic_extra__:</strong>  An instance attribute with the values of extra fields from validation when
-<code>model_config['extra'] == 'allow'</code>.</li>
-<li><strong>__pydantic_fields_set__:</strong>  An instance attribute with the names of fields explicitly set.</li>
-<li><strong>__pydantic_private__:</strong>  Instance attribute with the values of private attributes set on the model instance.</li>
+<li><strong>__pydantic_root_model__:</strong>  Whether the model is a [<code>RootModel</code>][pydantic.root_model.RootModel].</li>
+<li><strong>__pydantic_serializer__:</strong>  The <code>pydantic-core</code> <code>SchemaSerializer</code> used to dump instances of the model.</li>
+<li><strong>__pydantic_validator__:</strong>  The <code>pydantic-core</code> <code>SchemaValidator</code> used to validate instances of the model.</li>
+<li><strong>__pydantic_fields__:</strong>  A dictionary of field names and their corresponding [<code>FieldInfo</code>][pydantic.fields.FieldInfo] objects.</li>
+<li><strong>__pydantic_computed_fields__:</strong>  A dictionary of computed field names and their corresponding [<code>ComputedFieldInfo</code>][pydantic.fields.ComputedFieldInfo] objects.</li>
+<li><strong>__pydantic_extra__:</strong>  A dictionary containing extra values, if [<code>extra</code>][pydantic.config.ConfigDict.extra]
+is set to <code>'allow'</code>.</li>
+<li><strong>__pydantic_fields_set__:</strong>  The names of fields explicitly set during instantiation.</li>
+<li><strong>__pydantic_private__:</strong>  Values of private attributes set on the model instance.</li>
 </ul>
 </div>
 
@@ -220,39 +217,16 @@ __args__, __origin__, __parameters__ in typing-module generics. May eventually b
                             </div>
                             <div id="Library.model_config" class="classattr">
                                 <div class="attr variable">
-            <span class="name">model_config</span>        =
+            <span class="name">model_config</span><span class="annotation">: ClassVar[pydantic.config.ConfigDict]</span>        =
 <span class="default_value">{}</span>
 
         
     </div>
     <a class="headerlink" href="#Library.model_config"></a>
     
-    
+            <div class="docstring"><p>Configuration for the model, should be a dictionary conforming to [<code>ConfigDict</code>][pydantic.config.ConfigDict].</p>
+</div>
 
-                            </div>
-                            <div id="Library.model_fields" class="classattr">
-                                <div class="attr variable">
-            <span class="name">model_fields</span>        =
-<input id="Library.model_fields-view-value" class="view-value-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-            <label class="view-value-button pdoc-button" for="Library.model_fields-view-value"></label><span class="default_value">{&#39;id&#39;: FieldInfo(annotation=int, required=True, metadata=[Ge(ge=1), Le(le=999)]), &#39;name&#39;: FieldInfo(annotation=str, required=True), &#39;abbrev&#39;: FieldInfo(annotation=str, required=True), &#39;books&#39;: FieldInfo(annotation=List[Book], required=True)}</span>
-
-        
-    </div>
-    <a class="headerlink" href="#Library.model_fields"></a>
-    
-    
-
-                            </div>
-                            <div id="Library.model_computed_fields" class="classattr">
-                                <div class="attr variable">
-            <span class="name">model_computed_fields</span>        =
-<span class="default_value">{}</span>
-
-        
-    </div>
-    <a class="headerlink" href="#Library.model_computed_fields"></a>
-    
-    
 
                             </div>
                 </section>
