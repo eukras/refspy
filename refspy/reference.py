@@ -5,12 +5,13 @@ References consist of lists of ranges and are entirely numerical objects.
 They can be set to sort, merge, and join references when added together.
 """
 
-from typing import Any, List, Self
+from typing import Any, Self
 
 from pydantic import BaseModel, Field
 
+from refspy.number import Number
 from refspy.range import Range, combine, merge, range
-from refspy.verse import Number, Verse, verse
+from refspy.verse import Verse, verse
 
 
 class Reference(BaseModel):
@@ -34,7 +35,7 @@ class Reference(BaseModel):
         ```
     """
 
-    ranges: List[Range] = Field(min_length=1)
+    ranges: list[Range] = Field(min_length=1)
     """
     A reference must contain at least one `refspy.range.Range`.
 

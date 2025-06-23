@@ -2,7 +2,8 @@
 
 import math
 import re
-from typing import Dict, Generator, List, Match, Tuple
+from re import Match
+from collections.abc import Generator
 
 from refspy.book import Book
 from refspy.language import Language
@@ -49,8 +50,8 @@ class Matcher:
 
     def __init__(
         self,
-        books: Dict[Tuple[Number, Number], Book],
-        book_aliases: Dict[str, Tuple[Number, Number]],
+        books: dict[tuple[Number, Number], Book],
+        book_aliases: dict[str, tuple[Number, Number]],
         language: Language,
     ):
         self.books = books
@@ -155,8 +156,8 @@ class Matcher:
         return REGEXP
 
     def expand_book_aliases(
-        self, aliases: Dict[str, Tuple[int, int]]
-    ) -> Dict[str, Tuple[int, int]]:
+        self, aliases: dict[str, tuple[int, int]]
+    ) -> dict[str, tuple[int, int]]:
         """
         SBL style requires e.g. "1 Corinthians" be recognized as "First
         Corinthians" at the start of a sentence. Add these as keys to
@@ -273,7 +274,7 @@ class Matcher:
         })(?!:\\d){self.END}))*"
         return REGEXP
 
-    def numerical_book_prefixes(self, reverse=True) -> List[str]:
+    def numerical_book_prefixes(self, reverse=True) -> list[str]:
         prefixes = set()
         for key in self.book_aliases.keys():
             part_1 = key.split(" ")[0]
@@ -286,7 +287,7 @@ class Matcher:
 
     def generate_references(
         self, text: str, include_books: bool = False, include_nones: bool = False
-    ) -> Generator[Tuple[str, Reference | None], None, None]:
+    ) -> Generator[tuple[str, Reference | None], None, None]:
         """
         Match references and parentheses separately, then take the next lowest
         item (by starting match position) from the regexp match generators, and
@@ -465,7 +466,7 @@ class Matcher:
             return match
         return None
 
-    def match_number_ranges(self, text) -> List[str]:
+    def match_number_ranges(self, text) -> list[str]:
         """Match a list of numbers and number ranges.
 
         Example:
@@ -474,7 +475,7 @@ class Matcher:
         return self.RANGE_OR_NUMBER_COMPILED.findall(text)
 
     def make_number_ranges(
-        self, last: Range, matches: List[str], as_chapters: bool = False
+        self, last: Range, matches: list[str], as_chapters: bool = False
     ) -> Reference | None:
         """Create a reference from a list of numbers and number ranges.
 
@@ -598,7 +599,7 @@ def escape_book_name(name: str) -> str:
     return r"\s+".join([re.escape(_) for _ in name.split(" ")])
 
 
-def long_names_first(names: List[str]) -> List[str]:
+def long_names_first(names: list[str]) -> list[str]:
     """Remove duplicates and sort by length descending."""
     return sorted(set(names), key=len)[::-1]
 

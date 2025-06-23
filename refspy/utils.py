@@ -3,7 +3,7 @@ Provide general utility functions for the Refspy package.
 """
 
 import re
-from typing import Any, List, Tuple
+from typing import Any
 
 from refspy.constants import SPACE, NON_BREAKING_SPACE
 from refspy.number import Number
@@ -78,7 +78,7 @@ def strip_space_after_book_number(name: str) -> str:
 
 
 def add_space_after_book_number(
-    name: str, unnumbered_book_aliases: set, number_prefixes: dict
+    name: str, unnumbered_book_aliases: set, number_prefixes: dict[str, list[str]]
 ) -> str:
     """Remove space between any leading digit and all subsequent text.
 
@@ -92,7 +92,7 @@ def add_space_after_book_number(
     for number, prefixes in sorted(number_prefixes.items(), reverse=True):
         for prefix in prefixes:
             head = name[: len(prefix)]
-            tail = name[len(prefix):]
+            tail = name[len(prefix) :]
             if head == prefix and tail in unnumbered_book_aliases:
                 return number + " " + tail
     return re.sub(r"^(\d)([A-Z])([a-z].*)$", r"\1 \2\3", name)
@@ -125,7 +125,7 @@ def pluralize(number: int, singular: str, plural: str = "") -> str:
             return "%d %ss" % (number, singular)
 
 
-def sequential_replace_tuples(text: str, tuples: List[Tuple[str, str]]):
+def sequential_replace_tuples(text: str, tuples: list[tuple[str, str]]):
     """Replace values, searching from the end of each previous replacement.
 
     This is for replacing matches, and ensures they are replaced in the
@@ -151,7 +151,7 @@ def sequential_replace_tuples(text: str, tuples: List[Tuple[str, str]]):
     return new_text
 
 
-def sequential_replace(text: str, find: List[str], replace: List[str]) -> str:
+def sequential_replace(text: str, find: list[str], replace: list[str]) -> str:
     """Replace values, searching from the end of each previous replacement.
 
     This function takes find-replace strings as two separate lists. Unmatched

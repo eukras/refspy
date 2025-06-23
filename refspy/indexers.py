@@ -1,26 +1,25 @@
 """Indexing functions for libraries, books, and book aliases."""
 
-from typing import Dict, List, Tuple
 from refspy.book import Book
 from refspy.library import Library
 from refspy.utils import strip_book_number
-from refspy.verse import Number
+from refspy.number import Number
 
 PARAM_CHAR_LIMIT = 20
 """The maximum book name or alias length to convert to URL parameter names."""
 
 
-def index_libraries(libraries: List[Library]) -> Dict[Number, Library]:
+def index_libraries(libraries: list[Library]) -> dict[Number, Library]:
     """Create a lookup dict for libraries by library.id"""
-    index = dict()
+    index: dict[Number, Library] = dict()
     for library in libraries:
         index[library.id] = library
     return index
 
 
-def index_books(libraries: List[Library]) -> Dict[Tuple[Number, Number], Book]:
+def index_books(libraries: list[Library]) -> dict[tuple[Number, Number], Book]:
     """Create a lookup dict for books by (library.id, book.id)"""
-    index = dict()
+    index: dict[tuple[Number, Number], Book] = dict()
     for library in libraries:
         for book in library.books:
             index[library.id, book.id] = book
@@ -28,7 +27,7 @@ def index_books(libraries: List[Library]) -> Dict[Tuple[Number, Number], Book]:
 
 
 def add_unique_book_alias(
-    index: Dict[str, Tuple[Number, Number]],
+    index: dict[str, tuple[Number, Number]],
     alias: str,
     library_id: Number,
     book_id: Number,
@@ -51,10 +50,10 @@ def add_unique_book_alias(
 
 
 def index_book_aliases(
-    libraries: List[Library],
+    libraries: list[Library],
     include_two_letter_aliases: bool = True,
-    strict: bool = True
-) -> Dict[str, Tuple[Number, Number]]:
+    strict: bool = True,
+) -> dict[str, tuple[Number, Number]]:
     """Create a lookup table for library and book IDs by book aliases.
 
     Args:
@@ -69,7 +68,7 @@ def index_book_aliases(
         index the abbrev if it differs from the name. These books will not raise
         a ValueError when strict=True.
     """
-    index = dict()
+    index: dict[str, tuple[Number, Number]] = dict()
     for library in libraries:
         for book in library.books:
             aliases = [book.name]
@@ -77,9 +76,8 @@ def index_book_aliases(
                 aliases.append(book.abbrev)
             for alias in book.aliases:
                 len_alias = len(strip_book_number(alias))
-                if (
-                    (len_alias > 2 and len_alias < PARAM_CHAR_LIMIT) or
-                    (include_two_letter_aliases and len_alias == 2)
+                if (len_alias > 2 and len_alias < PARAM_CHAR_LIMIT) or (
+                    include_two_letter_aliases and len_alias == 2
                 ):
                     aliases.append(alias)
             for alias in aliases:

@@ -12,8 +12,6 @@ Attributes:
 See `refspy.libraries.en_US` for a complete example.
 """
 
-from typing import List
-
 from pydantic import BaseModel
 
 from refspy.book import Book
@@ -24,4 +22,4 @@ class Library(BaseModel):
     id: Number
     name: str
     abbrev: str
-    books: List[Book]
+    books: list[Book]

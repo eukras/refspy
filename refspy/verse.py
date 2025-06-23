@@ -7,7 +7,7 @@ Attributes:
     verse: 4
 """
 
-from typing import Tuple, Self
+from typing import Self
 
 from pydantic import BaseModel
 
@@ -15,7 +15,7 @@ from refspy.index import Index
 from refspy.number import Number
 
 
-VerseTuple = Tuple[Number, Number, Number, Number]
+VerseTuple = tuple[Number, Number, Number, Number]
 
 
 class Verse(BaseModel):

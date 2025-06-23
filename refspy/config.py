@@ -3,8 +3,6 @@
 Note: TODO: Don't initialise all libraries every time, only on demand.
 """
 
-from typing import Dict, List
-
 from refspy.language import Language
 from refspy.languages.english import ENGLISH
 from refspy.languages.french import FRENCH
@@ -22,7 +20,7 @@ from refspy.libraries.fr_FR import (
 )
 from refspy.library import Library
 
-LIBRARIES: Dict[str, Dict[str, List[Library]]] = {
+LIBRARIES: dict[str, dict[str, list[Library]]] = {
     "protestant": {
         "en_US": [EN_OT, EN_NT],
         "fr_FR": [FR_OT, FR_NT],
@@ -47,7 +45,7 @@ Example:
     ```
 """
 
-LANGUAGES: Dict[str, Language] = {"en": ENGLISH, "fr": FRENCH}
+LANGUAGES: dict[str, Language] = {"en": ENGLISH, "fr": FRENCH}
 """A dictionary of available languages, used for shorthand library invocation.
 
 Language names use the first two chars of locale names, e.g. 'en_US' is 'en'.

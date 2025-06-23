@@ -1,16 +1,15 @@
 """Format Reference objects using Format objects."""
 
-from typing import Dict, Tuple
-
 from refspy.book import Book
 from refspy.constants import EM_DASH, SPACE
 from refspy.format import Format
 from refspy.language import Language
 from refspy.languages.english import ENGLISH
+from refspy.number import Number
 from refspy.range import Range
 from refspy.reference import Reference
 from refspy.utils import string_together
-from refspy.verse import Number, Verse
+from refspy.verse import Verse
 
 
 class Formatter:
@@ -25,8 +24,8 @@ class Formatter:
 
     def __init__(
         self,
-        books: Dict[Tuple[Number, Number], Book],
-        book_aliases: Dict[str, Tuple[Number, Number]],
+        books: dict[tuple[Number, Number], Book],
+        book_aliases: dict[str, tuple[Number, Number]],
     ) -> None:
         self.books = books
         self.book_aliases = book_aliases
@@ -68,7 +67,7 @@ class Formatter:
             last_verse = next_range.start
         return out
 
-    def link_format(self, language: Language) -> Format:
+    def link_format(self) -> Format:
         """
         Follow English format conventions because they are more widely
         used by linkable resources.
@@ -199,7 +198,7 @@ class Formatter:
             )
         end_book = self.books[_.end.library, _.end.book]
         end_book_name = getattr(end_book, format.property or "", "")
-        if _.end.verse == 1 and _.end.verse == 999:
+        if _.start.verse == 1 and _.end.verse == 999:
             end_number = string_together(_.end.chapter)
         else:
             end_number = string_together(_.end.chapter, format.colon, _.end.verse)
