@@ -250,7 +250,7 @@ OT = Library(
         ),
         Book(
             id=35,
-            name="Habbakuk",
+            name="Habakkuk",
             abbrev="Hab",
             aliases=[],
             chapters=3,
@@ -306,11 +306,11 @@ DC = Library(
             chapters=16,
         ),
         Book(
-            # TODO: Offsets: 11..16? 
+            # TODO: Offsets: 11..16?
             id=3,
             name="Additions to Esther",
             abbrev="Add Esth",
-            aliases=["Esg"], # "Esther Greek"
+            aliases=["Esg"],  # "Esther Greek"
             chapters=10,
         ),
         Book(
@@ -626,7 +626,7 @@ NT = Library(
             id=27,
             name="Revelation",
             abbrev="Rev",
-            aliases=["Apocalypse", "Apoc", "Re", "Rv"], 
+            aliases=["Apocalypse", "Apoc", "Re", "Rv"],
             chapters=22,
         ),
     ],
