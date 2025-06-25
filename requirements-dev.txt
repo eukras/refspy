@@ -1,4 +1,4 @@
-build==1.2.1
+build==1.2.2
 iniconfig==2.0.0
 packaging==24.0
 pdoc==15.0.0
@@ -6,4 +6,4 @@ pluggy==1.5.0
 pyproject_hooks==1.1.0
 pytest==8.2.0
 ruff==0.7.4
-twine==5.1.1
+twine==6.1.0
