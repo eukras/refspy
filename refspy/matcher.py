@@ -13,7 +13,13 @@ from refspy.reference import (
     book_reference,
     reference,
 )
-from refspy.utils import add_space_after_book_number, get_unnumbered_book_aliases, parse_number, normalize_spacing, trim_trailing_period
+from refspy.utils import (
+    add_space_after_book_number,
+    get_unnumbered_book_aliases,
+    parse_number,
+    normalize_spacing,
+    trim_trailing_period,
+)
 from refspy.verse import Number, verse
 
 COLON = r"[:\.]"
@@ -63,14 +69,14 @@ class Matcher:
         self,
         books: Dict[Tuple[Number, Number], Book],
         book_aliases: Dict[str, Tuple[Number, Number]],
-        language: Language
+        language: Language,
     ):
         self.books = books
         self.language = language
         self.book_alias_keys = book_aliases.keys()
         self.book_aliases = self.expand_book_aliases(book_aliases)
         self.brackets_regexp = re.compile(self.build_brackets_regexp())
-        self.name_regexp = re.compile(self.build_reference_regexp())
+        self.reference_regexp = re.compile(self.build_reference_regexp())
 
     def build_reference_regexp(self) -> str:
         """
@@ -78,7 +84,7 @@ class Matcher:
 
         "Big Book 1:2-5 (cf. Small Book 34) is more interesting than vv.2:3-6."
 
-        ... we want to match:
+        ... We want to know which references are attached to books and which are just numeric:
 
             ```
             Matching string
@@ -173,10 +179,7 @@ class Matcher:
                 + r")"
                 + r"\s*"
                 + "(?:"
-                + "|".join([
-                        escape_book_name(_)
-                        for _ in long_names_first(aliases)
-                    ])
+                + "|".join([escape_book_name(_) for _ in long_names_first(aliases)])
                 + ")"
                 # + r"(?![^A-Za-z])"  # <-- Need a non-alpha lookahead?
                 + r"\b"
@@ -203,22 +206,23 @@ class Matcher:
         """
         Match a comma-(and-space?)-separated list of numbers and ranges.
 
-        Final numbers in a list require negative lookaheads to ensure they are
-        not the start of book names (1 Cor) or chapter refs (6:5):
+        A VERSE NUMBER is a number that can't be the start of a book name or chapter reference.
+
+        We use negative lookaheads to exclude book names (1 Cor) or chapter refs (6:5):
+
+        For en_US, this will look like:
 
             ```
             (
-                1(?!\\s*(Corinthians|Cor|Thess|etc)))
-              | 2(?!\\s*(Corinthians|Cor|Thess|etc)))
-              | 3(?!\\s*Jn)
-              | 4-999
-            )(?!:\\d)
+                1(?![:.]|\\s*(?:Corinthians|Cor|Thess|etc))
+              | 2(?![:.]|\\s*(?:Corinthians|Cor|Thess|etc))
+              | 3(?![:.]|\\s*(?:Jn))
+              | [4-999](?![:.])
+            )
             ```
-
-        TODO:
-            Must include missing numbers in the final range.
         """
         regexp_parts = []
+        # numbers which can be book numbers, when not followed by ':' or book names
         for number in self.numerical_book_prefixes():
             aliases = [
                 alias[len(number + " ") :]
@@ -227,15 +231,22 @@ class Matcher:
             ]
             regexp_parts.append(
                 number
-                + r"(?!"
+                + r"(?!"  # <-- negative look-ahead
+                + COLON
+                + r"|"
                 + r"\s*"
-                + "(?:"  # <-- COLON?
+                + "(?:"  # <-- non-capturing group
                 + "|".join([re.escape(key) for key in sorted(set(aliases))])
                 + "))"
             )
-        regexp_parts.append(f"[{len(regexp_parts) + 1}-999]")
-        SAFE_NUMBER = r"|".join(regexp_parts)
-        REGEXP = f"(?:{RANGE}|{NUMBER})(?:\\,\\s*(?:{RANGE}|(?:{SAFE_NUMBER})(?!:\\d){END}))*"
+
+        # numbers which cannot be book numbers, when not followed by ':'
+        # if it's 4..999, then in regexp that's 4-9 or a 2 or 3 digit number
+        regexp_parts.append(
+            f"(?:[{len(regexp_parts) + 1}-9]|" + r"\d{2,3}" + f")(?!{COLON})"
+        )
+        VERSE_NUMBER = r"|".join(regexp_parts)
+        REGEXP = f"(?:{RANGE}|{NUMBER})(?:\\,\\s*(?:{RANGE}|(?:{VERSE_NUMBER}){END}))*"
         return REGEXP
 
     def numerical_book_prefixes(self, reverse=True) -> List[str]:
@@ -266,7 +277,7 @@ class Matcher:
             include_nones: Whether to match malformed references
         """
         brackets_matches = self.brackets_regexp.finditer(text)
-        reference_matches = self.name_regexp.finditer(text)
+        reference_matches = self.reference_regexp.finditer(text)
 
         bracket_stack = []
 
@@ -304,13 +315,15 @@ class Matcher:
                         respaced_book_name = add_space_after_book_number(
                             normalize_spacing(trim_trailing_period(book_name)),
                             unnumbered_book_aliases,
-                            self.language.number_prefixes
+                            self.language.number_prefixes,
                         )
 
                         if respaced_book_name in self.book_aliases:
                             library_id, book_id = self.book_aliases[respaced_book_name]
                             book = self.books[library_id, book_id]
-                            last_range = book_reference(library_id, book_id).last_range()
+                            last_range = book_reference(
+                                library_id, book_id
+                            ).last_range()
                             if match_with_book:
                                 if matches := match_chapter_range(match_with_book):
                                     # Rom 1:2-3:4
@@ -349,9 +362,13 @@ class Matcher:
                                 else:
                                     bracket_stack.append(last_range)
                                 if include_books and (
-                                    trim_trailing_period(match_str) not in self.language.ambiguous_aliases
+                                    trim_trailing_period(match_str)
+                                    not in self.language.ambiguous_aliases
                                 ):
-                                    yield (match_str, book_reference(library_id, book_id))
+                                    yield (
+                                        match_str,
+                                        book_reference(library_id, book_id),
+                                    )
                     elif match_without_book:
                         if bracket_stack:
                             last_range = bracket_stack[-1]

@@ -42,7 +42,7 @@ References can always be formatted with Manager.template(ref). If no
 pattern argument is supplied, the default short format will be used, e.g.
 'Rom 12:1-7'. or ref.abbrev_name()
 """
-DEFAULT_TEMPLATE_PATTERN = '{ABBREV_NAME}'
+DEFAULT_TEMPLATE_PATTERN = "{ABBREV_NAME}"
 
 
 class Manager:
@@ -52,11 +52,11 @@ class Manager:
     """
 
     def __init__(
-            self,
-            libraries: List[Library],
-            language: Language,
-            include_two_letter_aliases=True,
-        ):
+        self,
+        libraries: List[Library],
+        language: Language,
+        include_two_letter_aliases=True,
+    ):
         """
         Construct a new Manager object.
 
@@ -73,19 +73,14 @@ class Manager:
         """A lookup dictionary for Books by (library.id, book.id)"""
 
         self.book_aliases: Dict[str, Tuple[Number, Number]] = index_book_aliases(
-            libraries,
-            include_two_letter_aliases=include_two_letter_aliases
+            libraries, include_two_letter_aliases=include_two_letter_aliases
         )
         """A lookup dictionary for (library.id, book.id) by book alias strings."""
 
         self.language: Language = language
         """Language-specific program data."""
 
-        self.matcher: Matcher = Matcher(
-            self.books,
-            self.book_aliases,
-            self.language
-        )
+        self.matcher: Matcher = Matcher(self.books, self.book_aliases, self.language)
         """Delegate reference matching tasks."""
 
         self.formatter: Formatter = Formatter(self.books, self.book_aliases)
@@ -98,11 +93,8 @@ class Manager:
     # Index and summary functions
     # -----------------------------------
 
-    def make_index_references(
-        self, references: List[Reference]
-    ) -> List[Reference]:
-        """Return a sorted list of References; no combining or simplifying.
-        """
+    def make_index_references(self, references: List[Reference]) -> List[Reference]:
+        """Return a sorted list of References; no combining or simplifying."""
         index = []
         collation = self.collate(
             sorted([ref for ref in references if ref and not ref.is_book()])
@@ -116,13 +108,13 @@ class Manager:
     def make_index(
         self,
         references: List[Reference],
-        pattern: str|None = None,
+        pattern: str | None = None,
     ) -> str | None:
         """
         Return a one-line list of references in order of appearance.
 
         Args:
-            pattern: a formatting string suitable for links, see 
+            pattern: a formatting string suitable for links, see
                 `refspy.manager.Manager.template()`.
 
         Note:
@@ -134,12 +126,8 @@ class Manager:
         else:
             return None
 
-
-    def make_summary_references(
-        self, references: List[Reference]
-    ) -> List[Reference]:
-        """Return a sorted, combined, simplified list of References.
-        """
+    def make_summary_references(self, references: List[Reference]) -> List[Reference]:
+        """Return a sorted, combined, simplified list of References."""
         collation = self.collate(
             sorted([ref for ref in references if ref and not ref.is_book()])
         )
@@ -150,14 +138,11 @@ class Manager:
                 summary.append(compact_ref)
         return summary
 
-
     def make_summary(
-        self,
-        references: List[Reference],
-        pattern: str | None = None
+        self, references: List[Reference], pattern: str | None = None
     ) -> str | None:
         """
-        Return a string showing a sorted, combined, list of References. 
+        Return a string showing a sorted, combined, list of References.
 
         Args:
             pattern: a formatting string suitable for links, see
@@ -225,8 +210,8 @@ class Manager:
             max_chapters: The maximum number of chapter hotspots to return.
             min_references: The minimal references per chapter that qualifies as a hotspot.
         """
-        tuples = self.make_hotspot_tuples(references, max_chapters, min_references) 
-        return [ref for ref, _  in tuples]
+        tuples = self.make_hotspot_tuples(references, max_chapters, min_references)
+        return [ref for ref, _ in tuples]
 
     def make_hotspots(
         self,
@@ -562,7 +547,7 @@ class Manager:
         string.
         """
         if reference is None:
-            return ''
+            return ""
 
         out = pattern if pattern else DEFAULT_TEMPLATE_PATTERN
 

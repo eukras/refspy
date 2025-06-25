@@ -2,7 +2,12 @@
 
 ## 1.0.0
 
-(Future)
+* 1.0.0 will appear when stable.
+
+## 0.10.2 -- BETA -- Bugfix release
+
+* Fix spelling of Habakkuk in en_US. (Rick Brannan, Issue #2)
+* Fix multi-digit numbers in verse lists (Rick Brannan, Issue #1)
 
 ## 0.10.1 -- BETA -- BREAKING CHANGE
 
@@ -18,12 +23,12 @@ objects in all cases.
 ### 0.9.13 -- BETA
 
 * Calculate hotspots (i.e. most referenced chapters)
-* Prevent matching e.g. '0.4' (no longer handle params in regular text). 
+* Prevent matching e.g. '0.4' (no longer handle params in regular text).
 * Article Wiki integration: support for reference indexes in book-length documents.
 
 ### 0.9.7 -- BETA
 
-* Add __.make_index() and __.make_summary(), incl. for demo.
+* Add __.make_index() and__.make_summary(), incl. for demo.
 * `url_param()` and `url_escape()` replace `__.param()`.
 * Add __.template() to Manager, integrate with summary example.
 * More compact and efficient book names in regexp (group by prefixes).
@@ -38,7 +43,7 @@ objects in all cases.
 ### 0.9.5 -- BETA
 
 * Removed 'depth' from books; determined by book.chapters == 1.
-* Removed 'code' from books and library; __.param() is calculated 
+* Removed 'code' from books and library; __.param() is calculated
     from book.abbrev.
 * Detects malformed references.
 * Matches partial and abbreviated number ranges.
