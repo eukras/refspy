@@ -9,10 +9,10 @@ from refspy.manager import Manager
 
 
 def refspy(
-        canon_name: str = "protestant", 
-        locale_name: str = "en_US",
-        include_two_letter_aliases: bool = True,
-    ) -> Manager:
+    canon_name: str = "protestant",
+    locale_name: str = "en_US",
+    include_two_letter_aliases: bool = True,
+) -> Manager:
     """Create a Manager object to access all common package functions.
 
     See: `refspy.manager.Manager`
@@ -34,7 +34,7 @@ def refspy(
         for each proposed library and language.
 
     To Do:
-        Load languages and libraries only on demand when there are more of them. 
+        Load languages and libraries only on demand when there are more of them.
     """
     return Manager(
         get_canon(canon_name, locale_name),
