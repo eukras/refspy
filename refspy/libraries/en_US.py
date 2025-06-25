@@ -250,7 +250,7 @@ OT = Library(
         ),
         Book(
             id=35,
-            name="Habbakuk",
+            name="Habakkuk",
             abbrev="Hab",
             aliases=[],
             chapters=3,
