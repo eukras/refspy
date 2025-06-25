@@ -21,7 +21,7 @@ classifiers = [
 
 [metadata]
 license_expression = "GPL-3.0-only"
-
+license_files = ['LICENSE']
 
 [tool.setuptools]
 packages = ["refspy", 'refspy.languages', 'refspy.libraries']
