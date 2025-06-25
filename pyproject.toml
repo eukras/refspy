@@ -4,16 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "refspy"
-version = "0.10.1"
-authors = [
-  { name="Nigel Chapman", email="nigel@chapman.id.au" },
-]
+version = "0.10.2"
+authors = [{ name = "Nigel Chapman", email = "nigel@chapman.id.au" }]
 description = "A Python package for working with biblical references in ordinary text."
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = [
-  "pydantic >=2.7.1"
-]
+dependencies = ["pydantic >=2.7.1"]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
@@ -26,8 +22,8 @@ classifiers = [
 
 
 [tool.setuptools]
-packages=["refspy", 'refspy.languages', 'refspy.libraries']
-py-modules=["refspy", 'refspy.languages', 'refspy.libraries']
+packages = ["refspy", 'refspy.languages', 'refspy.libraries']
+py-modules = ["refspy", 'refspy.languages', 'refspy.libraries']
 
 
 [project.urls]

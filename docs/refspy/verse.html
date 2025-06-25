@@ -60,12 +60,6 @@
                         <li>
                                 <a class="variable" href="#Verse.model_config">model_config</a>
                         </li>
-                        <li>
-                                <a class="variable" href="#Verse.model_fields">model_fields</a>
-                        </li>
-                        <li>
-                                <a class="variable" href="#Verse.model_computed_fields">model_computed_fields</a>
-                        </li>
                 </ul>
 
             </li>
@@ -113,18 +107,18 @@
 </span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="sd">    verse: 4</span>
 </span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>
-</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Self</span>
+</span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Self</span>
 </span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 </span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="kn">from</span> <span class="nn">refspy.index</span> <span class="kn">import</span> <span class="n">Index</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="kn">from</span> <span class="nn">refspy.number</span> <span class="kn">import</span> <span class="n">Number</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">refspy.index</span><span class="w"> </span><span class="kn">import</span> <span class="n">Index</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">refspy.number</span><span class="w"> </span><span class="kn">import</span> <span class="n">Number</span>
 </span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>
 </span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>
 </span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="n">VerseTuple</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Number</span><span class="p">,</span> <span class="n">Number</span><span class="p">,</span> <span class="n">Number</span><span class="p">]</span>
 </span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>
 </span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="k">class</span> <span class="nc">Verse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Verse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 </span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="sd">    Library, Book, Chapter, Verse</span>
 </span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="sd">    &quot;&quot;&quot;</span>
@@ -134,28 +128,28 @@
 </span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>    <span class="n">chapter</span><span class="p">:</span> <span class="n">Number</span>
 </span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>    <span class="n">verse</span><span class="p">:</span> <span class="n">Number</span>
 </span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>    <span class="k">def</span> <span class="nf">tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VerseTuple</span><span class="p">:</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VerseTuple</span><span class="p">:</span>
 </span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;A sortable tuple for comparison operations.&quot;&quot;&quot;</span>
 </span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">library</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">book</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">chapter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">verse</span><span class="p">)</span>
 </span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 </span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare verses by comparing tuples.&quot;&quot;&quot;</span>
 </span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tuple</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">tuple</span><span class="p">()</span>
 </span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>    <span class="k">def</span> <span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 </span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare verses by comparing tuples.&quot;&quot;&quot;</span>
 </span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tuple</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">tuple</span><span class="p">()</span>
 </span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>    <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 </span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare verses by comparing tuples.&quot;&quot;&quot;</span>
 </span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tuple</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">tuple</span><span class="p">()</span>
 </span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>    <span class="k">def</span> <span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 </span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare verses by comparing tuples.&quot;&quot;&quot;</span>
 </span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tuple</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">tuple</span><span class="p">()</span>
 </span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>
 </span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>    <span class="nd">@classmethod</span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>    <span class="k">def</span> <span class="nf">from_index</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">Index</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">from_index</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">Index</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 </span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a><span class="sd">        Convert a verse&#39;s index number to its tuple form.</span>
 </span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>
@@ -169,7 +163,7 @@
 </span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a>        <span class="n">l</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
 </span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a>        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">library</span><span class="o">=</span><span class="n">l</span><span class="p">,</span> <span class="n">book</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">chapter</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">verse</span><span class="o">=</span><span class="n">v</span><span class="p">)</span>
 </span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a>
-</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a>    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Index</span><span class="p">:</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Index</span><span class="p">:</span>
 </span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a `refspy.index.Index` number representing this verse.</span>
 </span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a>
 </span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a><span class="sd">        Example:</span>
@@ -180,7 +174,7 @@
 </span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a>        <span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">verse</span>
 </span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a>
 </span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a>
-</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a><span class="k">def</span> <span class="nf">verse</span><span class="p">(</span><span class="n">library</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">book</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">chapter</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">verse</span><span class="p">:</span> <span class="n">Number</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Verse</span><span class="p">:</span>
+</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a><span class="k">def</span><span class="w"> </span><span class="nf">verse</span><span class="p">(</span><span class="n">library</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">book</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">chapter</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">verse</span><span class="p">:</span> <span class="n">Number</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Verse</span><span class="p">:</span>
 </span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;A shorthand constructor for verses.&quot;&quot;&quot;</span>
 </span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a>    <span class="k">return</span> <span class="n">Verse</span><span class="p">(</span><span class="n">library</span><span class="o">=</span><span class="n">library</span><span class="p">,</span> <span class="n">book</span><span class="o">=</span><span class="n">book</span><span class="p">,</span> <span class="n">chapter</span><span class="o">=</span><span class="n">chapter</span><span class="p">,</span> <span class="n">verse</span><span class="o">=</span><span class="n">verse</span><span class="p">)</span>
 </span></pre></div>
@@ -211,7 +205,7 @@
 
     </div>
     <a class="headerlink" href="#Verse"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Verse-22"><a href="#Verse-22"><span class="linenos">22</span></a><span class="k">class</span> <span class="nc">Verse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Verse-22"><a href="#Verse-22"><span class="linenos">22</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Verse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 </span><span id="Verse-23"><a href="#Verse-23"><span class="linenos">23</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="Verse-24"><a href="#Verse-24"><span class="linenos">24</span></a><span class="sd">    Library, Book, Chapter, Verse</span>
 </span><span id="Verse-25"><a href="#Verse-25"><span class="linenos">25</span></a><span class="sd">    &quot;&quot;&quot;</span>
@@ -221,28 +215,28 @@
 </span><span id="Verse-29"><a href="#Verse-29"><span class="linenos">29</span></a>    <span class="n">chapter</span><span class="p">:</span> <span class="n">Number</span>
 </span><span id="Verse-30"><a href="#Verse-30"><span class="linenos">30</span></a>    <span class="n">verse</span><span class="p">:</span> <span class="n">Number</span>
 </span><span id="Verse-31"><a href="#Verse-31"><span class="linenos">31</span></a>
-</span><span id="Verse-32"><a href="#Verse-32"><span class="linenos">32</span></a>    <span class="k">def</span> <span class="nf">tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VerseTuple</span><span class="p">:</span>
+</span><span id="Verse-32"><a href="#Verse-32"><span class="linenos">32</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VerseTuple</span><span class="p">:</span>
 </span><span id="Verse-33"><a href="#Verse-33"><span class="linenos">33</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;A sortable tuple for comparison operations.&quot;&quot;&quot;</span>
 </span><span id="Verse-34"><a href="#Verse-34"><span class="linenos">34</span></a>        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">library</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">book</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">chapter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">verse</span><span class="p">)</span>
 </span><span id="Verse-35"><a href="#Verse-35"><span class="linenos">35</span></a>
-</span><span id="Verse-36"><a href="#Verse-36"><span class="linenos">36</span></a>    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="Verse-36"><a href="#Verse-36"><span class="linenos">36</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 </span><span id="Verse-37"><a href="#Verse-37"><span class="linenos">37</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare verses by comparing tuples.&quot;&quot;&quot;</span>
 </span><span id="Verse-38"><a href="#Verse-38"><span class="linenos">38</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tuple</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">tuple</span><span class="p">()</span>
 </span><span id="Verse-39"><a href="#Verse-39"><span class="linenos">39</span></a>
-</span><span id="Verse-40"><a href="#Verse-40"><span class="linenos">40</span></a>    <span class="k">def</span> <span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="Verse-40"><a href="#Verse-40"><span class="linenos">40</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 </span><span id="Verse-41"><a href="#Verse-41"><span class="linenos">41</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare verses by comparing tuples.&quot;&quot;&quot;</span>
 </span><span id="Verse-42"><a href="#Verse-42"><span class="linenos">42</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tuple</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">tuple</span><span class="p">()</span>
 </span><span id="Verse-43"><a href="#Verse-43"><span class="linenos">43</span></a>
-</span><span id="Verse-44"><a href="#Verse-44"><span class="linenos">44</span></a>    <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="Verse-44"><a href="#Verse-44"><span class="linenos">44</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 </span><span id="Verse-45"><a href="#Verse-45"><span class="linenos">45</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare verses by comparing tuples.&quot;&quot;&quot;</span>
 </span><span id="Verse-46"><a href="#Verse-46"><span class="linenos">46</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tuple</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">tuple</span><span class="p">()</span>
 </span><span id="Verse-47"><a href="#Verse-47"><span class="linenos">47</span></a>
-</span><span id="Verse-48"><a href="#Verse-48"><span class="linenos">48</span></a>    <span class="k">def</span> <span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="Verse-48"><a href="#Verse-48"><span class="linenos">48</span></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 </span><span id="Verse-49"><a href="#Verse-49"><span class="linenos">49</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare verses by comparing tuples.&quot;&quot;&quot;</span>
 </span><span id="Verse-50"><a href="#Verse-50"><span class="linenos">50</span></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tuple</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">tuple</span><span class="p">()</span>
 </span><span id="Verse-51"><a href="#Verse-51"><span class="linenos">51</span></a>
 </span><span id="Verse-52"><a href="#Verse-52"><span class="linenos">52</span></a>    <span class="nd">@classmethod</span>
-</span><span id="Verse-53"><a href="#Verse-53"><span class="linenos">53</span></a>    <span class="k">def</span> <span class="nf">from_index</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">Index</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+</span><span id="Verse-53"><a href="#Verse-53"><span class="linenos">53</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">from_index</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">Index</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 </span><span id="Verse-54"><a href="#Verse-54"><span class="linenos">54</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="Verse-55"><a href="#Verse-55"><span class="linenos">55</span></a><span class="sd">        Convert a verse&#39;s index number to its tuple form.</span>
 </span><span id="Verse-56"><a href="#Verse-56"><span class="linenos">56</span></a>
@@ -256,7 +250,7 @@
 </span><span id="Verse-64"><a href="#Verse-64"><span class="linenos">64</span></a>        <span class="n">l</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
 </span><span id="Verse-65"><a href="#Verse-65"><span class="linenos">65</span></a>        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">library</span><span class="o">=</span><span class="n">l</span><span class="p">,</span> <span class="n">book</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">chapter</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">verse</span><span class="o">=</span><span class="n">v</span><span class="p">)</span>
 </span><span id="Verse-66"><a href="#Verse-66"><span class="linenos">66</span></a>
-</span><span id="Verse-67"><a href="#Verse-67"><span class="linenos">67</span></a>    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Index</span><span class="p">:</span>
+</span><span id="Verse-67"><a href="#Verse-67"><span class="linenos">67</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Index</span><span class="p">:</span>
 </span><span id="Verse-68"><a href="#Verse-68"><span class="linenos">68</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a `refspy.index.Index` number representing this verse.</span>
 </span><span id="Verse-69"><a href="#Verse-69"><span class="linenos">69</span></a>
 </span><span id="Verse-70"><a href="#Verse-70"><span class="linenos">70</span></a><span class="sd">        Example:</span>
@@ -327,7 +321,7 @@
 
     </div>
     <a class="headerlink" href="#Verse.tuple"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Verse.tuple-32"><a href="#Verse.tuple-32"><span class="linenos">32</span></a>    <span class="k">def</span> <span class="nf">tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VerseTuple</span><span class="p">:</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Verse.tuple-32"><a href="#Verse.tuple-32"><span class="linenos">32</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VerseTuple</span><span class="p">:</span>
 </span><span id="Verse.tuple-33"><a href="#Verse.tuple-33"><span class="linenos">33</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;A sortable tuple for comparison operations.&quot;&quot;&quot;</span>
 </span><span id="Verse.tuple-34"><a href="#Verse.tuple-34"><span class="linenos">34</span></a>        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">library</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">book</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">chapter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">verse</span><span class="p">)</span>
 </span></pre></div>
@@ -351,7 +345,7 @@
     </div>
     <a class="headerlink" href="#Verse.from_index"></a>
             <div class="pdoc-code codehilite"><pre><span></span><span id="Verse.from_index-52"><a href="#Verse.from_index-52"><span class="linenos">52</span></a>    <span class="nd">@classmethod</span>
-</span><span id="Verse.from_index-53"><a href="#Verse.from_index-53"><span class="linenos">53</span></a>    <span class="k">def</span> <span class="nf">from_index</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">Index</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+</span><span id="Verse.from_index-53"><a href="#Verse.from_index-53"><span class="linenos">53</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">from_index</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">Index</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
 </span><span id="Verse.from_index-54"><a href="#Verse.from_index-54"><span class="linenos">54</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="Verse.from_index-55"><a href="#Verse.from_index-55"><span class="linenos">55</span></a><span class="sd">        Convert a verse&#39;s index number to its tuple form.</span>
 </span><span id="Verse.from_index-56"><a href="#Verse.from_index-56"><span class="linenos">56</span></a>
@@ -390,7 +384,7 @@
 
     </div>
     <a class="headerlink" href="#Verse.index"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Verse.index-67"><a href="#Verse.index-67"><span class="linenos">67</span></a>    <span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Index</span><span class="p">:</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Verse.index-67"><a href="#Verse.index-67"><span class="linenos">67</span></a>    <span class="k">def</span><span class="w"> </span><span class="nf">index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Index</span><span class="p">:</span>
 </span><span id="Verse.index-68"><a href="#Verse.index-68"><span class="linenos">68</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a `refspy.index.Index` number representing this verse.</span>
 </span><span id="Verse.index-69"><a href="#Verse.index-69"><span class="linenos">69</span></a>
 </span><span id="Verse.index-70"><a href="#Verse.index-70"><span class="linenos">70</span></a><span class="sd">        Example:</span>
@@ -415,39 +409,16 @@
                             </div>
                             <div id="Verse.model_config" class="classattr">
                                 <div class="attr variable">
-            <span class="name">model_config</span>        =
+            <span class="name">model_config</span><span class="annotation">: ClassVar[pydantic.config.ConfigDict]</span>        =
 <span class="default_value">{}</span>
 
         
     </div>
     <a class="headerlink" href="#Verse.model_config"></a>
     
-    
+            <div class="docstring"><p>Configuration for the model, should be a dictionary conforming to [<code>ConfigDict</code>][pydantic.config.ConfigDict].</p>
+</div>
 
-                            </div>
-                            <div id="Verse.model_fields" class="classattr">
-                                <div class="attr variable">
-            <span class="name">model_fields</span>        =
-<input id="Verse.model_fields-view-value" class="view-value-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-            <label class="view-value-button pdoc-button" for="Verse.model_fields-view-value"></label><span class="default_value">{&#39;library&#39;: FieldInfo(annotation=int, required=True, metadata=[Ge(ge=1), Le(le=999)]), &#39;book&#39;: FieldInfo(annotation=int, required=True, metadata=[Ge(ge=1), Le(le=999)]), &#39;chapter&#39;: FieldInfo(annotation=int, required=True, metadata=[Ge(ge=1), Le(le=999)]), &#39;verse&#39;: FieldInfo(annotation=int, required=True, metadata=[Ge(ge=1), Le(le=999)])}</span>
-
-        
-    </div>
-    <a class="headerlink" href="#Verse.model_fields"></a>
-    
-    
-
-                            </div>
-                            <div id="Verse.model_computed_fields" class="classattr">
-                                <div class="attr variable">
-            <span class="name">model_computed_fields</span>        =
-<span class="default_value">{}</span>
-
-        
-    </div>
-    <a class="headerlink" href="#Verse.model_computed_fields"></a>
-    
-    
 
                             </div>
                 </section>
@@ -462,7 +433,7 @@
 
     </div>
     <a class="headerlink" href="#verse"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="verse-78"><a href="#verse-78"><span class="linenos">78</span></a><span class="k">def</span> <span class="nf">verse</span><span class="p">(</span><span class="n">library</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">book</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">chapter</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">verse</span><span class="p">:</span> <span class="n">Number</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Verse</span><span class="p">:</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="verse-78"><a href="#verse-78"><span class="linenos">78</span></a><span class="k">def</span><span class="w"> </span><span class="nf">verse</span><span class="p">(</span><span class="n">library</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">book</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">chapter</span><span class="p">:</span> <span class="n">Number</span><span class="p">,</span> <span class="n">verse</span><span class="p">:</span> <span class="n">Number</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Verse</span><span class="p">:</span>
 </span><span id="verse-79"><a href="#verse-79"><span class="linenos">79</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;A shorthand constructor for verses.&quot;&quot;&quot;</span>
 </span><span id="verse-80"><a href="#verse-80"><span class="linenos">80</span></a>    <span class="k">return</span> <span class="n">Verse</span><span class="p">(</span><span class="n">library</span><span class="o">=</span><span class="n">library</span><span class="p">,</span> <span class="n">book</span><span class="o">=</span><span class="n">book</span><span class="p">,</span> <span class="n">chapter</span><span class="o">=</span><span class="n">chapter</span><span class="p">,</span> <span class="n">verse</span><span class="o">=</span><span class="n">verse</span><span class="p">)</span>
 </span></pre></div>

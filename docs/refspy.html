@@ -82,15 +82,15 @@ introduction.</p>
 </span><span id="L-4"><a href="#L-4"><span class="linenos"> 4</span></a><span class="sd">introduction.</span>
 </span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a>
-</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="kn">from</span> <span class="nn">refspy.init</span> <span class="kn">import</span> <span class="n">get_canon</span><span class="p">,</span> <span class="n">get_language</span>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="kn">from</span> <span class="nn">refspy.manager</span> <span class="kn">import</span> <span class="n">Manager</span>
+</span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">refspy.init</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_canon</span><span class="p">,</span> <span class="n">get_language</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">refspy.manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">Manager</span>
 </span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>
 </span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="k">def</span> <span class="nf">refspy</span><span class="p">(</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>        <span class="n">canon_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;protestant&quot;</span><span class="p">,</span> 
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>        <span class="n">locale_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en_US&quot;</span><span class="p">,</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>        <span class="n">include_two_letter_aliases</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Manager</span><span class="p">:</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="k">def</span><span class="w"> </span><span class="nf">refspy</span><span class="p">(</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>    <span class="n">canon_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;protestant&quot;</span><span class="p">,</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>    <span class="n">locale_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en_US&quot;</span><span class="p">,</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a>    <span class="n">include_two_letter_aliases</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Manager</span><span class="p">:</span>
 </span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a Manager object to access all common package functions.</span>
 </span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>
 </span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="sd">    See: `refspy.manager.Manager`</span>
@@ -112,7 +112,7 @@ introduction.</p>
 </span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a><span class="sd">        for each proposed library and language.</span>
 </span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>
 </span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="sd">    To Do:</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a><span class="sd">        Load languages and libraries only on demand when there are more of them. </span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a><span class="sd">        Load languages and libraries only on demand when there are more of them.</span>
 </span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>    <span class="k">return</span> <span class="n">Manager</span><span class="p">(</span>
 </span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>        <span class="n">get_canon</span><span class="p">(</span><span class="n">canon_name</span><span class="p">,</span> <span class="n">locale_name</span><span class="p">),</span>
@@ -134,11 +134,11 @@ introduction.</p>
 
     </div>
     <a class="headerlink" href="#refspy"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="refspy-12"><a href="#refspy-12"><span class="linenos">12</span></a><span class="k">def</span> <span class="nf">refspy</span><span class="p">(</span>
-</span><span id="refspy-13"><a href="#refspy-13"><span class="linenos">13</span></a>        <span class="n">canon_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;protestant&quot;</span><span class="p">,</span> 
-</span><span id="refspy-14"><a href="#refspy-14"><span class="linenos">14</span></a>        <span class="n">locale_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en_US&quot;</span><span class="p">,</span>
-</span><span id="refspy-15"><a href="#refspy-15"><span class="linenos">15</span></a>        <span class="n">include_two_letter_aliases</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="refspy-16"><a href="#refspy-16"><span class="linenos">16</span></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Manager</span><span class="p">:</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="refspy-12"><a href="#refspy-12"><span class="linenos">12</span></a><span class="k">def</span><span class="w"> </span><span class="nf">refspy</span><span class="p">(</span>
+</span><span id="refspy-13"><a href="#refspy-13"><span class="linenos">13</span></a>    <span class="n">canon_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;protestant&quot;</span><span class="p">,</span>
+</span><span id="refspy-14"><a href="#refspy-14"><span class="linenos">14</span></a>    <span class="n">locale_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en_US&quot;</span><span class="p">,</span>
+</span><span id="refspy-15"><a href="#refspy-15"><span class="linenos">15</span></a>    <span class="n">include_two_letter_aliases</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="refspy-16"><a href="#refspy-16"><span class="linenos">16</span></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Manager</span><span class="p">:</span>
 </span><span id="refspy-17"><a href="#refspy-17"><span class="linenos">17</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a Manager object to access all common package functions.</span>
 </span><span id="refspy-18"><a href="#refspy-18"><span class="linenos">18</span></a>
 </span><span id="refspy-19"><a href="#refspy-19"><span class="linenos">19</span></a><span class="sd">    See: `refspy.manager.Manager`</span>
@@ -160,7 +160,7 @@ introduction.</p>
 </span><span id="refspy-35"><a href="#refspy-35"><span class="linenos">35</span></a><span class="sd">        for each proposed library and language.</span>
 </span><span id="refspy-36"><a href="#refspy-36"><span class="linenos">36</span></a>
 </span><span id="refspy-37"><a href="#refspy-37"><span class="linenos">37</span></a><span class="sd">    To Do:</span>
-</span><span id="refspy-38"><a href="#refspy-38"><span class="linenos">38</span></a><span class="sd">        Load languages and libraries only on demand when there are more of them. </span>
+</span><span id="refspy-38"><a href="#refspy-38"><span class="linenos">38</span></a><span class="sd">        Load languages and libraries only on demand when there are more of them.</span>
 </span><span id="refspy-39"><a href="#refspy-39"><span class="linenos">39</span></a><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="refspy-40"><a href="#refspy-40"><span class="linenos">40</span></a>    <span class="k">return</span> <span class="n">Manager</span><span class="p">(</span>
 </span><span id="refspy-41"><a href="#refspy-41"><span class="linenos">41</span></a>        <span class="n">get_canon</span><span class="p">(</span><span class="n">canon_name</span><span class="p">,</span> <span class="n">locale_name</span><span class="p">),</span>

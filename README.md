@@ -5,15 +5,14 @@
 
 [![python](https://img.shields.io/badge/Python-3.11-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-![Version: 0.10.1 Beta](https://img.shields.io/badge/Version-0.10.1-purple) 
+![Version: 0.10.2 Beta](https://img.shields.io/badge/Version-0.10.2-purple)
 ![Status: BETA](https://img.shields.io/badge/Status-BETA-red)
 
 Refspy is a Python package for working with biblical references in ordinary text.
 
 [![Github Stars](https://img.shields.io/github/stars/eukras/refspy)](https://img.shields.io/github/stars/eukras/refspy)
 
-
-# README 
+# README
 
 * [eukras/refspy on Github](https://github.com/eukras/refspy) | [Report Issue](https://github.com/eukras/refspy/issues) | [Contact Author](mailto:nigel@chapman.id.au)
 * [refspy on PyPI](https://pypi.org/project/refspy/) &rarr; `pip install refspy`.
@@ -25,7 +24,6 @@ Refspy is a Python package for working with biblical references in ordinary text
 [![RefSpy Demo](https://github.com/eukras/refspy/raw/master/media/refspy-demo.png)](https://github.com/eukras/refspy/raw/master/media/refspy-demo.png)
 
 ([demo.py](https://github.com/eukras/refspy/blob/master/demo.py) will generate this as HTML)
-
 
 ## Features
 
@@ -50,7 +48,7 @@ Not implemented:
 ## The Reference Manager
 
 Initialising `refspy` with corpus and language names will return a reference
-manager. This provides a single convenient interface for the whole library. 
+manager. This provides a single convenient interface for the whole library.
 By default, refspy provides a Protestant canon in English.
 
 ```python
@@ -81,12 +79,11 @@ __ = Manager(libraries=[OT, DC, DC_ORTHODOX, NT], language=ENGLISH)
 The file `refspy/setup.py` shows valid names for libraries and languages.
 There's only English initially. The `en_US` libraries conform to the SBL Style
 Guide for book names and abbreviations. Other libraries can be defined and
-added locally following the structure in `refspy.libraries.en_US`. If they 
-follow established academic usage where possible, please contribute them to 
+added locally following the structure in `refspy.libraries.en_US`. If they
+follow established academic usage where possible, please contribute them to
 the project.
 
-
-### Creating references 
+### Creating references
 
 Shortcut functions can create simple references using any book name,
 abbreviation, or alias in the libraries list. Firstly, we can create
@@ -133,7 +130,6 @@ __ = refspy(include_two_letter_aliases=True)
 match, ref = __.first_reference('2Ti 1')
 assert ref == __.bcv('2 Tim', 1)
 ```
-
 
 ### Formatting references
 
@@ -198,7 +194,7 @@ The full list of template fields is:
 | `{PARAM_NUMBERS}` | `2.3-4` |
 
 Templates can be passed as optional arguments to other rendering functions, say
-to generate links within indexes. 
+to generate links within indexes.
 
 ```python
 __.make_index(references, template=bible_gateway)
@@ -218,7 +214,7 @@ assert not rom_2 >= rom_4
 assert rom_4 == rom_4a
 ```
 
-Because references can be compared using the `<` operator, they can also be sorted without any special functions, and used in `min()` and `max()`. 
+Because references can be compared using the `<` operator, they can also be sorted without any special functions, and used in `min()` and `max()`.
 
 ```python
 assert __.sort_references([rom_4, rom_2]) == [rom_2, rom_4]
@@ -228,7 +224,7 @@ assert min([rom_4, rom_2]) == rom_2
 
 ### Contains, Overlaps, Adjoins
 
-We will commonly want to know if one reference `contains()`, or `overlaps()` another. The `adjoins()` function works out adjacency for chapters and verses, but note it is limited by not knowing the lengths of chapters. 
+We will commonly want to know if one reference `contains()`, or `overlaps()` another. The `adjoins()` function works out adjacency for chapters and verses, but note it is limited by not knowing the lengths of chapters.
 
 ```python
 gen1 = __.r('Gen 1') 
@@ -298,7 +294,6 @@ nt_chapter_refs_ = [
   for book in NT.books  
 ] 
 ```
-
 
 ### Matching references in text
 
@@ -376,16 +371,15 @@ SUM:                            45            965            935           3815
 initialised with bad data, say if a verse has Numbers outside the range
 `0..999`, or if a Range has a start verse that is greater than its end verse.
 
-- **Book**. A book has id, name, abbrev, aliases, and chapters. No verse counts.
-- **Format**. The Format objects define what properties and characters to use when formatting references for various purposes.
-- **Index**. An integer which results from expanding a verse by powers of 1000; `verse(1, 7, 16, 1)` becomes the integer `1007016001`. Provided for database indexing if required.
-- **Language**. A language has verse_markers (e.g. `v.` and `.vv.`), ambiguous_aliases (e.g. `Is` and `Am`, which are also words), and number prefixes (e.g. `Second` and `II` for `2`).
-- **Library**. A library has id, name, abbrev, and a list of Books. See e.g. `libraries/en_US.py`. Library IDs are spaced out in a roughly historical order: OT is 200, NT is 400.
-- **Number**. An integer `1..999`. We assume verses/chapters/books/libraries are limited to this size. This may need modifying to accommodate, say, _zero verses_ in the Septuagint.
-- **Range**. A pair of `(start, end)` verses; `1 Cor 16:1-2` becomes `range(verse(400, 7, 16, 1), verse(400, 7, 16, 2))`.
-- **Reference**. A list of ranges; `1 Cor 16:1-2,6` becomes `reference([range(verse(400, 7, 16, 1), verse(400, 7, 16, 2)), range(verse(400, 7, 16, 6), verse(400, 7, 16, 6))])`. They do not automatically sort or simplify the ranges.
-- **Verse**. A quadruple of `(library, book, chapter, verse)` numbers; `1 Cor 16:1` becomes `verse(400, 7, 16, 1)`
-
+* **Book**. A book has id, name, abbrev, aliases, and chapters. No verse counts.
+* **Format**. The Format objects define what properties and characters to use when formatting references for various purposes.
+* **Index**. An integer which results from expanding a verse by powers of 1000; `verse(1, 7, 16, 1)` becomes the integer `1007016001`. Provided for database indexing if required.
+* **Language**. A language has verse_markers (e.g. `v.` and `.vv.`), ambiguous_aliases (e.g. `Is` and `Am`, which are also words), and number prefixes (e.g. `Second` and `II` for `2`).
+* **Library**. A library has id, name, abbrev, and a list of Books. See e.g. `libraries/en_US.py`. Library IDs are spaced out in a roughly historical order: OT is 200, NT is 400.
+* **Number**. An integer `1..999`. We assume verses/chapters/books/libraries are limited to this size. This may need modifying to accommodate, say, _zero verses_ in the Septuagint.
+* **Range**. A pair of `(start, end)` verses; `1 Cor 16:1-2` becomes `range(verse(400, 7, 16, 1), verse(400, 7, 16, 2))`.
+* **Reference**. A list of ranges; `1 Cor 16:1-2,6` becomes `reference([range(verse(400, 7, 16, 1), verse(400, 7, 16, 2)), range(verse(400, 7, 16, 6), verse(400, 7, 16, 6))])`. They do not automatically sort or simplify the ranges.
+* **Verse**. A quadruple of `(library, book, chapter, verse)` numbers; `1 Cor 16:1` becomes `verse(400, 7, 16, 1)`
 
 ## Data Structures
 
@@ -468,7 +462,7 @@ So, a chapter or book contains every range and verse within that chapter or
 book, however long the chapter or book are.
 
 Verses and ranges convert to tuples e.g. `((1, 2, 3, 4), (1, 2, 3, 5))` which can
-be sorted and compared. 
+be sorted and compared.
 
 Ranges can be tested for containment, overlap, or adjacency. Note that this
 does not take account of which verse numbers actually exist in any given text.
