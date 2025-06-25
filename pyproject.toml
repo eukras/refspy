@@ -6,19 +6,20 @@ build-backend = "setuptools.build_meta"
 name = "refspy"
 version = "0.10.2"
 authors = [{ name = "Nigel Chapman", email = "nigel@chapman.id.au" }]
-description = "A Python package for working with biblical references in ordinary text."
+description = "A Python package for working with biblical references in human text."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = ["pydantic >=2.7.1"]
 classifiers = [
   "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
-  "License-Expression: GPL-3.0-only",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
   "Topic :: Religion",
   "Topic :: Text Processing :: Indexing",
 ]
+license = "GPL-3.0-only"
+license-files = ["LICENSE"]
 
 
 [tool.setuptools]
