@@ -18,8 +18,9 @@ classifiers = [
   "Topic :: Religion",
   "Topic :: Text Processing :: Indexing",
 ]
-license = "GPL-3.0-only"
-license-files = ["LICENSE"]
+
+[metadata]
+license_expression = "GPL-3.0-only"
 
 
 [tool.setuptools]
