@@ -19,7 +19,7 @@ aliases that are common words will be ignored except in references, e.g. Am
 3:1, but not Am.
 """
 
-TEXT = text_template.replace('{AMBIGUOUS}', ', '.join(ENGLISH.ambiguous_aliases))
+TEXT = text_template.replace("{AMBIGUOUS}", ", ".join(ENGLISH.ambiguous_aliases))
 
 matches = __.find_references(TEXT, include_books=True, include_nones=True)
 strs, tags = [], []

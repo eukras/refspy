@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "refspy"
-version = "0.10.3"
+version = "0.10.4"
 authors = [{ name = "Nigel Chapman", email = "nigel@chapman.id.au" }]
 description = "A Python package for working with biblical references in human text."
 readme = "README.md"

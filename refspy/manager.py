@@ -127,7 +127,7 @@ class Manager:
             return None
 
     def make_summary_references(self, references: List[Reference]) -> List[Reference]:
-        """Return a sorted, combined, simplified list of References."""
+        """Return a sorted, combined, simplified list of references by book."""
         collation = self.collate(
             sorted([ref for ref in references if ref and not ref.is_book()])
         )
@@ -157,6 +157,44 @@ class Manager:
             min_references: The minimal references per chapter that qualifies as a hotspot.
         """
         if summaries := self.make_summary_references(references):
+            return ", ".join([self.template(ref, pattern) for ref in summaries])
+        else:
+            return None
+
+    def make_summary_references_by_chapter(
+        self, references: List[Reference]
+    ) -> List[Reference]:
+        """Return a sorted, combined, simplified list of references by book."""
+        collation = self.collate_chapter_references(
+            sorted([ref for ref in references if ref and not ref.is_book()])
+        )
+        summary = []
+        for _, book_collation in collation:
+            for _, chapter_collation in book_collation:
+                for _, reference_list in chapter_collation:
+                    compact_ref = self.combine_references(reference_list)
+                    summary.append(compact_ref)
+        return summary
+
+    def make_summary_by_chapter(
+        self, references: List[Reference], pattern: str | None = None
+    ) -> str | None:
+        """
+        Return a string showing a sorted, combined, list of References.
+
+        Args:
+            pattern: a formatting string suitable for links, see
+                `refspy.manager.Manager.template()`.
+
+        Note:
+            If no template pattern is provided, reference formatting
+            will default to `refspy.manager.Manager.abbrev_name()`.
+
+        Args:
+            max_chapters: The maximum number of chapter hotspots to return.
+            min_references: The minimal references per chapter that qualifies as a hotspot.
+        """
+        if summaries := self.make_summary_references_by_chapter(references):
             return ", ".join([self.template(ref, pattern) for ref in summaries])
         else:
             return None
@@ -280,19 +318,61 @@ class Manager:
         self, references: List[Reference]
     ) -> List[Tuple[Library, List[Tuple[Book, List[Reference]]]]]:
         """
+        The default collation is by book; use collate_chapter_references
+        otherwise.
+        """
+        return self.collate_book_references(references)
+
+    def collate_chapter_references(
+        self, references: List[Reference]
+    ) -> List[Tuple[Library, List[Tuple[Book, List[Tuple[Number, List[Reference]]]]]]]:
+        library_list = list()
+        for library_id, books_dict in self.collate_by_chapter(references).items():
+            book_list = list()
+            for book_id, chapters_dict in books_dict.items():
+                chapter_list = list()
+                for chapter_id, references in chapters_dict.items():
+                    chapter_list.append(tuple([chapter_id, references]))
+                book_list.append(tuple([self.books[library_id, book_id], chapter_list]))
+            library_list.append(tuple([self.libraries[library_id], book_list]))
+        return library_list
+
+    def collate_by_chapter(
+        self, references: List[Reference]
+    ) -> Dict[Number, Dict[Number, Dict[Number, List[Reference]]]]:
+        """
+        A collation groups single-book references by library, book, and chapter
+        IDs. Multi-book references are ignored.
+
+        TODO: Refactor code duplication with collate_by_book.
+        """
+        collation = dict()
+        for ref in [_ for _ in references if _.count_books() == 1]:
+            v1 = ref.ranges[0].start
+            if v1.library not in collation:
+                collation[v1.library] = dict()
+            if v1.book not in collation[v1.library]:
+                collation[v1.library][v1.book] = dict()
+            if v1.chapter not in collation[v1.library][v1.book]:
+                collation[v1.library][v1.book][v1.chapter] = list()
+            collation[v1.library][v1.book][v1.chapter].append(ref)
+        return collation
+
+    def collate_book_references(self, references: List[Reference]):
+        """
         A collation groups single-book references by library and book,
         providing Library and Book objects for iteration. Multi-book references
         are ignored.
         """
         library_list = list()
-        for library_id, books_dict in self.collate_by_id(references).items():
+        for library_id, books_dict in self.collate_by_book(references).items():
             book_list = list()
             for book_id, references in books_dict.items():
                 book_list.append(tuple([self.books[library_id, book_id], references]))
             library_list.append(tuple([self.libraries[library_id], book_list]))
         return library_list
 
-    def collate_by_id(
+    def collate_by_book(
         self, references: List[Reference]
     ) -> Dict[Number, Dict[Number, List[Reference]]]:
         """

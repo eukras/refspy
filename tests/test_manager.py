@@ -28,10 +28,15 @@ def test_init():
     assert __.libraries[LIBRARY.id] == LIBRARY
     assert __.book_aliases["Book"] == (LIBRARY.id, BOOK.id)
 
+
 def test_make_index_references():
     tuples = __.find_references("Book 1:2, 2:1, 3:4, 1:4-5, 7, 3:6")
     refs = __.make_index_references([ref for _, ref in tuples if ref])
-    assert ','.join([__.template(ref) for ref in refs if ref is not None]) == "Bk 1:2, 4–5, 7; 2:1; 3:4, 6"
+    assert (
+        ",".join([__.template(ref) for ref in refs if ref is not None])
+        == "Bk 1:2, 4–5, 7; 2:1; 3:4, 6"
+    )
+
 
 def test_make_index():
     tuples = __.find_references("Book 1:2, 2:1, 3:4, 1:4-5, 7, 3:6")
@@ -45,7 +50,7 @@ def test_make_hotspots():
     out = __.make_hotspots(
         [ref for _, ref in tuples if ref], max_chapters=2, min_references=2
     )
-    assert out == 'Bk 1, Bk 3'
+    assert out == "Bk 1, Bk 3"
 
 
 def test_make_hotspots_lots():
@@ -53,7 +58,7 @@ def test_make_hotspots_lots():
     out = __.make_hotspots(
         [ref for _, ref in tuples if ref], max_chapters=2, min_references=2
     )
-    assert out == 'Bk 1, Bk 3'
+    assert out == "Bk 1, Bk 3"
 
 
 def test_make_hotspots_empty():
@@ -95,13 +100,24 @@ def test_combine_references():
     assert combined == verse_reference(NT.id, 1, 2, 3, 6)
 
 
-def test_collate_by_id():
-    collation = __.collate_by_id(REFERENCES)
+def test_collate_by_book():
+    collation = __.collate_by_book(REFERENCES)
     for library_id, book_collation in collation.items():
         assert library_id == LIBRARY.id
         for book_id, book_references in book_collation.items():
             assert book_id == BOOK.id
             assert book_references == REFERENCES
+
+
+def test_collate_by_chapter():
+    collation = __.collate_by_chapter(REFERENCES)
+    for library_id, book_collation in collation.items():
+        assert library_id == LIBRARY.id
+        for book_id, chapter_collation in book_collation.items():
+            assert book_id == BOOK.id
+            for chapter_id, chapter_references in chapter_collation.items():
+                assert chapter_id == 1
+                assert chapter_references == REFERENCES
 
 
 def test_collate():
@@ -111,6 +127,32 @@ def test_collate():
         for book, book_references in book_collation:
             assert book == BOOK
             assert book_references == REFERENCES
+
+
+def test_collate_book_references():
+    """
+    Must be the same as test_collate
+    """
+    collation = __.collate_book_references(REFERENCES)
+    for library, book_collation in collation:
+        assert library == LIBRARY
+        for book, book_references in book_collation:
+            assert book == BOOK
+            assert book_references == REFERENCES
+
+
+def test_collate_chapter_references():
+    """
+    Must be the same as test_collate
+    """
+    collation = __.collate_chapter_references(REFERENCES)
+    for library, book_collation in collation:
+        assert library == LIBRARY
+        for book, chapter_collation in book_collation:
+            assert book == BOOK
+            for chapter_id, references in chapter_collation:
+                assert chapter_id == 1
+                assert references == REFERENCES
 
 
 def test_first_reference():
