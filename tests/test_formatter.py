@@ -73,6 +73,14 @@ def test_multiple_chapter_range():
     assert fmt.format(ref, NAME_FORMAT) == "Big Book 1:1–2; 2:1–2"
 
 
+def test_inter_book_range():
+    ref = reference(
+        range(verse(1, 1, 1, 20), verse(1, 2, 2, 10)),
+    )
+
+    assert fmt.format(ref, NAME_FORMAT) == "Primo Booko 1:20 – Big Book 2:10"
+
+
 def test_multiple_book_range():
     ref = reference(
         range(verse(1, 2, 1, 1), verse(1, 2, 1, 2)),

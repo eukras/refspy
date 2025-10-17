@@ -113,7 +113,7 @@ class Formatter:
             start_number = string_together(_.start.chapter)
         else:
             start_number = string_together(
-                (_.start.chapter, options.colon, _.start.verse)
+                _.start.chapter, options.colon, _.start.verse
             )
         end_book = self.books[_.end.library, _.end.book]
         end_book_name = getattr(end_book, options.property or "", "")
