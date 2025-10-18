@@ -317,7 +317,7 @@ DC = Library(
             id=4,
             name="Wisdom of Solomon",
             abbrev="Wis",
-            aliases=[],
+            aliases=["Wisdom"],
             chapters=19,
         ),
         Book(
