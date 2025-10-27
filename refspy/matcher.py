@@ -109,7 +109,7 @@ class Matcher:
         REGEXP = "".join(
             [
                 "(",
-                f"{END}({NAME_PATTERN})(?!\\s[A-Z])",  # John, but not John B.
+                f"{END}({NAME_PATTERN})(?!{SPACE}[A-Z])",  # John, but not John B.
                 "(",
                 "".join(
                     [
