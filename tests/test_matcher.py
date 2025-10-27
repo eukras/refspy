@@ -129,6 +129,11 @@ def test_match_names():
     assert matcher.reference_regexp.findall("Small") == [("Small", "Small", "", "")]
 
 
+def test_does_not_match_human_first_names():
+    assert matcher.reference_regexp.findall("Big Bob") == []
+    assert matcher.reference_regexp.findall("Big B.") == []
+
+
 def test_match_names_and_numbers():
     assert matcher.reference_regexp.findall("Big Book 1") == [
         ("Big Book 1", "Big Book", " 1", "")

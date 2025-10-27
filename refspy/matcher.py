@@ -4,7 +4,6 @@ import math
 import re
 from typing import Dict, Generator, List, Match, Tuple
 
-from refspy import language
 from refspy.book import Book
 from refspy.language import Language
 from refspy.range import Range, range, verse_range
@@ -45,6 +44,8 @@ class Matcher:
     Match:
     - Opening and closing brackets
       - So we don't carry book context past the end of parentheses
+    - [PROPOSED] Ends of sentence and end of paragraph.
+      - So we don't carry book context for an undue distance within the text.
     - References
       - Book names (incl. substitutions like 'First' for '1':
         - with no reference: sets context; only returned as a reference if
@@ -96,6 +97,11 @@ class Matcher:
             ('Small Book 34',  'Small Book', '34',     None)
             ( None,             None,         None,   '2:3-6')
             ```
+
+        Additionally, we want to minimize bad matches like John Smith, or John
+        B. Smith; a negative lookahead for a following capital eliminates a lot
+        of false positives; may be necessary to treat known names differently
+        in each language.
         """
         NAME_PATTERN = self.build_book_name_regexp()
         VERSE_MARKER = self.build_verse_marker_regexp()
@@ -103,7 +109,7 @@ class Matcher:
         REGEXP = "".join(
             [
                 "(",
-                f"{END}({NAME_PATTERN})",  # Rom
+                f"{END}({NAME_PATTERN})(?!\\s[A-Z])",  # John, but not John B.
                 "(",
                 "".join(
                     [
