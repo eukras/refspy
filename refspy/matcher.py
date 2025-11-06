@@ -71,6 +71,7 @@ class Matcher:
         books: Dict[Tuple[Number, Number], Book],
         book_aliases: Dict[str, Tuple[Number, Number]],
         language: Language,
+        use_context: bool = False,
     ):
         self.books = books
         self.language = language
@@ -267,7 +268,11 @@ class Matcher:
         return r"[\(\)]"
 
     def generate_references(
-        self, text: str, include_books: bool = False, include_nones: bool = False
+        self,
+        text: str,
+        include_books: bool = False,
+        include_nones: bool = False,
+        use_context: bool = False,
     ) -> Generator[Tuple[str, Reference | None], None, None]:
         """
         Match references and parentheses separately, then take the next lowest
@@ -275,7 +280,7 @@ class Matcher:
         process. Yield references for book names and chapter/verse numbers.
 
         This is the base function used by `__.find_references()` and
-        `__.first_reference()`.
+        `__.first_reference()`. It keeps all the logic in one place.
 
         Args:
             text: In which to find references
@@ -367,15 +372,19 @@ class Matcher:
                                     bracket_stack[-1] = last_range
                                 else:
                                     bracket_stack.append(last_range)
-                                if include_books and (
-                                    trim_trailing_period(match_str)
-                                    not in self.language.ambiguous_aliases
+                                if (
+                                    include_books
+                                    and use_context
+                                    and (
+                                        trim_trailing_period(match_str)
+                                        not in self.language.ambiguous_aliases
+                                    )
                                 ):
                                     yield (
                                         match_str,
                                         book_reference(library_id, book_id),
                                     )
-                    elif match_without_book:
+                    elif match_without_book and use_context:
                         if bracket_stack:
                             last_range = bracket_stack[-1]
                             library_id, book_id = (

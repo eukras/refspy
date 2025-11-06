@@ -402,17 +402,27 @@ class Manager:
         return next(generator, (None, None))
 
     def find_references(
-        self, text: str, include_books: bool = False, include_nones: bool = False
+        self,
+        text: str,
+        include_books: bool = False,
+        include_nones: bool = False,
+        use_context: bool = False,
     ) -> List[Tuple[str, Reference | None]]:
         """
         Return a list of tuples of (match_str, reference) found by
         `refspy.manager.Manager.generate_references()`
         """
-        generator = self.matcher.generate_references(text, include_books, include_nones)
+        generator = self.matcher.generate_references(
+            text, include_books, include_nones, use_context
+        )
         return list(generator)
 
     def generate_references(
-        self, text: str, include_books: bool = False, include_nones: bool = False
+        self,
+        text: str,
+        include_books: bool = False,
+        include_nones: bool = False,
+        use_context: bool = False,
     ) -> Generator[Tuple[str, Reference | None], None, None]:
         """
         Generate tuples of (match_str, reference) for provided text.manager
@@ -424,11 +434,15 @@ class Manager:
             include_books: Whether to yield book names without reference numbers
             include_nones: Whether to yield (match_str, None) for malformed
                 references.
+            use_context: Whether to yield anything other than exact book and
+                number matches
 
         Yield:
             A tuple of `(match_str, reference)` for each valid reference.
         """
-        yield from self.matcher.generate_references(text, include_books, include_nones)
+        yield from self.matcher.generate_references(
+            text, include_books, include_nones, use_context
+        )
 
     # -----------------------------------
     # Reference creator functions
