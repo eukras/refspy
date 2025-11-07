@@ -85,9 +85,8 @@ class Matcher:
         self.NUMBER_CAPTURE = re.compile(f"({self.NUMBER})")
         self.RANGE_CAPTURE = re.compile(f"({self.NUMBER}){self.DASH}({self.NUMBER})")
         self.CHAPTER_RANGE_CAPTURE = re.compile(
-            f"{self.END}({self.NUMBER}){self.COLON}({self.NUMBER}){self.DASH}({
-                self.NUMBER
-            }){self.COLON}({self.NUMBER}){self.END}"
+            f"{self.END}({self.NUMBER}){self.COLON}({self.NUMBER}){self.DASH}"
+            + f"({self.NUMBER}){self.COLON}({self.NUMBER}){self.END}"
         )
         self.CHAPTER_VERSES_CAPTURE = re.compile(
             f"{self.END}({self.NUMBER}){self.COLON}({self.LIST}){self.END}"
@@ -130,25 +129,20 @@ class Matcher:
                 "(",
                 "".join(
                     [
-                        f"{self.OPTIONAL_SPACE}{self.NUMBER}{self.COLON}{self.NUMBER}{
-                            self.DASH
-                        }{self.NUMBER}{self.COLON}{self.NUMBER}",  # Rom 1:2-3:4
+                        f"{self.OPTIONAL_SPACE}{self.NUMBER}{self.COLON}{self.NUMBER}{self.DASH}{self.NUMBER}{self.COLON}{self.NUMBER}",  # Rom 1:2-3:4
                         "|",
                         f"{self.OPTIONAL_SPACE}{self.NUMBER}{self.COLON}{
                             NUMBER_LIST
                         }",  # Rom 3:4,6-9
                         "|",
-                        # Phlm 3-4 (verse), Rom 3-4 (chapter)
-                        f"{self.OPTIONAL_SPACE}{NUMBER_LIST}",
+                        f"{self.OPTIONAL_SPACE}{NUMBER_LIST}",  # Phlm 3-4 (verse), Rom 3-4 (chapter)
                     ]
                 ),
                 ")?",
                 ")|(",
                 "".join(
                     [
-                        f"{self.NUMBER}{self.COLON}{self.NUMBER}{self.DASH}{
-                            self.NUMBER
-                        }{self.COLON}{self.NUMBER}",  # 1:2-3:4
+                        f"{self.NUMBER}{self.COLON}{self.NUMBER}{self.DASH}{self.NUMBER}{self.COLON}{self.NUMBER}",  # 1:2-3:4
                         "|",
                         f"{self.NUMBER}{self.COLON}{NUMBER_LIST}",  # 3:4,6-9
                         "|",
