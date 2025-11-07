@@ -78,9 +78,7 @@ class Matcher:
         self.NUMBER = r"\d+[a-d]?"
 
         self.RANGE = f"{self.NUMBER}{self.DASH}{self.NUMBER}"
-        self.LIST = f"(?:{self.RANGE}|{self.NUMBER})(?:{self.COMMA}(?:{self.RANGE}|{
-            self.NUMBER
-        }))*"
+        self.LIST = f"(?:{self.RANGE}|{self.NUMBER})(?:{self.COMMA}(?:{self.RANGE}|{self.NUMBER}))*"
 
         self.RANGE_OR_NUMBER_COMPILED = re.compile(f"({self.RANGE}|{self.NUMBER})")
 

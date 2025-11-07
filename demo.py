@@ -31,9 +31,7 @@ def generate_demo(name):
                 tags.append(f'<span class="yellow">{match_str}</span>')
             else:
                 tags.append(
-                    f'<span class="green">{match_str}</span><sup>{
-                        __.abbrev_name(ref)
-                    }</sup>'
+                    f'<span class="green">{match_str}</span><sup>{__.abbrev_name(ref)}</sup>'
                 )
 
         references = [ref for _, ref in matches if ref and not ref.is_book()]
