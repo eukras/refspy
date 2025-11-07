@@ -131,9 +131,7 @@ class Matcher:
                     [
                         f"{self.OPTIONAL_SPACE}{self.NUMBER}{self.COLON}{self.NUMBER}{self.DASH}{self.NUMBER}{self.COLON}{self.NUMBER}",  # Rom 1:2-3:4
                         "|",
-                        f"{self.OPTIONAL_SPACE}{self.NUMBER}{self.COLON}{
-                            NUMBER_LIST
-                        }",  # Rom 3:4,6-9
+                        f"{self.OPTIONAL_SPACE}{self.NUMBER}{self.COLON}{NUMBER_LIST}",  # Rom 3:4,6-9
                         "|",
                         f"{self.OPTIONAL_SPACE}{NUMBER_LIST}",  # Phlm 3-4 (verse), Rom 3-4 (chapter)
                     ]
