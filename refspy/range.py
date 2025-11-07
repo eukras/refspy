@@ -1,6 +1,6 @@
 """Data object for verse ranges."""
 
-from typing import List, Self, Tuple
+from typing import Self
 from pydantic import BaseModel, model_validator
 
 from refspy.number import Number
@@ -11,7 +11,7 @@ class Range(BaseModel):
     start: Verse
     end: Verse
 
-    def tuple(self) -> Tuple[Verse, Verse]:
+    def tuple(self) -> tuple[Verse, Verse]:
         return (self.start, self.end)
 
     @model_validator(mode="after")
@@ -320,7 +320,7 @@ def range(start: Verse, end: Verse) -> Range:
     return Range(start=start, end=end)
 
 
-def merge(ranges: List[Range], skip_sort: bool = False) -> List[Range]:
+def merge(ranges: list[Range], skip_sort: bool = False) -> list[Range]:
     """Merge overlapping ranges within a sorted list.
 
     This performs a sort before merging unless skip_sort=True.
@@ -341,7 +341,7 @@ def merge(ranges: List[Range], skip_sort: bool = False) -> List[Range]:
     return new_ranges
 
 
-def combine(ranges: List[Range], skip_merge: bool = False) -> List[Range]:
+def combine(ranges: list[Range], skip_merge: bool = False) -> list[Range]:
     """Join adjacent ranges within a sorted and merged list
 
     This performs a sort and merge before combining, unless skip_merge=True.

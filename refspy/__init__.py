@@ -22,8 +22,9 @@ def refspy(
             - `protestant`
             - `catholic` (adds Deuterocanonicals)
             - `orthodox` (adds Anagignoskomena)
-        locale_name: A valid key for the `refspy.config.LANGUAGES` dict (1).
+        locale_name: A valid key for the `refspy.config.LANGUAGES` dict (2).
             - `en_US`
+            - `fr_FR`
         include_two_letter_aliases: e.g. 'Ge', '1 Jn'.
 
     Note:

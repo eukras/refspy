@@ -2,7 +2,8 @@
 
 import math
 import re
-from typing import Dict, Generator, List, Match, Tuple
+from re import Match
+from collections.abc import Generator
 
 from refspy.book import Book
 from refspy.language import Language
@@ -21,23 +22,6 @@ from refspy.utils import (
 )
 from refspy.verse import Number, verse
 
-COLON = r"[:\.]"
-DASH = r"[–-]"
-END = r"\b"
-NUMBER = r"\d+[a-d]?"
-SPACE = r"\s*"
-RANGE = f"{NUMBER}{DASH}{NUMBER}"
-LIST = f"(?:{RANGE}|{NUMBER})(?:\\,\\s*(?:{RANGE}|{NUMBER}))*"
-
-RANGE_OR_NUMBER_COMPILED = re.compile(f"({RANGE}|{NUMBER})")
-
-NUMBER_CAPTURE = re.compile(f"({NUMBER})")
-RANGE_CAPTURE = re.compile(f"({NUMBER}){DASH}({NUMBER})")
-CHAPTER_RANGE_CAPTURE = re.compile(
-    f"{END}({NUMBER}){COLON}({NUMBER}){DASH}({NUMBER}){COLON}({NUMBER}){END}"
-)
-CHAPTER_VERSES_CAPTURE = re.compile(f"{END}({NUMBER}){COLON}({LIST}){END}")
-
 
 class Matcher:
     """
@@ -49,7 +33,7 @@ class Matcher:
     - References
       - Book names (incl. substitutions like 'First' for '1':
         - with no reference: sets context; only returned as a reference if
-            requested with include_books=True
+            requested with yield_books=True
         - when book.chapter > 1:
           - 1:2-3:4
           - 1:1,2-3 etc
@@ -68,15 +52,49 @@ class Matcher:
 
     def __init__(
         self,
-        books: Dict[Tuple[Number, Number], Book],
-        book_aliases: Dict[str, Tuple[Number, Number]],
+        books: dict[tuple[Number, Number], Book],
+        book_aliases: dict[str, tuple[Number, Number]],
         language: Language,
-        use_context: bool = False,
     ):
         self.books = books
         self.language = language
         self.book_alias_keys = book_aliases.keys()
         self.book_aliases = self.expand_book_aliases(book_aliases)
+
+        # Regexes for matching are generated on intiialisation,
+        # using the language object for punctuation.
+
+        self.SPACE = r"\s+"
+        self.OPTIONAL_SPACE = r"\s*"
+        self.END = r"\b"
+
+        self.COMMA = (
+            "[" + re.escape(self.language.match_commas) + "]" + self.OPTIONAL_SPACE
+        )
+        self.COLON = (
+            "[" + re.escape(self.language.match_colons) + "]" + self.OPTIONAL_SPACE
+        )
+        self.DASH = "[" + re.escape(self.language.match_dashes) + "]"
+        self.NUMBER = r"\d+[a-d]?"
+
+        self.RANGE = f"{self.NUMBER}{self.DASH}{self.NUMBER}"
+        self.LIST = f"(?:{self.RANGE}|{self.NUMBER})(?:{self.COMMA}(?:{self.RANGE}|{
+            self.NUMBER
+        }))*"
+
+        self.RANGE_OR_NUMBER_COMPILED = re.compile(f"({self.RANGE}|{self.NUMBER})")
+
+        self.NUMBER_CAPTURE = re.compile(f"({self.NUMBER})")
+        self.RANGE_CAPTURE = re.compile(f"({self.NUMBER}){self.DASH}({self.NUMBER})")
+        self.CHAPTER_RANGE_CAPTURE = re.compile(
+            f"{self.END}({self.NUMBER}){self.COLON}({self.NUMBER}){self.DASH}({
+                self.NUMBER
+            }){self.COLON}({self.NUMBER}){self.END}"
+        )
+        self.CHAPTER_VERSES_CAPTURE = re.compile(
+            f"{self.END}({self.NUMBER}){self.COLON}({self.LIST}){self.END}"
+        )
+
         self.brackets_regexp = re.compile(self.build_brackets_regexp())
         self.reference_regexp = re.compile(self.build_reference_regexp())
 
@@ -110,24 +128,31 @@ class Matcher:
         REGEXP = "".join(
             [
                 "(",
-                f"{END}({NAME_PATTERN})(?!{SPACE}[A-Z])",  # John, but not John B.
+                f"{self.END}({NAME_PATTERN})(?!{self.SPACE}[A-Z])",  # John, but not John B.
                 "(",
                 "".join(
                     [
-                        f"{SPACE}{NUMBER}{COLON}{NUMBER}{DASH}{NUMBER}{COLON}{NUMBER}",  # Rom 1:2-3:4
+                        f"{self.OPTIONAL_SPACE}{self.NUMBER}{self.COLON}{self.NUMBER}{
+                            self.DASH
+                        }{self.NUMBER}{self.COLON}{self.NUMBER}",  # Rom 1:2-3:4
                         "|",
-                        f"{SPACE}{NUMBER}{COLON}{NUMBER_LIST}",  # Rom 3:4,6-9
+                        f"{self.OPTIONAL_SPACE}{self.NUMBER}{self.COLON}{
+                            NUMBER_LIST
+                        }",  # Rom 3:4,6-9
                         "|",
-                        f"{SPACE}{NUMBER_LIST}",  # Phlm 3-4 (verse), Rom 3-4 (chapter)
+                        # Phlm 3-4 (verse), Rom 3-4 (chapter)
+                        f"{self.OPTIONAL_SPACE}{NUMBER_LIST}",
                     ]
                 ),
                 ")?",
                 ")|(",
                 "".join(
                     [
-                        f"{NUMBER}{COLON}{NUMBER}{DASH}{NUMBER}{COLON}{NUMBER}",  # 1:2-3:4
+                        f"{self.NUMBER}{self.COLON}{self.NUMBER}{self.DASH}{
+                            self.NUMBER
+                        }{self.COLON}{self.NUMBER}",  # 1:2-3:4
                         "|",
-                        f"{NUMBER}{COLON}{NUMBER_LIST}",  # 3:4,6-9
+                        f"{self.NUMBER}{self.COLON}{NUMBER_LIST}",  # 3:4,6-9
                         "|",
                         f"(?:{VERSE_MARKER}){NUMBER_LIST}",  # vv.3-4
                     ]
@@ -138,8 +163,8 @@ class Matcher:
         return REGEXP
 
     def expand_book_aliases(
-        self, aliases: Dict[str, Tuple[int, int]]
-    ) -> Dict[str, Tuple[int, int]]:
+        self, aliases: dict[str, tuple[int, int]]
+    ) -> dict[str, tuple[int, int]]:
         """
         SBL style requires e.g. "1 Corinthians" be recognized as "First
         Corinthians" at the start of a sentence. Add these as keys to
@@ -182,9 +207,15 @@ class Matcher:
             ]
             regexp_parts.append(
                 r"(?:"
-                + "|".join([number] + self.language.number_prefixes[number])
+                + "|".join(
+                    [number]
+                    + [
+                        escape_book_name(_)
+                        for _ in self.language.number_prefixes[number]
+                    ]
+                )
                 + r")"
-                + r"\s*"
+                + self.OPTIONAL_SPACE
                 + "(?:"
                 + "|".join([escape_book_name(_) for _ in long_names_first(aliases)])
                 + ")"
@@ -239,7 +270,7 @@ class Matcher:
             regexp_parts.append(
                 number
                 + r"(?!"  # <-- negative look-ahead
-                + COLON
+                + self.COLON
                 + r"|"
                 + r"\s*"
                 + "(?:"  # <-- non-capturing group
@@ -247,16 +278,21 @@ class Matcher:
                 + "))"
             )
 
+        # TODO: REMOVE (after merge)
+        # regexp_parts.append(f"[{len(regexp_parts) + 1}-999]")
+        # SAFE_NUMBER = r"|".join(regexp_parts)
+        # REGEXP = f"(?:{self.RANGE}|{self.NUMBER})(?:{self.COMMA}{self.SPACE}(?:{self.RANGE}|(?:{SAFE_NUMBER}){self.END}))*"
+
         # numbers which cannot be book numbers, when not followed by ':'
         # if it's 4..999, then in regexp that's 4-9 or a 2 or 3 digit number
         regexp_parts.append(
-            f"(?:[{len(regexp_parts) + 1}-9]|" + r"\d{2,3}" + f")(?!{COLON})"
+            f"(?:[{len(regexp_parts) + 1}-9]|" + r"\d{2,3}" + f")(?!{self.COLON})"
         )
         VERSE_NUMBER = r"|".join(regexp_parts)
-        REGEXP = f"(?:{RANGE}|{NUMBER})(?:\\,\\s*(?:{RANGE}|(?:{VERSE_NUMBER}){END}))*"
+        REGEXP = f"(?:{self.RANGE}|{self.NUMBER})(?:\\,\\s*(?:{self.RANGE}|(?:{VERSE_NUMBER}){self.END}))*"
         return REGEXP
 
-    def numerical_book_prefixes(self, reverse=True) -> List[str]:
+    def numerical_book_prefixes(self, reverse=True) -> list[str]:
         prefixes = set()
         for key in self.book_aliases.keys():
             part_1 = key.split(" ")[0]
@@ -270,10 +306,10 @@ class Matcher:
     def generate_references(
         self,
         text: str,
-        include_books: bool = False,
-        include_nones: bool = False,
-        use_context: bool = False,
-    ) -> Generator[Tuple[str, Reference | None], None, None]:
+        yield_books: bool = False,
+        yield_nones: bool = False,
+        use_context: bool = True,
+    ) -> Generator[tuple[str, Reference | None], None, None]:
         """
         Match references and parentheses separately, then take the next lowest
         item (by starting match position) from the regexp match generators, and
@@ -284,8 +320,9 @@ class Matcher:
 
         Args:
             text: In which to find references
-            include_books: Whether to match book names alone
-            include_nones: Whether to match malformed references
+            yield_books: Whether to match book names alone
+            yield_nones: Whether to match malformed references
+            use_context: Whether to use context for number-only references.
         """
         brackets_matches = self.brackets_regexp.finditer(text)
         reference_matches = self.reference_regexp.finditer(text)
@@ -336,17 +373,23 @@ class Matcher:
                                 library_id, book_id
                             ).last_range()
                             if match_with_book:
-                                if matches := match_chapter_range(match_with_book):
+                                if matches := self.match_chapter_range(match_with_book):
                                     # Rom 1:2-3:4
                                     book_ref = make_chapter_range(last_range, matches)
-                                    if book_ref is not None or include_nones:
+                                    if book_ref is not None or yield_nones:
                                         yield (match_str, book_ref)
-                                elif matches := match_chapter_verses(match_with_book):
+                                elif matches := self.match_chapter_verses(
+                                    match_with_book
+                                ):
                                     # Rom 3:4,6-9
-                                    book_ref = make_chapter_verses(last_range, matches)
-                                    if book_ref is not None or include_nones:
+                                    book_ref = self.make_chapter_verses(
+                                        last_range, matches
+                                    )
+                                    if book_ref is not None or yield_nones:
                                         yield (match_str, book_ref)
-                                elif matches := match_number_ranges(match_with_book):
+                                elif matches := self.match_number_ranges(
+                                    match_with_book
+                                ):
                                     if book.chapters == 1:
                                         # Phlm 3-4 (verse)
                                         v = verse_range(
@@ -355,15 +398,15 @@ class Matcher:
                                             1,
                                             1,
                                         )
-                                        book_ref = make_number_ranges(v, matches)
-                                        if book_ref is not None or include_nones:
+                                        book_ref = self.make_number_ranges(v, matches)
+                                        if book_ref is not None or yield_nones:
                                             yield (match_str, book_ref)
                                     if book.chapters > 1:
                                         # Rom 3-4 (chapter)
-                                        book_ref = make_number_ranges(
+                                        book_ref = self.make_number_ranges(
                                             last_range, matches, as_chapters=True
                                         )
-                                        if book_ref is not None or include_nones:
+                                        if book_ref is not None or yield_nones:
                                             yield (match_str, book_ref)
                                 else:
                                     yield (match_str, None)
@@ -372,13 +415,9 @@ class Matcher:
                                     bracket_stack[-1] = last_range
                                 else:
                                     bracket_stack.append(last_range)
-                                if (
-                                    include_books
-                                    and use_context
-                                    and (
-                                        trim_trailing_period(match_str)
-                                        not in self.language.ambiguous_aliases
-                                    )
+                                if yield_books and (
+                                    trim_trailing_period(match_str)
+                                    not in self.language.ambiguous_aliases
                                 ):
                                     yield (
                                         match_str,
@@ -391,30 +430,34 @@ class Matcher:
                                 last_range.start.library,
                                 last_range.start.book,
                             )
-                            if matches := match_chapter_range(match_without_book):
+                            if matches := self.match_chapter_range(match_without_book):
                                 # 1:2-3:4
                                 book_ref = make_chapter_range(last_range, matches)
-                                if book_ref is not None or include_nones:
+                                if book_ref is not None or yield_nones:
                                     yield (match_without_book, book_ref)
-                            elif matches := match_chapter_verses(match_without_book):
+                            elif matches := self.match_chapter_verses(
+                                match_without_book
+                            ):
                                 # 3:4,6-9
-                                book_ref = make_chapter_verses(last_range, matches)
-                                if book_ref is not None or include_nones:
+                                book_ref = self.make_chapter_verses(last_range, matches)
+                                if book_ref is not None or yield_nones:
                                     yield (match_without_book, book_ref)
-                            elif matches := match_number_ranges(match_without_book):
+                            elif matches := self.match_number_ranges(
+                                match_without_book
+                            ):
                                 # v.2, vv.3-4
-                                book_ref = make_number_ranges(last_range, matches)
-                                if book_ref is not None or include_nones:
+                                book_ref = self.make_number_ranges(last_range, matches)
+                                if book_ref is not None or yield_nones:
                                     yield (match_without_book, book_ref)
                             else:
-                                if include_nones:
+                                if yield_nones:
                                     yield (match_without_book, None)
                         else:
-                            if include_nones:
+                            if yield_nones:
                                 yield (match_without_book, None)
 
                 except ValueError:
-                    if include_nones:
+                    if yield_nones:
                         yield (match_str or match_without_book, None)
 
                 if book_ref:
@@ -426,16 +469,122 @@ class Matcher:
 
                 reference_match = next(reference_matches, None)
 
+    def match_chapter_range(self, text) -> Match | None:
+        """Match a pair of chapter-and-verse references.
 
-def match_chapter_range(text) -> Match | None:
-    """Match a pair of chapter-and-verse references.
+        Example:
+            `Rom 1:2-3:4`
+        """
+        if match := self.CHAPTER_RANGE_CAPTURE.search(text):
+            return match
+        return None
 
-    Example:
-        `Rom 1:2-3:4`
-    """
-    if match := CHAPTER_RANGE_CAPTURE.search(text):
-        return match
-    return None
+    def match_chapter_verses(self, text) -> Match | None:
+        """Match a verse list preceded by a chapter marker.
+
+        Example:
+            `Rom 3:4,6-9`
+        """
+        if match := self.CHAPTER_VERSES_CAPTURE.search(text):
+            return match
+        return None
+
+    def match_number_ranges(self, text) -> list[str]:
+        """Match a list of numbers and number ranges.
+
+        Example:
+            `Phlm 1,3-4` (verse), `Rom 1,3-4` (chapter)
+        """
+        return self.RANGE_OR_NUMBER_COMPILED.findall(text)
+
+    def make_number_ranges(
+        self, last: Range, matches: list[str], as_chapters: bool = False
+    ) -> Reference | None:
+        """Create a reference from a list of numbers and number ranges.
+
+        Args:
+            last: a verse to which this number list is relative.
+            matches: the result of `match_number_ranges()`
+            as_chapters: Treat these numbers as chapters rather than verses.
+
+        Example:
+            `Phlm 3-4` (verse), `Rom 3-4` (chapter)
+
+        Note:
+            If the end number is less than the start number, we check whether it
+            might be an abbreviated reference. `123-24` or even `17-8` can be
+            interpreted as `123-124` and `17-18` respectively. We test whether the
+            second number has fewer digits than the first.
+        """
+        ranges = []
+        for text in matches:
+            if range_matches := self.RANGE_CAPTURE.match(text):
+                start, end = range_matches.group(1, 2)
+            elif number_matches := self.NUMBER_CAPTURE.match(text):
+                start = end = number_matches.group(1)
+            else:
+                continue
+            if parse_number(end) < parse_number(start):
+                if new_end := infer_abbreviation(start, end):
+                    end = new_end
+                else:
+                    return None
+            if as_chapters:
+                if last.is_same_book():
+                    ranges.append(
+                        range(
+                            verse(
+                                last.start.library,
+                                last.start.book,
+                                parse_number(start),
+                                1,
+                            ),
+                            verse(
+                                last.end.library, last.end.book, parse_number(end), 999
+                            ),
+                        )
+                    )
+            else:
+                if last.is_same_chapter():
+                    ranges.append(
+                        range(
+                            verse(
+                                last.start.library,
+                                last.start.book,
+                                last.start.chapter,
+                                parse_number(start),
+                            ),
+                            verse(
+                                last.end.library,
+                                last.end.book,
+                                last.end.chapter,
+                                parse_number(end),
+                            ),
+                        )
+                    )
+        if ranges:
+            return reference(*ranges)
+        else:
+            return None
+
+    def make_chapter_verses(self, last: Range, match: Match) -> Reference | None:
+        """Create a reference from verse list preceded by a chapter marker.
+
+        See `match_chapter_verses`.
+
+        Example:
+            `Rom 3:4,6-9`
+        """
+        if last.is_same_book():
+            chapter, numbers = match.groups()
+            if range_match := self.match_number_ranges(numbers):
+                last_range = range(
+                    verse(last.start.library, last.start.book, int(chapter), 1),
+                    verse(last.end.library, last.end.book, int(chapter), 999),
+                )
+                if reference := self.make_number_ranges(last_range, range_match):
+                    return reference
+        return None
 
 
 def make_chapter_range(last: Range, match: Match) -> Reference | None:
@@ -464,112 +613,6 @@ def make_chapter_range(last: Range, match: Match) -> Reference | None:
     return None
 
 
-def match_chapter_verses(text) -> Match | None:
-    """Match a verse list preceded by a chapter marker.
-
-    Example:
-        `Rom 3:4,6-9`
-    """
-    if match := CHAPTER_VERSES_CAPTURE.search(text):
-        return match
-    return None
-
-
-def make_chapter_verses(last: Range, match: Match) -> Reference | None:
-    """Create a reference from verse list preceded by a chapter marker.
-
-    See `match_chapter_verses`.
-
-    Example:
-        `Rom 3:4,6-9`
-    """
-    if last.is_same_book():
-        chapter, numbers = match.groups()
-        if range_match := match_number_ranges(numbers):
-            last_range = range(
-                verse(last.start.library, last.start.book, int(chapter), 1),
-                verse(last.end.library, last.end.book, int(chapter), 999),
-            )
-            if reference := make_number_ranges(last_range, range_match):
-                return reference
-    return None
-
-
-def match_number_ranges(text) -> List[str]:
-    """Match a list of numbers and number ranges.
-
-    Example:
-        `Phlm 1,3-4` (verse), `Rom 1,3-4` (chapter)
-    """
-    return RANGE_OR_NUMBER_COMPILED.findall(text)
-
-
-def make_number_ranges(
-    last: Range, matches: List[str], as_chapters: bool = False
-) -> Reference | None:
-    """Create a reference from a list of numbers and number ranges.
-
-    Args:
-        last: a verse to which this number list is relative.
-        matches: the result of `match_number_ranges()`
-        as_chapters: Treat these numbers as chapters rather than verses.
-
-    Example:
-        `Phlm 3-4` (verse), `Rom 3-4` (chapter)
-
-    Note:
-        If the end number is less than the start number, we check whether it
-        might be an abbreviated reference. `123-24` or even `17-8` can be
-        interpreted as `123-124` and `17-18` respectively. We test whether the
-        second number has fewer digits than the first.
-    """
-    ranges = []
-    for text in matches:
-        if range_matches := RANGE_CAPTURE.match(text):
-            start, end = range_matches.group(1, 2)
-        elif number_matches := NUMBER_CAPTURE.match(text):
-            start = end = number_matches.group(1)
-        else:
-            continue
-        if parse_number(end) < parse_number(start):
-            if new_end := infer_abbreviation(start, end):
-                end = new_end
-            else:
-                return None
-        if as_chapters:
-            if last.is_same_book():
-                ranges.append(
-                    range(
-                        verse(
-                            last.start.library, last.start.book, parse_number(start), 1
-                        ),
-                        verse(last.end.library, last.end.book, parse_number(end), 999),
-                    )
-                )
-        else:
-            if last.is_same_chapter():
-                ranges.append(
-                    range(
-                        verse(
-                            last.start.library,
-                            last.start.book,
-                            last.start.chapter,
-                            parse_number(start),
-                        ),
-                        verse(
-                            last.end.library,
-                            last.end.book,
-                            last.end.chapter,
-                            parse_number(end),
-                        ),
-                    )
-                )
-    if ranges:
-        return reference(*ranges)
-    else:
-        return None
-
-
 def escape_book_name(name: str) -> str:
     """Regexp escape a name, but match multiple spaces.
 
@@ -579,8 +622,8 @@ def escape_book_name(name: str) -> str:
     return r"\s+".join([re.escape(_) for _ in name.split(" ")])
 
 
-def long_names_first(names: List[str]) -> List[str]:
-    """Remove duplicates and sort descending."""
+def long_names_first(names: list[str]) -> list[str]:
+    """Remove duplicates and sort by length descending."""
     return sorted(set(names), key=len)[::-1]
 
 

@@ -19,7 +19,6 @@ substitute prefixes like 'I' or 'First'.
 A book with only one chapter will be formatted without chapter numbers.
 """
 
-from typing import List
 from pydantic import BaseModel
 
 from refspy.number import Number
@@ -29,5 +28,5 @@ class Book(BaseModel):
     id: Number
     name: str
     abbrev: str
-    aliases: List[str]
+    aliases: list[str]
     chapters: int

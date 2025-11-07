@@ -1,18 +1,17 @@
 """Navigation functions for Reference objects"""
 
-from typing import Dict, Tuple
-
 from refspy.book import Book
+from refspy.number import Number
 from refspy.range import range
 from refspy.reference import Reference, reference
-from refspy.verse import Number, verse
+from refspy.verse import verse
 
 
 class Navigator:
     def __init__(
         self,
-        books: Dict[Tuple[Number, Number], Book],
-        book_aliases: Dict[str, Tuple[Number, Number]],
+        books: dict[tuple[Number, Number], Book],
+        book_aliases: dict[str, tuple[Number, Number]],
     ) -> None:
         """
         Note:
@@ -54,10 +53,10 @@ class Navigator:
             ```
         """
 
-        self.books: Dict[Tuple[Number, Number], Book] = books
+        self.books: dict[tuple[Number, Number], Book] = books
         """Lookup `refspy.book.Book` by `(library.id, book.id)`."""
 
-        self.book_aliases: Dict[str, Tuple[Number, Number]] = book_aliases
+        self.book_aliases: dict[str, tuple[Number, Number]] = book_aliases
         """Lookup `(library.id, book.id)` by book alias."""
 
     def prev_chapter(self, ref: Reference) -> Reference | None:

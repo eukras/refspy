@@ -122,18 +122,17 @@ substitute prefixes like 'I' or 'First'.</p>
 </span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="sd">A book with only one chapter will be formatted without chapter numbers.</span>
 </span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">refspy.number</span><span class="w"> </span><span class="kn">import</span> <span class="n">Number</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">refspy.number</span><span class="w"> </span><span class="kn">import</span> <span class="n">Number</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>
 </span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>    <span class="nb">id</span><span class="p">:</span> <span class="n">Number</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>    <span class="n">abbrev</span><span class="p">:</span> <span class="nb">str</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>    <span class="n">aliases</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a>    <span class="n">chapters</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a>    <span class="nb">id</span><span class="p">:</span> <span class="n">Number</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>    <span class="n">abbrev</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a>    <span class="n">aliases</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>    <span class="n">chapters</span><span class="p">:</span> <span class="nb">int</span>
 </span></pre></div>
 
 
@@ -149,12 +148,12 @@ substitute prefixes like 'I' or 'First'.</p>
 
     </div>
     <a class="headerlink" href="#Book"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="Book-29"><a href="#Book-29"><span class="linenos">29</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-</span><span id="Book-30"><a href="#Book-30"><span class="linenos">30</span></a>    <span class="nb">id</span><span class="p">:</span> <span class="n">Number</span>
-</span><span id="Book-31"><a href="#Book-31"><span class="linenos">31</span></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-</span><span id="Book-32"><a href="#Book-32"><span class="linenos">32</span></a>    <span class="n">abbrev</span><span class="p">:</span> <span class="nb">str</span>
-</span><span id="Book-33"><a href="#Book-33"><span class="linenos">33</span></a>    <span class="n">aliases</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-</span><span id="Book-34"><a href="#Book-34"><span class="linenos">34</span></a>    <span class="n">chapters</span><span class="p">:</span> <span class="nb">int</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="Book-28"><a href="#Book-28"><span class="linenos">28</span></a><span class="k">class</span><span class="w"> </span><span class="nc">Book</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="Book-29"><a href="#Book-29"><span class="linenos">29</span></a>    <span class="nb">id</span><span class="p">:</span> <span class="n">Number</span>
+</span><span id="Book-30"><a href="#Book-30"><span class="linenos">30</span></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="Book-31"><a href="#Book-31"><span class="linenos">31</span></a>    <span class="n">abbrev</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="Book-32"><a href="#Book-32"><span class="linenos">32</span></a>    <span class="n">aliases</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+</span><span id="Book-33"><a href="#Book-33"><span class="linenos">33</span></a>    <span class="n">chapters</span><span class="p">:</span> <span class="nb">int</span>
 </span></pre></div>
 
 
@@ -226,7 +225,7 @@ is set to <code>'allow'</code>.</li>
                             </div>
                             <div id="Book.aliases" class="classattr">
                                 <div class="attr variable">
-            <span class="name">aliases</span><span class="annotation">: List[str]</span>
+            <span class="name">aliases</span><span class="annotation">: list[str]</span>
 
         
     </div>

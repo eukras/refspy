@@ -4,17 +4,9 @@ See `refspy.refspy()` for a useful helper function.
 """
 
 import re
-from typing import Dict, Generator, List, Tuple
-
+from collections.abc import Generator
 from pydantic import TypeAdapter
 from refspy.book import Book
-from refspy.format import (
-    ABBREV_BOOK_FORMAT,
-    ABBREV_NAME_FORMAT,
-    BOOK_FORMAT,
-    NAME_FORMAT,
-    NUMBER_FORMAT,
-)
 from refspy.formatter import Formatter
 from refspy.indexers import (
     index_book_aliases,
@@ -25,6 +17,7 @@ from refspy.language import Language
 from refspy.library import Library
 from refspy.matcher import Matcher
 from refspy.navigator import Navigator
+from refspy.number import Number
 from refspy.range import combine, merge, range
 from refspy.reference import (
     Reference,
@@ -33,16 +26,14 @@ from refspy.reference import (
     reference,
     verse_reference,
 )
-from refspy.utils import pluralize, url_param, url_escape
-from refspy.verse import Number, verse
-
+from refspy.utils import url_param, url_escape
+from refspy.verse import verse
 
 """
 References can always be formatted with Manager.template(ref). If no
 pattern argument is supplied, the default short format will be used, e.g.
 'Rom 12:1-7'. or ref.abbrev_name()
 """
-DEFAULT_TEMPLATE_PATTERN = "{ABBREV_NAME}"
 
 
 class Manager:
@@ -53,9 +44,9 @@ class Manager:
 
     def __init__(
         self,
-        libraries: List[Library],
+        libraries: list[Library],
         language: Language,
-        include_two_letter_aliases=True,
+        include_two_letter_aliases: bool = True,
     ):
         """
         Construct a new Manager object.
@@ -66,13 +57,13 @@ class Manager:
             include_two_letter_aliases: Whether to allow `len(alias) == 2`
                 (default: True)
         """
-        self.libraries: Dict[Number, Library] = index_libraries(libraries)
+        self.libraries: dict[Number, Library] = index_libraries(libraries)
         """A lookup dictionary for Libraries by library.id """
 
-        self.books: Dict[Tuple[Number, Number], Book] = index_books(libraries)
+        self.books: dict[tuple[Number, Number], Book] = index_books(libraries)
         """A lookup dictionary for Books by (library.id, book.id)"""
 
-        self.book_aliases: Dict[str, Tuple[Number, Number]] = index_book_aliases(
+        self.book_aliases: dict[str, tuple[Number, Number]] = index_book_aliases(
             libraries, include_two_letter_aliases=include_two_letter_aliases
         )
         """A lookup dictionary for (library.id, book.id) by book alias strings."""
@@ -93,7 +84,7 @@ class Manager:
     # Index and summary functions
     # -----------------------------------
 
-    def make_index_references(self, references: List[Reference]) -> List[Reference]:
+    def make_index_references(self, references: list[Reference]) -> list[Reference]:
         """Return a sorted list of References; no combining or simplifying."""
         index = []
         collation = self.collate(
@@ -107,7 +98,7 @@ class Manager:
 
     def make_index(
         self,
-        references: List[Reference],
+        references: list[Reference],
         pattern: str | None = None,
     ) -> str | None:
         """
@@ -126,8 +117,8 @@ class Manager:
         else:
             return None
 
-    def make_summary_references(self, references: List[Reference]) -> List[Reference]:
-        """Return a sorted, combined, simplified list of references by book."""
+    def make_summary_references(self, references: list[Reference]) -> list[Reference]:
+        """Return a sorted, combined, simplified list of References."""
         collation = self.collate(
             sorted([ref for ref in references if ref and not ref.is_book()])
         )
@@ -139,7 +130,7 @@ class Manager:
         return summary
 
     def make_summary(
-        self, references: List[Reference], pattern: str | None = None
+        self, references: list[Reference], pattern: str | None = None
     ) -> str | None:
         """
         Return a string showing a sorted, combined, list of References.
@@ -162,8 +153,8 @@ class Manager:
             return None
 
     def make_summary_references_by_chapter(
-        self, references: List[Reference]
-    ) -> List[Reference]:
+        self, references: list[Reference]
+    ) -> list[Reference]:
         """Return a sorted, combined, simplified list of references by book."""
         collation = self.collate_chapter_references(
             sorted([ref for ref in references if ref and not ref.is_book()])
@@ -177,7 +168,7 @@ class Manager:
         return summary
 
     def make_summary_by_chapter(
-        self, references: List[Reference], pattern: str | None = None
+        self, references: list[Reference], pattern: str | None = None
     ) -> str | None:
         """
         Return a string showing a sorted, combined, list of References.
@@ -201,10 +192,10 @@ class Manager:
 
     def make_hotspot_tuples(
         self,
-        references: List[Reference],
+        references: list[Reference],
         max_chapters: int = 7,
         min_references: int = 2,
-    ) -> List[Tuple[Reference, int]]:
+    ) -> list[tuple[Reference, int]]:
         """
         Find the most referenced chapters in a set of references.
 
@@ -237,10 +228,10 @@ class Manager:
 
     def make_hotspot_references(
         self,
-        references: List[Reference],
+        references: list[Reference],
         max_chapters: int = 7,
         min_references: int = 2,
-    ) -> List[Reference]:
+    ) -> list[Reference]:
         """
         Return chapter references in descending order of frequency.
 
@@ -253,7 +244,7 @@ class Manager:
 
     def make_hotspots(
         self,
-        references: List[Reference],
+        references: list[Reference],
         max_chapters: int = 7,
         min_references: int = 2,
         pattern: str | None = None,
@@ -278,7 +269,7 @@ class Manager:
     # Merging functions
     # -----------------------------------
 
-    def sort_references(self, references: List[Reference]) -> Reference:
+    def sort_references(self, references: list[Reference]) -> Reference:
         """For a list of references, make a single reference containing their sorted ranges."""
 
         ranges = []
@@ -287,7 +278,7 @@ class Manager:
                 ranges.append(rng)
         return reference(*sorted(ranges))
 
-    def merge_references(self, references: List[Reference]) -> Reference:
+    def merge_references(self, references: list[Reference]) -> Reference:
         """For a list of references, merge their ranges into a new reference.
 
         Merging means combining ranges that overlap.
@@ -298,7 +289,7 @@ class Manager:
         new_ref = reference(*merge(ranges))
         return new_ref
 
-    def combine_references(self, references: List[Reference]) -> Reference:
+    def combine_references(self, references: list[Reference]) -> Reference:
         """For a list of references, combine their ranges into a new reference.
 
         Combining means sorting ranges, merging overlaps, and joining adjacent
@@ -315,8 +306,8 @@ class Manager:
     # -----------------------------------
 
     def collate(
-        self, references: List[Reference]
-    ) -> List[Tuple[Library, List[Tuple[Book, List[Reference]]]]]:
+        self, references: list[Reference]
+    ) -> list[tuple[Library, list[tuple[Book, list[Reference]]]]]:
         """
         The default collation is by book; use collate_chapter_references
         otherwise.
@@ -324,8 +315,8 @@ class Manager:
         return self.collate_book_references(references)
 
     def collate_chapter_references(
-        self, references: List[Reference]
-    ) -> List[Tuple[Library, List[Tuple[Book, List[Tuple[Number, List[Reference]]]]]]]:
+        self, references: list[Reference]
+    ) -> list[tuple[Library, list[tuple[Book, list[tuple[Number, list[Reference]]]]]]]:
         library_list = list()
         for library_id, books_dict in self.collate_by_chapter(references).items():
             book_list = list()
@@ -338,8 +329,8 @@ class Manager:
         return library_list
 
     def collate_by_chapter(
-        self, references: List[Reference]
-    ) -> Dict[Number, Dict[Number, Dict[Number, List[Reference]]]]:
+        self, references: list[Reference]
+    ) -> dict[Number, dict[Number, dict[Number, list[Reference]]]]:
         """
         A collation groups single-book references by library, book, and chapter
         IDs. Multi-book references are ignored.
@@ -358,7 +349,7 @@ class Manager:
             collation[v1.library][v1.book][v1.chapter].append(ref)
         return collation
 
-    def collate_book_references(self, references: List[Reference]):
+    def collate_book_references(self, references: list[Reference]):
         """
         A collation groups single-book references by library and book,
         providing Library and Book objects for iteration. Multi-book references
@@ -373,8 +364,8 @@ class Manager:
         return library_list
 
     def collate_by_book(
-        self, references: List[Reference]
-    ) -> Dict[Number, Dict[Number, List[Reference]]]:
+        self, references: list[Reference]
+    ) -> dict[Number, dict[Number, list[Reference]]]:
         """
         A collation groups single-book references by library and book IDs.
         Multi-book references are ignored.
@@ -393,7 +384,7 @@ class Manager:
     # Matching functions
     # -----------------------------------
 
-    def first_reference(self, text: str) -> Tuple[str | None, Reference | None]:
+    def first_reference(self, text: str) -> tuple[str | None, Reference | None]:
         """
         Return the first tuple of (match_str, reference) found by
         `refspy.manager.Manager.generate_references()`
@@ -406,8 +397,8 @@ class Manager:
         text: str,
         include_books: bool = False,
         include_nones: bool = False,
-        use_context: bool = False,
-    ) -> List[Tuple[str, Reference | None]]:
+        use_context: bool = True,
+    ) -> list[tuple[str, Reference | None]]:
         """
         Return a list of tuples of (match_str, reference) found by
         `refspy.manager.Manager.generate_references()`
@@ -420,10 +411,10 @@ class Manager:
     def generate_references(
         self,
         text: str,
-        include_books: bool = False,
-        include_nones: bool = False,
-        use_context: bool = False,
-    ) -> Generator[Tuple[str, Reference | None], None, None]:
+        yield_books: bool = False,
+        yield_nones: bool = False,
+        use_context: bool = True,
+    ) -> Generator[tuple[str, Reference | None], None, None]:
         """
         Generate tuples of (match_str, reference) for provided text.manager
 
@@ -431,8 +422,8 @@ class Manager:
 
         Args:
             text: a string to search for references
-            include_books: Whether to yield book names without reference numbers
-            include_nones: Whether to yield (match_str, None) for malformed
+            yield_books: Whether to yield book names without reference numbers
+            yield_nones: Whether to yield (match_str, None) for malformed
                 references.
             use_context: Whether to yield anything other than exact book and
                 number matches
@@ -441,7 +432,7 @@ class Manager:
             A tuple of `(match_str, reference)` for each valid reference.
         """
         yield from self.matcher.generate_references(
-            text, include_books, include_nones, use_context
+            text, yield_books, yield_nones, use_context
         )
 
     # -----------------------------------
@@ -502,7 +493,7 @@ class Manager:
             )
 
     def bcr(
-        self, alias: str, c: Number, v_ranges: List[Number | Tuple[Number, Number]]
+        self, alias: str, c: Number, v_ranges: list[Number | tuple[Number, Number]]
     ) -> Reference:
         if alias not in self.book_aliases:
             raise ValueError(f'Book alias "{alias}" not found.')
@@ -590,28 +581,39 @@ class Manager:
     # Formatting functions
     # -----------------------------------
 
+    def link(self, ref: Reference) -> str:
+        """Format a URL Link, with English style number references"""
+        return self.formatter.format(ref, self.formatter.link_format())
+
     def name(self, ref: Reference) -> str:
         """Format a reference."""
-        return self.formatter.format(ref, NAME_FORMAT)
+        return self.formatter.format(ref, self.formatter.name_format(self.language))
 
     def book(self, ref: Reference) -> str:
         """Format a reference using only the book part of its name."""
-        return self.formatter.format(ref, BOOK_FORMAT)
+        return self.formatter.format(ref, self.formatter.book_format(self.language))
 
     def abbrev_name(self, ref: Reference) -> str:
         """Format an abbreviated reference."""
-        return self.formatter.format(ref, ABBREV_NAME_FORMAT)
+        return self.formatter.format(
+            ref, self.formatter.abbrev_name_format(self.language)
+        )
 
     def abbrev_book(self, ref: Reference) -> str:
         """Format an abbreviated reference using only the book part of its name."""
-        return self.formatter.format(ref, ABBREV_BOOK_FORMAT)
+        return self.formatter.format(
+            ref, self.formatter.abbrev_book_format(self.language)
+        )
 
     def numbers(self, ref: Reference) -> str:
-        """Format a reference using only the number part of its name.
+        """Format a reference using only the number part of its name."""
+        return self.formatter.format(ref, self.formatter.number_format(self.language))
 
-        The number part is the same for full names and abreviated names.
-        """
-        return self.formatter.format(ref, NUMBER_FORMAT)
+    def abbrev_numbers(self, ref: Reference) -> str:
+        """Format an abbreviated reference using only the number part of its name."""
+        return self.formatter.format(
+            ref, self.formatter.abbrev_number_format(self.language)
+        )
 
     # -----------------------------------
     # Template formatting functions
@@ -621,6 +623,9 @@ class Manager:
         """
         Substitute formatting values in a string:
 
+            * `{LINK}` -> "1%20Cor%202:3-4"
+                    - like ESC_ABBREV_NAME, but with English numbering in any language.
+                    - useful for BibleGateway and presumably other sites.
             * `{NAME}` -> "1 Corinthians 2:3–4"
             * `{BOOK}` -> "1 Corinthians"
             * `{NUMBERS}` -> "2:3–4"
@@ -643,13 +648,15 @@ class Manager:
         if reference is None:
             return ""
 
-        out = pattern if pattern else DEFAULT_TEMPLATE_PATTERN
+        out = pattern if pattern else "{ABBREV_NAME}"
 
         regexp = re.compile(r"\{[A-Z_]+\}")
         matches = regexp.findall(out)
         numbers = self.numbers(reference)
         for _ in matches:
-            if _ == "{NAME}":
+            if _ == "{LINK}":
+                out = out.replace("{LINK}", url_escape(self.link(reference)))
+            elif _ == "{NAME}":
                 out = out.replace("{NAME}", self.name(reference))
             elif _ == "{BOOK}":
                 out = out.replace("{BOOK}", self.book(reference))

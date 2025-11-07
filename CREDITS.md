@@ -2,5 +2,6 @@
 
 Special thanks to: 
 
-* Rick Brannan, for expanding the en_US library aliases.
-* Rajesh Koilpillai, for bug reporting.
+* Antoine (@a2ohm, France) for the French translation and testing.
+* Rick Brannan (@RickBrannan, USA), for expanding the en_US library aliases.
+* Rajesh Koilpillai (India), for bug reporting.

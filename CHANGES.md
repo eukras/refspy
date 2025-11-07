@@ -9,12 +9,19 @@
 * Fix spelling of Habakkuk in en_US. (Rick Brannan, Issue #2)
 * Fix multi-digit numbers in verse lists (Rick Brannan, Issue #1)
 
+## 0.11.1 -- BETA -- MULTILINGUAL
+
+* Structural changes to support multiple languages.
+* Add French book names and referencing conventions.
+
 ## 0.10.1 -- BETA -- BREAKING CHANGE
 
 * make_index, make_summary, make_hotspots now return `str`,
 while make_index_references, make_summary_references, make_hotspots_references
 return `List[Reference]`. This is a consistent way to access the Reference
 objects in all cases.
+
+## 0.9 -- ALPHA -- INITIAL DEVELOPMENT
 
 ### 0.9.14 -- BETA
 
