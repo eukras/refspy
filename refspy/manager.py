@@ -6,28 +6,31 @@ See `refspy.refspy()` for a useful helper function.
 import re
 from collections.abc import Generator
 from pydantic import TypeAdapter
-from refspy.book import Book
-from refspy.formatter import Formatter
-from refspy.indexers import (
-    index_book_aliases,
-    index_books,
-    index_libraries,
-)
-from refspy.language import Language
-from refspy.library import Library
-from refspy.matcher import Matcher
-from refspy.navigator import Navigator
-from refspy.number import Number
-from refspy.range import combine, merge, range
-from refspy.reference import (
+
+from refspy.models.book import Book
+from refspy.models.language import Language
+from refspy.models.library import Library
+from refspy.models.range import combine, merge, range
+from refspy.models.reference import (
     Reference,
     book_reference,
     chapter_reference,
     reference,
     verse_reference,
 )
+from refspy.models.verse import verse
+
+from refspy.types.number import Number
+
+from refspy.formatter import Formatter
+from refspy.indexers import (
+    index_book_aliases,
+    index_books,
+    index_libraries,
+)
+from refspy.matcher import Matcher
+from refspy.navigator import Navigator
 from refspy.utils import url_param, url_escape
-from refspy.verse import verse
 
 """
 References can always be formatted with Manager.template(ref). If no
@@ -398,13 +401,14 @@ class Manager:
         include_books: bool = False,
         include_nones: bool = False,
         use_context: bool = True,
+        euro_format: bool = False,
     ) -> list[tuple[str, Reference | None]]:
         """
         Return a list of tuples of (match_str, reference) found by
         `refspy.manager.Manager.generate_references()`
         """
         generator = self.matcher.generate_references(
-            text, include_books, include_nones, use_context
+            text, include_books, include_nones, use_context, euro_format
         )
         return list(generator)
 
@@ -414,6 +418,7 @@ class Manager:
         yield_books: bool = False,
         yield_nones: bool = False,
         use_context: bool = True,
+        euro_format: bool = False,
     ) -> Generator[tuple[str, Reference | None], None, None]:
         """
         Generate tuples of (match_str, reference) for provided text.manager
@@ -432,7 +437,7 @@ class Manager:
             A tuple of `(match_str, reference)` for each valid reference.
         """
         yield from self.matcher.generate_references(
-            text, yield_books, yield_nones, use_context
+            text, yield_books, yield_nones, use_context, euro_format
         )
 
     # -----------------------------------
@@ -533,7 +538,7 @@ class Manager:
     def next_chapter(self, ref: Reference) -> Reference | None:
         """Get the next chapter to the one containing this reference.
 
-        This loops over the end of books using `refspy.book.Book.chapters`.
+        This loops over the end of books using `refspy.models.book.Book.chapters`.
         This does not loop beyond the end of libraries.
         """
         return self.navigator.next_chapter(ref)
@@ -541,7 +546,7 @@ class Manager:
     def prev_chapter(self, ref: Reference) -> Reference | None:
         """Get the previous chapter to the one containing this reference.
 
-        This loops over the end of books using `refspy.book.Book.chapters`, but
+        This loops over the end of books using `refspy.models.book.Book.chapters`, but
         not beyond the end of libraries.
         """
         return self.navigator.prev_chapter(ref)

@@ -1,11 +1,14 @@
-"""Data object for language options.
+"""
+Data object for reference character separators.
 
-Program strings that vary with the selected language.
+The Symbol object is used in instances of `refspy.language.Language`
+to store the different symbol conventions used in the EU countries
+and internationally. For example, `1:2,4-5 (INTL) == 1,2.4-5 (EURO)`.
+
+It also stores matching characters that should be considered equivalent when
+matching.
 
 Attributes:
-    verse_markers: The equivalent of 'v.' and vv.' in English.
-    ambiguous_aliases: Book names or abbreviations that are also common words.
-    number_prefixes: The equivalent of 'I' and 'First' (etc) in English.
     colon: ':' in English
     comma: ',' in English
     dash: '-' in English
@@ -16,18 +19,14 @@ Attributes:
     format_semicolon: ";" in English
     match_colons: ":." in English
     match_commas: "," in English
-    match_dashes: "–-" in ENglish (incl. EN_DASH)
+    match_dashes: "–-" in English (incl. EN_DASH)
     match_semicolons: ";" in English
-    default_link_pattern: see `refspy.manager.Manager.template()`
 """
 
 from pydantic import BaseModel
 
 
-class Language(BaseModel):
-    verse_markers: list[str]
-    ambiguous_aliases: list[str]
-    number_prefixes: dict[str, list[str]]
+class Symbols(BaseModel):
     colon: str
     comma: str
     dash: str
@@ -40,4 +39,3 @@ class Language(BaseModel):
     match_commas: str
     match_dashes: str
     match_semicolons: str
-    default_link_pattern: str

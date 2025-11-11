@@ -7,8 +7,8 @@ from refspy.indexers import (
     index_books,
     index_libraries,
 )
-from refspy.book import Book
-from refspy.library import Library
+from refspy.models.book import Book
+from refspy.models.library import Library
 
 bk_1 = Book(id=1, name="Book", abbrev="Bk", aliases=["vol"], chapters=10)
 bk_2 = Book(id=2, name="Book", abbrev="Bk", aliases=[], chapters=10)

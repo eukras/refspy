@@ -1,10 +1,10 @@
 """Navigation functions for Reference objects"""
 
-from refspy.book import Book
-from refspy.number import Number
-from refspy.range import range
-from refspy.reference import Reference, reference
-from refspy.verse import verse
+from refspy.models.book import Book
+from refspy.types.number import Number
+from refspy.models.range import range
+from refspy.models.reference import Reference, reference
+from refspy.models.verse import verse
 
 
 class Navigator:
@@ -25,7 +25,7 @@ class Navigator:
             from refspy.indexers import index_book_aliases, index_books
             from refspy.libraries.en_US import NT, OT
             from refspy.navigator import Navigator
-            from refspy.reference import chapter_reference
+            from refspy.models.reference import chapter_reference
 
             libraries = [OT, NT]
             navigator = Navigator(
@@ -54,7 +54,7 @@ class Navigator:
         """
 
         self.books: dict[tuple[Number, Number], Book] = books
-        """Lookup `refspy.book.Book` by `(library.id, book.id)`."""
+        """Lookup `refspy.models.book.Book` by `(library.id, book.id)`."""
 
         self.book_aliases: dict[str, tuple[Number, Number]] = book_aliases
         """Lookup `(library.id, book.id)` by book alias."""

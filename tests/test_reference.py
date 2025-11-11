@@ -3,13 +3,13 @@ from context import *
 from pydantic import ValidationError
 import pytest
 
-from refspy.reference import (
+from refspy.models.reference import (
     chapter_reference,
     reference,
     verse_reference,
 )
-from refspy.range import range
-from refspy.verse import verse
+from refspy.models.range import range
+from refspy.models.verse import verse
 
 
 def test_empty_reference_raises_value_error():

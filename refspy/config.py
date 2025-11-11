@@ -3,9 +3,13 @@
 Note: TODO: Don't initialise all libraries every time, only on demand.
 """
 
-from refspy.language import Language
+from refspy.models.language import Language
+from refspy.models.library import Library
+from refspy.models.symbols import Symbols
+
 from refspy.languages.english import ENGLISH
 from refspy.languages.french import FRENCH
+
 from refspy.libraries.en_US import (
     DC as EN_DC,
     DC_ORTHODOX as EN_DC_ORTHODOX,
@@ -18,7 +22,9 @@ from refspy.libraries.fr_FR import (
     NT as FR_NT,
     OT as FR_OT,
 )
-from refspy.library import Library
+
+from refspy.symbols.european import EUROPEAN
+from refspy.symbols.international import INTERNATIONAL
 
 LIBRARIES: dict[str, dict[str, list[Library]]] = {
     "protestant": {
@@ -45,6 +51,8 @@ Example:
     ```
 """
 
+LANGUAGE_OPTIONS: dict[str, str] = {"en_US": "English", "fr_FR": "French"}
+
 LANGUAGES: dict[str, Language] = {"en": ENGLISH, "fr": FRENCH}
 """A dictionary of available languages, used for shorthand library invocation.
 
@@ -57,3 +65,5 @@ Example:
     LANGUAGES = { "en": ENGLISH }
     ```
 """
+
+SYMBOLS: dict[str, Symbols] = {"euro": EUROPEAN, "intl": INTERNATIONAL}

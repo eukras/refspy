@@ -1,9 +1,11 @@
 """Indexing functions for libraries, books, and book aliases."""
 
-from refspy.book import Book
-from refspy.library import Library
+from refspy.models.book import Book
+from refspy.models.library import Library
+
+from refspy.types.number import Number
+
 from refspy.utils import strip_book_number
-from refspy.number import Number
 
 PARAM_CHAR_LIMIT = 20
 """The maximum book name or alias length to convert to URL parameter names."""

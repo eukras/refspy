@@ -3,9 +3,10 @@ from context import *
 from refspy.formatter import Formatter
 from refspy.indexers import index_book_aliases, index_books
 from refspy.languages.english import ENGLISH
-from refspy.range import range
-from refspy.reference import reference
-from refspy.verse import verse
+
+from refspy.models.range import range
+from refspy.models.reference import reference
+from refspy.models.verse import verse
 
 from tests.data import TEST_LIBRARY, TEST_LIBRARY_2
 

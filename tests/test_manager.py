@@ -1,15 +1,15 @@
 import pytest
 from context import *
 
-from refspy import refspy
-from refspy.book import Book
 from refspy.languages.english import ENGLISH
 from refspy.libraries.en_US import NT
-from refspy.library import Library
 from refspy.manager import Manager
-from refspy.range import range
-from refspy.reference import reference, verse_reference
-from refspy.verse import verse
+
+from refspy.models.book import Book
+from refspy.models.library import Library
+from refspy.models.range import range
+from refspy.models.reference import reference, verse_reference
+from refspy.models.verse import verse
 
 BOOK = Book(id=2, name="Book", abbrev="Bk", aliases=["vol"], chapters=3)
 

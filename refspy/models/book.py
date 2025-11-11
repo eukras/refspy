@@ -21,7 +21,7 @@ A book with only one chapter will be formatted without chapter numbers.
 
 from pydantic import BaseModel
 
-from refspy.number import Number
+from refspy.types.number import Number
 
 
 class Book(BaseModel):

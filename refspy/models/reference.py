@@ -9,9 +9,9 @@ from typing import Any, Self
 
 from pydantic import BaseModel, Field
 
-from refspy.number import Number
-from refspy.range import Range, combine, merge, range
-from refspy.verse import Verse, verse
+from refspy.types.number import Number
+from refspy.models.range import Range, combine, merge, range
+from refspy.models.verse import Verse, verse
 
 
 class Reference(BaseModel):

@@ -3,8 +3,8 @@
 from typing import Self
 from pydantic import BaseModel, model_validator
 
-from refspy.number import Number
-from refspy.verse import verse, Verse
+from refspy.types.number import Number
+from refspy.models.verse import verse, Verse
 
 
 class Range(BaseModel):

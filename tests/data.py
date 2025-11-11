@@ -1,5 +1,7 @@
-from refspy.book import Book
-from refspy.library import Library
+from context import *
+
+from refspy.models.book import Book
+from refspy.models.library import Library
 
 FIRST_BOOK = Book(
     id=1,

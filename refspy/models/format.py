@@ -7,13 +7,13 @@ characters in normal English formatting. Attributes should contain any
 necessary spacing to be added before or after characters.
 
 Attributes:
-    colon: ':'
-    comma: ', '
-    dash: '-'
-    semicolon: '; '
-    book_only: False
-    number_only: False
-    property: 'name'
+    colon: ':' in English
+    comma: ',' in English
+    dash: '-' in English
+    semicolon: ';' in English
+    book_only: e.g. 'Romans'
+    number_only: e.g. '12:16'
+    property: 'name' (or None)
 
 Note:
     If book_only is true, number_only is ignored.

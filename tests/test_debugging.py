@@ -3,9 +3,9 @@ from context import *
 from refspy.languages.english import ENGLISH
 from refspy.libraries.en_US import OT, NT
 from refspy.manager import Manager
-from refspy.range import range, verse_range
-from refspy.reference import reference, verse_reference
-from refspy.verse import verse
+from refspy.models.range import range, verse_range
+from refspy.models.reference import reference, verse_reference
+from refspy.models.verse import verse
 
 __ = Manager(libraries=[OT, NT], language=ENGLISH)
 

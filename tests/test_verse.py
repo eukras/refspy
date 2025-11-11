@@ -1,7 +1,7 @@
 from pydantic import ValidationError
 import pytest
 
-from refspy.verse import verse, Verse
+from refspy.models.verse import verse, Verse
 
 
 def test_shorthand():

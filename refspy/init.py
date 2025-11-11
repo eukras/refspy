@@ -1,8 +1,9 @@
 """Initialisation helpers for Refspy package."""
 
-from refspy.config import LANGUAGES, LIBRARIES
-from refspy.language import Language
-from refspy.library import Library
+from refspy.config import LANGUAGES, LIBRARIES, SYMBOLS
+from refspy.models.language import Language
+from refspy.models.library import Library
+from refspy.models.symbols import Symbols
 
 
 def get_language(language_name: str) -> Language:
@@ -19,3 +20,10 @@ def get_canon(canon_name: str, locale_name: str) -> list[Library]:
         if locale_name in LIBRARIES[canon_name]:
             return LIBRARIES[canon_name][locale_name]
     raise ValueError(f"Canon '{canon_name}' not found for locale '{locale_name}'.")
+
+
+def get_symbols(symbols_name: str) -> Symbols:
+    """Lookup keys in `refspy.config.SYMBOLS` dict."""
+    if symbols_name in SYMBOLS:
+        return SYMBOLS[symbols_name]
+    raise ValueError(f"Canon '{symbols_name}' not found.")

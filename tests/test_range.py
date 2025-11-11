@@ -3,7 +3,7 @@ from context import *
 from pydantic import ValidationError
 import pytest
 
-from refspy.range import (
+from refspy.models.range import (
     Range,
     book_range,
     chapter_range,
@@ -12,7 +12,7 @@ from refspy.range import (
     range,
     verse_range,
 )
-from refspy.verse import verse
+from refspy.models.verse import verse
 
 
 def test_shorthand():

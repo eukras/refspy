@@ -20,6 +20,7 @@ from refspy.utils import (
 
 __ = refspy()
 
+
 def test_parse_number():
     text = "USD $50"
     assert parse_number(text) == 50
@@ -34,38 +35,79 @@ def test_parse_number_raises_value_error():
 def test_url_param():
     assert url_param("1 Cor 3:4–5") == "1+cor+3.4-5"
 
+
 def test_url_escape():
     assert url_escape("1 Cor 3:4–5") == "1%20Cor%203%3A4-5"
 
 
 def test_strip_book_number():
-    assert strip_book_number('2 Tim') == 'Tim'
-    assert strip_book_number('2Tim') == '2Tim'
-    assert strip_book_number('1st') == '1st'
+    assert strip_book_number("2 Tim") == "Tim"
+    assert strip_book_number("2Tim") == "2Tim"
+    assert strip_book_number("1st") == "1st"
 
 
 def test_strip_space_after_book_number():
-    assert strip_space_after_book_number('2 Tim') == '2Tim'
-    assert strip_space_after_book_number('2  Tim') == '2 Tim'
-    assert strip_space_after_book_number('2Tim') == '2Tim'
-    assert strip_space_after_book_number('1st') == '1st'
+    assert strip_space_after_book_number("2 Tim") == "2Tim"
+    assert strip_space_after_book_number("2  Tim") == "2 Tim"
+    assert strip_space_after_book_number("2Tim") == "2Tim"
+    assert strip_space_after_book_number("1st") == "1st"
 
 
 def test_add_space_after_book_number():
-    """ Remove space between any leading digit and all subsequent text.
+    """Remove space between any leading digit and all subsequent text.
 
     e.g. '2Tim' becomes '2 Tim'.
     """
     unnumbered_book_aliases = get_unnumbered_book_aliases(__.book_aliases)
 
-    assert add_space_after_book_number('2Tim', unnumbered_book_aliases, ENGLISH.number_prefixes) == '2 Tim'
-    assert add_space_after_book_number('IITim', unnumbered_book_aliases, ENGLISH.number_prefixes) == '2 Tim'
-    assert add_space_after_book_number('2ndTim', unnumbered_book_aliases, ENGLISH.number_prefixes) == '2 Tim'
-    assert add_space_after_book_number('SecondTim', unnumbered_book_aliases, ENGLISH.number_prefixes) == '2 Tim'
-    assert add_space_after_book_number('2 Tim', unnumbered_book_aliases, ENGLISH.number_prefixes) == '2 Tim'
-    assert add_space_after_book_number('II Tim', unnumbered_book_aliases, ENGLISH.number_prefixes) == 'II Tim'
-    assert add_space_after_book_number('2nd Tim', unnumbered_book_aliases, ENGLISH.number_prefixes) == '2nd Tim'
-    assert add_space_after_book_number('Second Tim', unnumbered_book_aliases, ENGLISH.number_prefixes) == 'Second Tim'
+    assert (
+        add_space_after_book_number(
+            "2Tim", unnumbered_book_aliases, ENGLISH.number_prefixes
+        )
+        == "2 Tim"
+    )
+    assert (
+        add_space_after_book_number(
+            "IITim", unnumbered_book_aliases, ENGLISH.number_prefixes
+        )
+        == "2 Tim"
+    )
+    assert (
+        add_space_after_book_number(
+            "2ndTim", unnumbered_book_aliases, ENGLISH.number_prefixes
+        )
+        == "2 Tim"
+    )
+    assert (
+        add_space_after_book_number(
+            "SecondTim", unnumbered_book_aliases, ENGLISH.number_prefixes
+        )
+        == "2 Tim"
+    )
+    assert (
+        add_space_after_book_number(
+            "2 Tim", unnumbered_book_aliases, ENGLISH.number_prefixes
+        )
+        == "2 Tim"
+    )
+    assert (
+        add_space_after_book_number(
+            "II Tim", unnumbered_book_aliases, ENGLISH.number_prefixes
+        )
+        == "II Tim"
+    )
+    assert (
+        add_space_after_book_number(
+            "2nd Tim", unnumbered_book_aliases, ENGLISH.number_prefixes
+        )
+        == "2nd Tim"
+    )
+    assert (
+        add_space_after_book_number(
+            "Second Tim", unnumbered_book_aliases, ENGLISH.number_prefixes
+        )
+        == "Second Tim"
+    )
 
 
 def test_normalize_spacing():

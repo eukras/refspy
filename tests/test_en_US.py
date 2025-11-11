@@ -2,7 +2,7 @@ from context import *
 
 from refspy import refspy
 from refspy.libraries.en_US import DC, DC_ORTHODOX, NT
-from refspy.reference import verse_reference
+from refspy.models.reference import verse_reference
 
 __ = refspy()
 

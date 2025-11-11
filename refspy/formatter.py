@@ -1,15 +1,18 @@
 """Format Reference objects using Format objects."""
 
-from refspy.book import Book
-from refspy.constants import EM_DASH, SPACE
-from refspy.format import Format
-from refspy.language import Language
+from refspy.models.language import Language
 from refspy.languages.english import ENGLISH
-from refspy.number import Number
-from refspy.range import Range
-from refspy.reference import Reference
+
+from refspy.models.book import Book
+from refspy.models.format import Format
+from refspy.models.range import Range
+from refspy.models.reference import Reference
+from refspy.models.verse import Verse
+
+from refspy.types.number import Number
+
+from refspy.constants import EM_DASH, SPACE
 from refspy.utils import string_together
-from refspy.verse import Verse
 
 
 class Formatter:
@@ -73,10 +76,10 @@ class Formatter:
         used by linkable resources.
         """
         return Format(
-            colon=ENGLISH.format_colon,
-            comma=ENGLISH.format_comma,
-            dash=ENGLISH.format_dash,
-            semicolon=ENGLISH.format_semicolon,
+            colon=ENGLISH.symbols.format_colon,
+            comma=ENGLISH.symbols.format_comma,
+            dash=ENGLISH.symbols.format_dash,
+            semicolon=ENGLISH.symbols.format_semicolon,
             book_only=False,
             number_only=False,
             property="abbrev",
@@ -84,10 +87,10 @@ class Formatter:
 
     def name_format(self, language: Language) -> Format:
         return Format(
-            colon=language.format_colon,
-            comma=language.format_comma,
-            dash=language.format_dash,
-            semicolon=language.format_semicolon,
+            colon=language.symbols.format_colon,
+            comma=language.symbols.format_comma,
+            dash=language.symbols.format_dash,
+            semicolon=language.symbols.format_semicolon,
             book_only=False,
             number_only=False,
             property="name",
@@ -95,10 +98,10 @@ class Formatter:
 
     def book_format(self, language: Language) -> Format:
         return Format(
-            colon=language.format_colon,
-            comma=language.format_comma,
-            dash=language.format_dash,
-            semicolon=language.format_semicolon,
+            colon=language.symbols.format_colon,
+            comma=language.symbols.format_comma,
+            dash=language.symbols.format_dash,
+            semicolon=language.symbols.format_semicolon,
             book_only=True,
             number_only=False,
             property="name",
@@ -106,10 +109,10 @@ class Formatter:
 
     def number_format(self, language: Language) -> Format:
         return Format(
-            colon=language.format_colon,
-            comma=language.format_comma,
-            dash=language.format_dash,
-            semicolon=language.format_semicolon,
+            colon=language.symbols.format_colon,
+            comma=language.symbols.format_comma,
+            dash=language.symbols.format_dash,
+            semicolon=language.symbols.format_semicolon,
             book_only=False,
             number_only=True,
             property=None,
@@ -117,10 +120,10 @@ class Formatter:
 
     def abbrev_name_format(self, language: Language) -> Format:
         return Format(
-            colon=language.format_colon,
-            comma=language.format_comma,
-            dash=language.format_dash,
-            semicolon=language.format_semicolon,
+            colon=language.symbols.format_colon,
+            comma=language.symbols.format_comma,
+            dash=language.symbols.format_dash,
+            semicolon=language.symbols.format_semicolon,
             book_only=False,
             number_only=False,
             property="abbrev",
@@ -128,10 +131,10 @@ class Formatter:
 
     def abbrev_book_format(self, language: Language) -> Format:
         return Format(
-            colon=language.format_colon,
-            comma=language.format_comma,
-            dash=language.format_dash,
-            semicolon=language.format_semicolon,
+            colon=language.symbols.format_colon,
+            comma=language.symbols.format_comma,
+            dash=language.symbols.format_dash,
+            semicolon=language.symbols.format_semicolon,
             book_only=True,
             number_only=False,
             property="abbrev",
@@ -139,10 +142,10 @@ class Formatter:
 
     def abbrev_number_format(self, language: Language) -> Format:
         return Format(
-            colon=language.format_colon,
-            comma=language.format_comma,
-            dash=language.format_dash,
-            semicolon=language.format_semicolon,
+            colon=language.symbols.format_colon,
+            comma=language.symbols.format_comma,
+            dash=language.symbols.format_dash,
+            semicolon=language.symbols.format_semicolon,
             book_only=False,
             number_only=True,
             property="abbrev",

@@ -11,8 +11,8 @@ from typing import Self
 
 from pydantic import BaseModel
 
-from refspy.index import Index
-from refspy.number import Number
+from refspy.types.index import Index
+from refspy.types.number import Number
 
 
 VerseTuple = tuple[Number, Number, Number, Number]

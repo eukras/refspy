@@ -5,14 +5,18 @@ import re
 from re import Match
 from collections.abc import Generator
 
-from refspy.book import Book
-from refspy.language import Language
-from refspy.range import Range, range, verse_range
-from refspy.reference import (
+from refspy.models.book import Book
+from refspy.models.language import Language
+from refspy.models.range import Range, range, verse_range
+from refspy.models.reference import (
     Reference,
     book_reference,
     reference,
 )
+from refspy.models.verse import verse
+
+from refspy.types.number import Number
+
 from refspy.utils import (
     add_space_after_book_number,
     get_unnumbered_book_aliases,
@@ -20,7 +24,6 @@ from refspy.utils import (
     normalize_spacing,
     trim_trailing_period,
 )
-from refspy.verse import Number, verse
 
 
 class Matcher:
@@ -69,12 +72,18 @@ class Matcher:
         self.END = r"\b"
 
         self.COMMA = (
-            "[" + re.escape(self.language.match_commas) + "]" + self.OPTIONAL_SPACE
+            "["
+            + re.escape(self.language.symbols.match_commas)
+            + "]"
+            + self.OPTIONAL_SPACE
         )
         self.COLON = (
-            "[" + re.escape(self.language.match_colons) + "]" + self.OPTIONAL_SPACE
+            "["
+            + re.escape(self.language.symbols.match_colons)
+            + "]"
+            + self.OPTIONAL_SPACE
         )
-        self.DASH = "[" + re.escape(self.language.match_dashes) + "]"
+        self.DASH = "[" + re.escape(self.language.symbols.match_dashes) + "]"
         self.NUMBER = r"\d+[a-d]?"
 
         self.RANGE = f"{self.NUMBER}{self.DASH}{self.NUMBER}"
@@ -299,6 +308,7 @@ class Matcher:
         yield_books: bool = False,
         yield_nones: bool = False,
         use_context: bool = True,
+        euro_format: bool = False,
     ) -> Generator[tuple[str, Reference | None], None, None]:
         """
         Match references and parentheses separately, then take the next lowest

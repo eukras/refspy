@@ -14,8 +14,8 @@ See `refspy.libraries.en_US` for a complete example.
 
 from pydantic import BaseModel
 
-from refspy.book import Book
-from refspy.number import Number
+from refspy.models.book import Book
+from refspy.types.number import Number
 
 
 class Library(BaseModel):

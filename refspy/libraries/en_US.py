@@ -1,5 +1,5 @@
-from refspy.book import Book
-from refspy.library import Library
+from refspy.models.book import Book
+from refspy.models.library import Library
 
 # See README.md for Library ID numbers
 # English language libraries follow SBL style guide for books and

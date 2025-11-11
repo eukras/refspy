@@ -6,7 +6,7 @@ import re
 from typing import Any
 
 from refspy.constants import SPACE, NON_BREAKING_SPACE
-from refspy.number import Number
+from refspy.types.number import Number
 
 
 def parse_number(number_str: str) -> Number:

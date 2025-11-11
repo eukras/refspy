@@ -10,14 +10,16 @@ from refspy.matcher import (
     infer_abbreviation,
     make_chapter_range,
 )
-from refspy.range import range, verse_range
-from refspy.reference import (
+
+from refspy.models.range import range, verse_range
+from refspy.models.reference import (
     book_reference,
     chapter_reference,
     reference,
     verse_reference,
 )
-from refspy.verse import verse
+from refspy.models.verse import verse
+
 from tests.data import TEST_LIBRARY
 
 books = index_books([TEST_LIBRARY])

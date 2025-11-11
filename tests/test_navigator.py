@@ -3,7 +3,8 @@ from context import *
 from refspy.indexers import index_book_aliases, index_books
 from refspy.libraries.en_US import NT
 from refspy.navigator import Navigator
-from refspy.reference import chapter_reference as ch
+
+from refspy.models.reference import chapter_reference as ch
 
 books = index_books([NT])
 book_aliases = index_book_aliases([NT])

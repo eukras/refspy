@@ -1,5 +1,5 @@
-from refspy.book import Book
-from refspy.library import Library
+from refspy.models.book import Book
+from refspy.models.library import Library
 
 # See README.md for Library ID numbers
 # French language libraries follow style guides for books
@@ -309,7 +309,7 @@ DC = Library(
             chapters=16,
         ),
         Book(
-            # TODO: Offsets: 11..16? 
+            # TODO: Offsets: 11..16?
             id=3,
             name="Esther grec",
             abbrev="Est gr",
@@ -376,14 +376,14 @@ DC = Library(
             id=13,
             name="Premier livre des Maccabées",
             abbrev="1 M",
-            aliases=[],
+            aliases=["1 Macc"],
             chapters=16,
         ),
         Book(
             id=14,
             name="Deuxième livre des Maccabées",
             abbrev="2 M",
-            aliases=[],
+            aliases=["2 Macc"],
             chapters=15,
         ),
     ],
@@ -629,7 +629,7 @@ NT = Library(
             id=27,
             name="Apocalypse",
             abbrev="Ap",
-            aliases=[], 
+            aliases=[],
             chapters=22,
         ),
     ],
