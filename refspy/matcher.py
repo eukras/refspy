@@ -13,6 +13,7 @@ from refspy.models.reference import (
     book_reference,
     reference,
 )
+from refspy.models.syntax import Syntax
 from refspy.models.verse import verse
 
 from refspy.types.number import Number
@@ -58,9 +59,11 @@ class Matcher:
         books: dict[tuple[Number, Number], Book],
         book_aliases: dict[str, tuple[Number, Number]],
         language: Language,
+        syntax: Syntax | None = None,
     ):
         self.books = books
         self.language = language
+        self.syntax = syntax or language.syntax
         self.book_alias_keys = book_aliases.keys()
         self.book_aliases = self.expand_book_aliases(book_aliases)
 
@@ -72,18 +75,12 @@ class Matcher:
         self.END = r"\b"
 
         self.COMMA = (
-            "["
-            + re.escape(self.language.symbols.match_commas)
-            + "]"
-            + self.OPTIONAL_SPACE
+            "[" + re.escape(self.syntax.match_commas) + "]" + self.OPTIONAL_SPACE
         )
         self.COLON = (
-            "["
-            + re.escape(self.language.symbols.match_colons)
-            + "]"
-            + self.OPTIONAL_SPACE
+            "[" + re.escape(self.syntax.match_colons) + "]" + self.OPTIONAL_SPACE
         )
-        self.DASH = "[" + re.escape(self.language.symbols.match_dashes) + "]"
+        self.DASH = "[" + re.escape(self.syntax.match_dashes) + "]"
         self.NUMBER = r"\d+[a-d]?"
 
         self.RANGE = f"{self.NUMBER}{self.DASH}{self.NUMBER}"

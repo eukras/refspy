@@ -8,9 +8,9 @@ Example:
 """
 
 from refspy.constants import NON_BREAKING_SPACE, SPACE
-from refspy.models.symbols import Symbols
+from refspy.models.syntax import Syntax
 
-EUROPEAN = Symbols(
+EUROPEAN = Syntax(
     colon=",",
     format_colon="," + NON_BREAKING_SPACE,
     match_colons=":,",

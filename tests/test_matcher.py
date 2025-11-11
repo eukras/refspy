@@ -1,10 +1,12 @@
 import re
 
+from pydantic import InstanceOf
 import pytest
 from context import *
 
 from refspy.indexers import index_book_aliases, index_books
 from refspy.languages.english import ENGLISH
+from refspy.languages.french import FRENCH
 from refspy.matcher import (
     Matcher,
     infer_abbreviation,
@@ -20,11 +22,19 @@ from refspy.models.reference import (
 )
 from refspy.models.verse import verse
 
+from refspy.syntax.international import INTERNATIONAL
 from tests.data import TEST_LIBRARY
 
 books = index_books([TEST_LIBRARY])
 book_aliases = index_book_aliases([TEST_LIBRARY])
 matcher = Matcher(books, book_aliases, ENGLISH)
+matcher_fr = Matcher(books, book_aliases, FRENCH)
+matcher_fr_intl = Matcher(books, book_aliases, FRENCH, INTERNATIONAL)
+
+
+def test_syntax():
+    assert matcher_fr.syntax.colon == ","
+    assert matcher_fr_intl.syntax.colon == ":"
 
 
 def test_regexp_building_blocks():

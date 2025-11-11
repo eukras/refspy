@@ -1,5 +1,5 @@
 from refspy.models.language import Language
-from refspy.symbols.european import EUROPEAN
+from refspy.syntax.european import EUROPEAN
 
 
 FRENCH = Language(
@@ -25,7 +25,7 @@ FRENCH = Language(
         "3": ["Troisième Lettre à", "Troisième Épître de", "3e", "III"],
         "4": ["Quatrième", "4e", "IV"],
     },
-    symbols=EUROPEAN,
+    syntax=EUROPEAN,
     default_link_pattern='<a href="https://www.biblegateway.com/passage/?search={LINK}&version=SG21" target="_blank">{ABBREV_NAME}</a>',
     demonstration_text="""
 Lorsque quelqu'un écrit une référence biblique, on peut lire Rm 12:1.6-17, 2

@@ -15,14 +15,14 @@ Attributes:
 
 from pydantic import BaseModel
 
-from refspy.models.symbols import Symbols
+from refspy.models.syntax import Syntax
 
 
 class Language(BaseModel):
     verse_markers: list[str]
     ambiguous_aliases: list[str]
     number_prefixes: dict[str, list[str]]
-    symbols: Symbols
+    syntax: Syntax
     default_link_pattern: str
     demonstration_text: str
     nt_translation: str

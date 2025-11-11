@@ -1,5 +1,5 @@
 from refspy.models.language import Language
-from refspy.symbols.international import INTERNATIONAL
+from refspy.syntax.international import INTERNATIONAL
 
 
 ENGLISH = Language(
@@ -11,7 +11,7 @@ ENGLISH = Language(
         "3": ["Third Letter to the", "Third", "3rd", "III"],
         "4": ["Fourth Letter to the", "Fourth", "4th", "IV"],
     },
-    symbols=INTERNATIONAL,
+    syntax=INTERNATIONAL,
     default_link_pattern='<a href="https://www.biblegateway.com/passage/?search={LINK}&version=NRSVA" target="_blank">{ABBREV_NAME}</a>',
     demonstration_text="""
 Human-written Bible references look like Rom 12.1, 6-17, 2 Cor. 1:2-3:4, or

@@ -26,7 +26,7 @@ Attributes:
 from pydantic import BaseModel
 
 
-class Symbols(BaseModel):
+class Syntax(BaseModel):
     colon: str
     comma: str
     dash: str

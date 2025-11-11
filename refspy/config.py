@@ -5,7 +5,7 @@ Note: TODO: Don't initialise all libraries every time, only on demand.
 
 from refspy.models.language import Language
 from refspy.models.library import Library
-from refspy.models.symbols import Symbols
+from refspy.models.syntax import Syntax
 
 from refspy.languages.english import ENGLISH
 from refspy.languages.french import FRENCH
@@ -23,8 +23,8 @@ from refspy.libraries.fr_FR import (
     OT as FR_OT,
 )
 
-from refspy.symbols.european import EUROPEAN
-from refspy.symbols.international import INTERNATIONAL
+from refspy.syntax.european import EUROPEAN
+from refspy.syntax.international import INTERNATIONAL
 
 LIBRARIES: dict[str, dict[str, list[Library]]] = {
     "protestant": {
@@ -66,4 +66,4 @@ Example:
     ```
 """
 
-SYMBOLS: dict[str, Symbols] = {"euro": EUROPEAN, "intl": INTERNATIONAL}
+SYNTAX: dict[str, Syntax] = {"euro": EUROPEAN, "intl": INTERNATIONAL}
