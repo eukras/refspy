@@ -443,7 +443,7 @@ class Manager:
             A tuple of `(match_str, reference)` for each valid reference.
         """
         yield from self.matcher.generate_references(
-            text, yield_books, yield_nones, use_context, euro_format
+            text, yield_books, yield_nones, use_context
         )
 
     # -----------------------------------
