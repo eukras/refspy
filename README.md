@@ -14,7 +14,7 @@ Refspy is a Python package for working with biblical references in human text.
 
 # README
 
-- ![Bible Rocket](https://www.chapman.id.au/bible-rocket) -- **ONLINE DEMO** -- Find Bible References in plain text
+- [Bible Rocket](https://www.chapman.id.au/bible-rocket) -- **ONLINE DEMO** -- Find Bible References in plain text
 
 - [eukras/refspy on Github](https://github.com/eukras/refspy) | [Report Issue](https://github.com/eukras/refspy/issues) | [Contact Author](mailto:nigel@chapman.id.au)
 - [refspy on PyPI](https://pypi.org/project/refspy/) &rarr; `pip install refspy`.
@@ -34,7 +34,7 @@ The script [demo.py](https://github.com/eukras/refspy/blob/master/demo.py) will 
 - Find biblical references matching human writing styles (spaces, commas, prefixes, abbreviations)
 - Match international and European syntaxes (Matt 5:3,7-9 vs Matt 5,3.7-9).
 
-- Use contextual book references to interpret partial references (e.g. "i Romans see 5:4").
+- Use contextual book references to interpret partial references (e.g. "in Romans see 5:4").
 
 - Sequentially replace matched references.
 - Compile indexes of all matched references, or all verse ranges covered; list the most referenced chapters (hotspots) in a list of references.
