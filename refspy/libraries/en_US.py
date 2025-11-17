@@ -1,12 +1,12 @@
 from refspy.models.book import Book
-from refspy.models.library import Library
+from refspy.models.library import DC_ID, DCO_ID, NT_ID, OT_ID, Library
 
 # See README.md for Library ID numbers
 # English language libraries follow SBL style guide for books and
 # abbreviations.
 
 OT = Library(
-    id=200,
+    id=OT_ID,
     name="Old Testament",
     abbrev="OT",
     books=[
@@ -287,7 +287,7 @@ OT = Library(
 )
 
 DC = Library(
-    id=210,
+    id=DC_ID,
     name="Deuterocanonical",
     abbrev="DC",
     books=[
@@ -386,7 +386,7 @@ DC = Library(
     ],
 )
 DC_ORTHODOX = Library(
-    id=220,
+    id=DCO_ID,
     name="Deuterocanonical (Orthodox)",
     abbrev="DCO",
     books=[
@@ -436,7 +436,7 @@ DC_ORTHODOX = Library(
 )
 
 NT = Library(
-    id=400,
+    id=NT_ID,
     name="New Testament",
     abbrev="NT",
     books=[

@@ -18,6 +18,7 @@ from refspy.models.reference import (
     reference,
     verse_reference,
 )
+from refspy.models.syntax import Syntax
 from refspy.models.verse import verse
 
 from refspy.types.number import Number
@@ -49,6 +50,7 @@ class Manager:
         self,
         libraries: list[Library],
         language: Language,
+        syntax: Syntax | None = None,
         include_two_letter_aliases: bool = True,
     ):
         """
@@ -57,6 +59,7 @@ class Manager:
         Args:
             libraries: A list of libraries like NT, OT.
             language: A language object like ENGLISH.
+            language: A syntax object like INTERNATIONAL.
             include_two_letter_aliases: Whether to allow `len(alias) == 2`
                 (default: True)
         """
@@ -74,7 +77,12 @@ class Manager:
         self.language: Language = language
         """Language-specific program data."""
 
-        self.matcher: Matcher = Matcher(self.books, self.book_aliases, self.language)
+        self.syntax: Syntax = syntax or language.syntax
+        """Syntax-specific program data."""
+
+        self.matcher: Matcher = Matcher(
+            self.books, self.book_aliases, self.language, self.syntax
+        )
         """Delegate reference matching tasks."""
 
         self.formatter: Formatter = Formatter(self.books, self.book_aliases)
@@ -401,14 +409,13 @@ class Manager:
         include_books: bool = False,
         include_nones: bool = False,
         use_context: bool = True,
-        euro_format: bool = False,
     ) -> list[tuple[str, Reference | None]]:
         """
         Return a list of tuples of (match_str, reference) found by
         `refspy.manager.Manager.generate_references()`
         """
         generator = self.matcher.generate_references(
-            text, include_books, include_nones, use_context, euro_format
+            text, include_books, include_nones, use_context
         )
         return list(generator)
 
@@ -418,7 +425,6 @@ class Manager:
         yield_books: bool = False,
         yield_nones: bool = False,
         use_context: bool = True,
-        euro_format: bool = False,
     ) -> Generator[tuple[str, Reference | None], None, None]:
         """
         Generate tuples of (match_str, reference) for provided text.manager

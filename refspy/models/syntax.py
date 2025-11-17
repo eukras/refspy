@@ -9,6 +9,8 @@ It also stores matching characters that should be considered equivalent when
 matching.
 
 Attributes:
+    name: e.g. 'International'
+    abbrev: e.g. 'intl'
     colon: ':' in English
     comma: ',' in English
     dash: '-' in English
@@ -25,8 +27,12 @@ Attributes:
 
 from pydantic import BaseModel
 
+from refspy.utils import string_together
+
 
 class Syntax(BaseModel):
+    name: str
+    abbrev: str
     colon: str
     comma: str
     dash: str
@@ -39,3 +45,22 @@ class Syntax(BaseModel):
     match_commas: str
     match_dashes: str
     match_semicolons: str
+
+
+def syntax_label(syntax: Syntax) -> str:
+    def bracket(chars):
+        return f"[{chars}]" if len(chars) > 1 else chars
+
+    return string_together(
+        "c",
+        bracket(syntax.match_colons),
+        "v",
+        bracket(syntax.match_commas),
+        "v",
+        syntax.dash,  # <-- no point showing EM_DASH, EN_DASH, etc.
+        "v",
+        bracket(syntax.match_semicolons),
+        " (",
+        syntax.abbrev,
+        ")",
+    )

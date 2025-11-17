@@ -275,9 +275,6 @@ class Matcher:
             )
 
         # TODO: REMOVE (after merge)
-        # regexp_parts.append(f"[{len(regexp_parts) + 1}-999]")
-        # SAFE_NUMBER = r"|".join(regexp_parts)
-        # REGEXP = f"(?:{self.RANGE}|{self.NUMBER})(?:{self.COMMA}{self.SPACE}(?:{self.RANGE}|(?:{SAFE_NUMBER}){self.END}))*"
 
         # numbers which cannot be book numbers, when not followed by ':'
         # if it's 4..999, then in regexp that's 4-9 or a 2 or 3 digit number
@@ -285,8 +282,11 @@ class Matcher:
             f"(?:[{len(regexp_parts) + 1}-9]|" + r"\d{2,3}" + f")(?!{self.COLON})"
         )
         VERSE_NUMBER = r"|".join(regexp_parts)
-        REGEXP = f"(?:{self.RANGE}|{self.NUMBER})(?:\\,\\s*(?:{self.RANGE}|(?:{VERSE_NUMBER}){self.END}))*"
+        REGEXP = f"(?:{self.RANGE}|{self.NUMBER})(?:{self.COMMA}(?:{self.RANGE}|(?:{VERSE_NUMBER}){self.END}))*"
         return REGEXP
+        # regexp_parts.append(f"[{len(regexp_parts) + 1}-999]")
+        # SAFE_NUMBER = r"|".join(regexp_parts)
+        # REGEXP = f"(?:{self.RANGE}|{self.NUMBER})(?:{self.COMMA}{self.SPACE}(?:{self.RANGE}|(?:{SAFE_NUMBER}){self.END}))*"
 
     def numerical_book_prefixes(self, reverse=True) -> list[str]:
         prefixes = set()
@@ -305,7 +305,6 @@ class Matcher:
         yield_books: bool = False,
         yield_nones: bool = False,
         use_context: bool = True,
-        euro_format: bool = False,
     ) -> Generator[tuple[str, Reference | None], None, None]:
         """
         Match references and parentheses separately, then take the next lowest

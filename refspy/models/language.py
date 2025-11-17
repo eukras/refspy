@@ -28,3 +28,4 @@ class Language(BaseModel):
     nt_translation: str
     ot_translation: str
     dc_translation: str
+    dc_notes: list[str]

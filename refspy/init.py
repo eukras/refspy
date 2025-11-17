@@ -1,6 +1,7 @@
 """Initialisation helpers for Refspy package."""
 
 from refspy.config import LANGUAGES, LIBRARIES, SYNTAX
+
 from refspy.models.language import Language
 from refspy.models.library import Library
 from refspy.models.syntax import Syntax

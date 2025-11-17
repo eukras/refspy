@@ -17,6 +17,11 @@ from pydantic import BaseModel
 from refspy.models.book import Book
 from refspy.types.number import Number
 
+OT_ID: Number = 200
+DC_ID: Number = 210
+DCO_ID: Number = 220
+NT_ID: Number = 400
+
 
 class Library(BaseModel):
     id: Number

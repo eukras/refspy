@@ -11,13 +11,15 @@ from refspy.constants import SPACE
 from refspy.models.syntax import Syntax
 
 INTERNATIONAL = Syntax(
+    name="International",
+    abbrev="intl",
     colon=":",
     format_colon=":",
     match_colons=":.",
     comma=",",
     format_comma="," + SPACE,
     match_commas=",",
-    dash="–",
+    dash="-",
     format_dash="–",
     match_dashes="–-",
     semicolon=";",

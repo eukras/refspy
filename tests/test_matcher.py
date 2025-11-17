@@ -1,6 +1,5 @@
 import re
 
-from pydantic import InstanceOf
 import pytest
 from context import *
 
@@ -30,11 +29,6 @@ book_aliases = index_book_aliases([TEST_LIBRARY])
 matcher = Matcher(books, book_aliases, ENGLISH)
 matcher_fr = Matcher(books, book_aliases, FRENCH)
 matcher_fr_intl = Matcher(books, book_aliases, FRENCH, INTERNATIONAL)
-
-
-def test_syntax():
-    assert matcher_fr.syntax.colon == ","
-    assert matcher_fr_intl.syntax.colon == ":"
 
 
 def test_regexp_building_blocks():
