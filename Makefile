@@ -1,17 +1,20 @@
-build:
+build: 
 	python -m build
 
 demo:
-	python demo.py > demo.html
+	python demo.py
 
-docs:
+docs: refspy/
 	pdoc refspy/ -d google -o docs
 
-init:
+init: requirements.txt
 	pip install -r requirements.txt
 
-publish:
+publish: dist/
 	twine upload dist/*
 
-test:
+test: tests/
 	python -m pytest tests
+
+cloc: refspy/
+	cloc *.py *.toml *.md refspy tests
