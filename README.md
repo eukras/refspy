@@ -5,7 +5,7 @@
 
 [![python](https://img.shields.io/badge/Python-3.11-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-![Version: 0.11.1 Beta](https://img.shields.io/badge/Version-0.11.1-purple)
+![Version: 0.11.3 Beta](https://img.shields.io/badge/Version-0.11.3-purple)
 ![Status: BETA](https://img.shields.io/badge/Status-BETA-red)
 
 Refspy is a Python package for working with biblical references in human text.
@@ -14,6 +14,8 @@ Refspy is a Python package for working with biblical references in human text.
 
 # README
 
+- ![Bible Rocket](https://www.chapman.id.au/bible-rocket) -- **ONLINE DEMO** -- Find Bible References in plain text
+
 - [eukras/refspy on Github](https://github.com/eukras/refspy) | [Report Issue](https://github.com/eukras/refspy/issues) | [Contact Author](mailto:nigel@chapman.id.au)
 - [refspy on PyPI](https://pypi.org/project/refspy/) &rarr; `pip install refspy`.
 - [refspy on ReadTheDocs](https://refspy.readthedocs.io/en/latest/refspy.html) &rarr; See `docs/` dir.
@@ -21,7 +23,7 @@ Refspy is a Python package for working with biblical references in human text.
 
 ## Multi-language Demonstration
 
-The script [demo.py](https://github.com/eukras/refspy/blob/master/demo.py) will turn `demo/en_US.txt` into `demo/en_US.html`, which is used to make the following screenshots.
+The script [demo.py](https://github.com/eukras/refspy/blob/master/demo.py) will generate file like `demo/en_US.html` for all languages, which are used to make the following screenshots.
 
 |                                                              `en_US` ([@eukras](https://github.com/eukras))                                                               |                                                             `fr_FR` ([@a2ohm](https://www.github.com/a2ohm))                                                              |
 | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
@@ -30,6 +32,10 @@ The script [demo.py](https://github.com/eukras/refspy/blob/master/demo.py) will 
 ## Features
 
 - Find biblical references matching human writing styles (spaces, commas, prefixes, abbreviations)
+- Match international and European syntaxes (Matt 5:3,7-9 vs Matt 5,3.7-9).
+
+- Use contextual book references to interpret partial references (e.g. "i Romans see 5:4").
+
 - Sequentially replace matched references.
 - Compile indexes of all matched references, or all verse ranges covered; list the most referenced chapters (hotspots) in a list of references.
 - Format references as names, abbreviated names, and URL parameters.
@@ -62,6 +68,7 @@ Or, to create specific canons:
 
 ```python
 from refspy.languages.english import ENGLISH
+from refspy.languages.french import FRENCH
 from refspy.libraries.en_US import DC, DC_ORTHODOX, NT, OT
 from refspy.manager import Manager
 
@@ -70,20 +77,25 @@ __ = refspy('protestant', 'en_US')
 __ = Manager(libraries=[OT, NT], language=ENGLISH)
 
 # Catholic
-__ = refspy('catholic', 'en_US')
-__ = Manager(libraries=[OT, DC, NT], language=ENGLISH)
+__ = refspy('catholic', 'fr_FR')
+__ = Manager(libraries=[OT, DC, NT], language=FRENCH)
 
 # Orthodox
 __ = refspy('orthodox', 'en_US')
 __ = Manager(libraries=[OT, DC, DC_ORTHODOX, NT], language=ENGLISH)
 ```
 
+Additionally, a third argument can specify international or European syntax
+for references, that is, whether to write `Matt 5:3,7-9` or `Matt 5,3.7-9`.
+If not argument is given, the default syntax for the specified language will be
+used.
+
 The file `refspy/setup.py` shows valid names for libraries and languages.
 There's only English initially. The `en_US` libraries conform to the SBL Style
 Guide for book names and abbreviations. Other libraries can be defined and
 added locally following the structure in `refspy.libraries.en_US`. If they
-follow established academic usage where possible, please contribute them to
-the project.
+follow established academic usage where possible, please contribute them to the
+project.
 
 ### Creating references
 
@@ -357,17 +369,16 @@ html_list = "; ".join(index)
 # Internals
 
 ```bash
-> cloc *.py *.toml *.md refspy tests
-
+github.com/AlDanial/cloc v 2.04  T=0.04 s (1285.4 files/s, 171816.9 lines/s)
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Python                          37            797            935           3287
-Markdown                         4            162              0            468
-TOML                             1              5              0             30
+Python                          44            933           1122           4396
+Markdown                         6            177              0            519
+TOML                             1              5              0             35
 Text                             3              1              0             30
 -------------------------------------------------------------------------------
-SUM:                            45            965            935           3815
+SUM:                            54           1116           1122           4980
 -------------------------------------------------------------------------------
 ```
 
@@ -377,6 +388,7 @@ SUM:                            45            965            935           3815
 `Reference`, and `Verse` are Pydantic types that will raise ValueErrors if
 initialised with bad data, say if a verse has Numbers outside the range
 `0..999`, or if a Range has a start verse that is greater than its end verse.
+These appear in the models and types folders.
 
 - **Book**. A book has id, name, abbrev, aliases, and chapters. No verse counts.
 - **Format**. The Format objects define what properties and characters to use when formatting references for various purposes.
@@ -386,6 +398,7 @@ initialised with bad data, say if a verse has Numbers outside the range
 - **Number**. An integer `1..999`. We assume verses/chapters/books/libraries are limited to this size. This may need modifying to accommodate, say, _zero verses_ in the Septuagint.
 - **Range**. A pair of `(start, end)` verses; `1 Cor 16:1-2` becomes `range(verse(400, 7, 16, 1), verse(400, 7, 16, 2))`.
 - **Reference**. A list of ranges; `1 Cor 16:1-2,6` becomes `reference([range(verse(400, 7, 16, 1), verse(400, 7, 16, 2)), range(verse(400, 7, 16, 6), verse(400, 7, 16, 6))])`. They do not automatically sort or simplify the ranges.
+- **Syntax**. The correct characters for matching and formatting references; international or European.
 - **Verse**. A quadruple of `(library, book, chapter, verse)` numbers; `1 Cor 16:1` becomes `verse(400, 7, 16, 1)`
 
 ## Data Structures
