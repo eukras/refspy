@@ -26,6 +26,9 @@ def refspy(
         locale_name: A valid key for the `refspy.config.LANGUAGES` dict (2).
             - `en_US`
             - `fr_FR`
+        syntax_name: A valid key for the `refspy.config.SYNTAX` dict (2).
+            - `intl`
+            - `euro`
         include_two_letter_aliases: e.g. 'Ge', '1 Jn'.
 
     Note:
