@@ -2,47 +2,40 @@
 # These can be used to generate demonstration HTML files for supported languages, of the form en_US.html.
 # These can be screenshotted and stored in media/refspy-demo-en_US.png or similar, and included in README.md.
 
-import os
 from refspy import refspy
-from refspy.constants import DEMO_DIR
+from refspy.config import LANGUAGE_OPTIONS
+from refspy.init import get_language
 from refspy.utils import sequential_replace
 
-# Must add a way to format links as EN_US while showing the titles in the
-# preferred language
 
+def generate_demo(locale: str, language_name: str, syntax_name: str):
+    __ = refspy("orthodox", locale, syntax_name)
 
-def generate_demo(name):
-    lang = os.path.basename(name).replace(".txt", "")
+    LANGUAGE = get_language(locale[:2])
+    TEXT = LANGUAGE.demonstration_text
 
-    __ = refspy("orthodox", lang)
+    matches = __.find_references(TEXT, include_books=True, include_nones=True)
+    strs, tags = [], []
+    for match_str, ref in matches:
+        strs.append(match_str)
+        if ref is None:
+            tags.append(f'<span class="purple">{match_str}</span>')
+        elif ref.is_book():
+            tags.append(f'<span class="yellow">{match_str}</span>')
+        else:
+            tags.append(
+                f'<span class="green">{match_str}</span><sup>{__.abbrev_name(ref)}</sup>'
+            )
 
-    with open(name) as f:
-        TEXT = f.read()
+    references = [ref for _, ref in matches if ref and not ref.is_book()]
 
-        # TEXT = demo_text.replace('{AMBIGUOUS}', ', '.join(ENGLISH.ambiguous_aliases))
+    INDEX = __.make_index(references)
+    SUMMARY = __.make_summary(references, pattern=__.language.default_link_pattern)
+    HOTSPOTS = __.make_hotspots(references, max_chapters=7, min_references=2)
 
-        matches = __.find_references(TEXT, include_books=True, include_nones=True)
-        strs, tags = [], []
-        for match_str, ref in matches:
-            strs.append(match_str)
-            if ref is None:
-                tags.append(f'<span class="purple">{match_str}</span>')
-            elif ref.is_book():
-                tags.append(f'<span class="yellow">{match_str}</span>')
-            else:
-                tags.append(
-                    f'<span class="green">{match_str}</span><sup>{__.abbrev_name(ref)}</sup>'
-                )
+    GENERATOR = "https://github.com/eukras/refspy/blob/master/demo.py"
 
-        references = [ref for _, ref in matches if ref and not ref.is_book()]
-
-        INDEX = __.make_index(references)
-        SUMMARY = __.make_summary(references, pattern=__.language.default_link_pattern)
-        HOTSPOTS = __.make_hotspots(references, max_chapters=7, min_references=2)
-
-        GENERATOR = "https://github.com/eukras/refspy/blob/master/demo.py"
-
-        html_text = r"""
+    html_text = r"""
         <html>
             <head>
                 <style>
@@ -57,7 +50,7 @@ def generate_demo(name):
             </head>
             """
 
-        html_text += f"""
+    html_text += f"""
             <body>
                 <p><b>REFSPY</b>. <i>A Python library for working with biblical
                 references in ordinary text.</i></p>
@@ -86,14 +79,12 @@ def generate_demo(name):
             </body>
         </html>
         """
-
-        html_name = name.replace(".txt", ".html")
-
-        with open(html_name, "w") as html_file:
-            html_file.write(html_text)
+    return html_text
 
 
-with os.scandir(DEMO_DIR) as entries:
-    for entry in entries:
-        if entry.name.endswith(".txt") and entry.is_file():
-            generate_demo(entry.path)
+for locale, language_name, syntax_name in LANGUAGE_OPTIONS:
+    html_text = generate_demo(locale, language_name, syntax_name)
+    html_filename = f"demo/{locale}.html"
+    with open(html_filename, "w") as html_file:
+        html_file.write(html_text)
+        print(html_filename)
