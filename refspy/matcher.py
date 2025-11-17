@@ -234,7 +234,12 @@ class Matcher:
         return r"|".join(regexp_parts)
 
     def build_verse_marker_regexp(self):
-        return "|".join([re.escape(key) for key in self.language.verse_markers])
+        return "|".join(
+            [
+                re.escape(key) + self.OPTIONAL_SPACE
+                for key in self.language.verse_markers
+            ]
+        )
 
     def build_number_list_regexp(self):
         """

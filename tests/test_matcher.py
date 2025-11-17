@@ -245,6 +245,16 @@ def test_match_chapter_verses():
     ]
 
 
+def test_match_number_ranges_prefixed_vv_with_space():
+    last_range = verse_range(1, 1, 1, 1)
+    matches = matcher.match_number_ranges("vv. 1,4-5")
+    assert matches is not None
+    reference = matcher.make_number_ranges(last_range, matches)
+    assert reference is not None
+    assert reference.ranges[0] == range(verse(1, 1, 1, 1), verse(1, 1, 1, 1))
+    assert reference.ranges[1] == range(verse(1, 1, 1, 4), verse(1, 1, 1, 5))
+
+
 def test_find_references():
     sample_text = "Big Book 1:2-5 and 34:6,7 are more interesting than Small Book 3-6."
     __ = matcher.generate_references(sample_text)
