@@ -63,15 +63,15 @@
 
                         <label class="view-source-button" for="mod-en_US-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">  1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">refspy.book</span><span class="w"> </span><span class="kn">import</span> <span class="n">Book</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos">  2</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">refspy.library</span><span class="w"> </span><span class="kn">import</span> <span class="n">Library</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">  1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">refspy.models.book</span><span class="w"> </span><span class="kn">import</span> <span class="n">Book</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos">  2</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">refspy.models.library</span><span class="w"> </span><span class="kn">import</span> <span class="n">DC_ID</span><span class="p">,</span> <span class="n">DCO_ID</span><span class="p">,</span> <span class="n">NT_ID</span><span class="p">,</span> <span class="n">OT_ID</span><span class="p">,</span> <span class="n">Library</span>
 </span><span id="L-3"><a href="#L-3"><span class="linenos">  3</span></a>
 </span><span id="L-4"><a href="#L-4"><span class="linenos">  4</span></a><span class="c1"># See README.md for Library ID numbers</span>
 </span><span id="L-5"><a href="#L-5"><span class="linenos">  5</span></a><span class="c1"># English language libraries follow SBL style guide for books and</span>
 </span><span id="L-6"><a href="#L-6"><span class="linenos">  6</span></a><span class="c1"># abbreviations.</span>
 </span><span id="L-7"><a href="#L-7"><span class="linenos">  7</span></a>
 </span><span id="L-8"><a href="#L-8"><span class="linenos">  8</span></a><span class="n">OT</span> <span class="o">=</span> <span class="n">Library</span><span class="p">(</span>
-</span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a>    <span class="nb">id</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+</span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a>    <span class="nb">id</span><span class="o">=</span><span class="n">OT_ID</span><span class="p">,</span>
 </span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Old Testament&quot;</span><span class="p">,</span>
 </span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a>    <span class="n">abbrev</span><span class="o">=</span><span class="s2">&quot;OT&quot;</span><span class="p">,</span>
 </span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a>    <span class="n">books</span><span class="o">=</span><span class="p">[</span>
@@ -352,7 +352,7 @@
 </span><span id="L-287"><a href="#L-287"><span class="linenos">287</span></a><span class="p">)</span>
 </span><span id="L-288"><a href="#L-288"><span class="linenos">288</span></a>
 </span><span id="L-289"><a href="#L-289"><span class="linenos">289</span></a><span class="n">DC</span> <span class="o">=</span> <span class="n">Library</span><span class="p">(</span>
-</span><span id="L-290"><a href="#L-290"><span class="linenos">290</span></a>    <span class="nb">id</span><span class="o">=</span><span class="mi">210</span><span class="p">,</span>
+</span><span id="L-290"><a href="#L-290"><span class="linenos">290</span></a>    <span class="nb">id</span><span class="o">=</span><span class="n">DC_ID</span><span class="p">,</span>
 </span><span id="L-291"><a href="#L-291"><span class="linenos">291</span></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Deuterocanonical&quot;</span><span class="p">,</span>
 </span><span id="L-292"><a href="#L-292"><span class="linenos">292</span></a>    <span class="n">abbrev</span><span class="o">=</span><span class="s2">&quot;DC&quot;</span><span class="p">,</span>
 </span><span id="L-293"><a href="#L-293"><span class="linenos">293</span></a>    <span class="n">books</span><span class="o">=</span><span class="p">[</span>
@@ -451,7 +451,7 @@
 </span><span id="L-386"><a href="#L-386"><span class="linenos">386</span></a>    <span class="p">],</span>
 </span><span id="L-387"><a href="#L-387"><span class="linenos">387</span></a><span class="p">)</span>
 </span><span id="L-388"><a href="#L-388"><span class="linenos">388</span></a><span class="n">DC_ORTHODOX</span> <span class="o">=</span> <span class="n">Library</span><span class="p">(</span>
-</span><span id="L-389"><a href="#L-389"><span class="linenos">389</span></a>    <span class="nb">id</span><span class="o">=</span><span class="mi">220</span><span class="p">,</span>
+</span><span id="L-389"><a href="#L-389"><span class="linenos">389</span></a>    <span class="nb">id</span><span class="o">=</span><span class="n">DCO_ID</span><span class="p">,</span>
 </span><span id="L-390"><a href="#L-390"><span class="linenos">390</span></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Deuterocanonical (Orthodox)&quot;</span><span class="p">,</span>
 </span><span id="L-391"><a href="#L-391"><span class="linenos">391</span></a>    <span class="n">abbrev</span><span class="o">=</span><span class="s2">&quot;DCO&quot;</span><span class="p">,</span>
 </span><span id="L-392"><a href="#L-392"><span class="linenos">392</span></a>    <span class="n">books</span><span class="o">=</span><span class="p">[</span>
@@ -501,7 +501,7 @@
 </span><span id="L-436"><a href="#L-436"><span class="linenos">436</span></a><span class="p">)</span>
 </span><span id="L-437"><a href="#L-437"><span class="linenos">437</span></a>
 </span><span id="L-438"><a href="#L-438"><span class="linenos">438</span></a><span class="n">NT</span> <span class="o">=</span> <span class="n">Library</span><span class="p">(</span>
-</span><span id="L-439"><a href="#L-439"><span class="linenos">439</span></a>    <span class="nb">id</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+</span><span id="L-439"><a href="#L-439"><span class="linenos">439</span></a>    <span class="nb">id</span><span class="o">=</span><span class="n">NT_ID</span><span class="p">,</span>
 </span><span id="L-440"><a href="#L-440"><span class="linenos">440</span></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;New Testament&quot;</span><span class="p">,</span>
 </span><span id="L-441"><a href="#L-441"><span class="linenos">441</span></a>    <span class="n">abbrev</span><span class="o">=</span><span class="s2">&quot;NT&quot;</span><span class="p">,</span>
 </span><span id="L-442"><a href="#L-442"><span class="linenos">442</span></a>    <span class="n">books</span><span class="o">=</span><span class="p">[</span>

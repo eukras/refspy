@@ -63,8 +63,8 @@
 
                         <label class="view-source-button" for="mod-fr_FR-view-source"><span>View Source</span></label>
 
-                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">  1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">refspy.book</span><span class="w"> </span><span class="kn">import</span> <span class="n">Book</span>
-</span><span id="L-2"><a href="#L-2"><span class="linenos">  2</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">refspy.library</span><span class="w"> </span><span class="kn">import</span> <span class="n">Library</span>
+                        <div class="pdoc-code codehilite"><pre><span></span><span id="L-1"><a href="#L-1"><span class="linenos">  1</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">refspy.models.book</span><span class="w"> </span><span class="kn">import</span> <span class="n">Book</span>
+</span><span id="L-2"><a href="#L-2"><span class="linenos">  2</span></a><span class="kn">from</span><span class="w"> </span><span class="nn">refspy.models.library</span><span class="w"> </span><span class="kn">import</span> <span class="n">Library</span><span class="p">,</span> <span class="n">OT_ID</span><span class="p">,</span> <span class="n">NT_ID</span><span class="p">,</span> <span class="n">DC_ID</span><span class="p">,</span> <span class="n">DCO_ID</span>
 </span><span id="L-3"><a href="#L-3"><span class="linenos">  3</span></a>
 </span><span id="L-4"><a href="#L-4"><span class="linenos">  4</span></a><span class="c1"># See README.md for Library ID numbers</span>
 </span><span id="L-5"><a href="#L-5"><span class="linenos">  5</span></a><span class="c1"># French language libraries follow style guides for books</span>
@@ -74,7 +74,7 @@
 </span><span id="L-9"><a href="#L-9"><span class="linenos">  9</span></a><span class="c1"># - Traduction œucuménique (TOB)</span>
 </span><span id="L-10"><a href="#L-10"><span class="linenos"> 10</span></a>
 </span><span id="L-11"><a href="#L-11"><span class="linenos"> 11</span></a><span class="n">OT</span> <span class="o">=</span> <span class="n">Library</span><span class="p">(</span>
-</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a>    <span class="nb">id</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos"> 12</span></a>    <span class="nb">id</span><span class="o">=</span><span class="n">OT_ID</span><span class="p">,</span>
 </span><span id="L-13"><a href="#L-13"><span class="linenos"> 13</span></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Ancien Testament&quot;</span><span class="p">,</span>
 </span><span id="L-14"><a href="#L-14"><span class="linenos"> 14</span></a>    <span class="n">abbrev</span><span class="o">=</span><span class="s2">&quot;AT&quot;</span><span class="p">,</span>
 </span><span id="L-15"><a href="#L-15"><span class="linenos"> 15</span></a>    <span class="n">books</span><span class="o">=</span><span class="p">[</span>
@@ -355,7 +355,7 @@
 </span><span id="L-290"><a href="#L-290"><span class="linenos">290</span></a><span class="p">)</span>
 </span><span id="L-291"><a href="#L-291"><span class="linenos">291</span></a>
 </span><span id="L-292"><a href="#L-292"><span class="linenos">292</span></a><span class="n">DC</span> <span class="o">=</span> <span class="n">Library</span><span class="p">(</span>
-</span><span id="L-293"><a href="#L-293"><span class="linenos">293</span></a>    <span class="nb">id</span><span class="o">=</span><span class="mi">210</span><span class="p">,</span>
+</span><span id="L-293"><a href="#L-293"><span class="linenos">293</span></a>    <span class="nb">id</span><span class="o">=</span><span class="n">DC_ID</span><span class="p">,</span>
 </span><span id="L-294"><a href="#L-294"><span class="linenos">294</span></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Deuterocanonical&quot;</span><span class="p">,</span>
 </span><span id="L-295"><a href="#L-295"><span class="linenos">295</span></a>    <span class="n">abbrev</span><span class="o">=</span><span class="s2">&quot;DC&quot;</span><span class="p">,</span>
 </span><span id="L-296"><a href="#L-296"><span class="linenos">296</span></a>    <span class="n">books</span><span class="o">=</span><span class="p">[</span>
@@ -374,7 +374,7 @@
 </span><span id="L-309"><a href="#L-309"><span class="linenos">309</span></a>            <span class="n">chapters</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
 </span><span id="L-310"><a href="#L-310"><span class="linenos">310</span></a>        <span class="p">),</span>
 </span><span id="L-311"><a href="#L-311"><span class="linenos">311</span></a>        <span class="n">Book</span><span class="p">(</span>
-</span><span id="L-312"><a href="#L-312"><span class="linenos">312</span></a>            <span class="c1"># TODO: Offsets: 11..16? </span>
+</span><span id="L-312"><a href="#L-312"><span class="linenos">312</span></a>            <span class="c1"># TODO: Offsets: 11..16?</span>
 </span><span id="L-313"><a href="#L-313"><span class="linenos">313</span></a>            <span class="nb">id</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
 </span><span id="L-314"><a href="#L-314"><span class="linenos">314</span></a>            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Esther grec&quot;</span><span class="p">,</span>
 </span><span id="L-315"><a href="#L-315"><span class="linenos">315</span></a>            <span class="n">abbrev</span><span class="o">=</span><span class="s2">&quot;Est gr&quot;</span><span class="p">,</span>
@@ -441,20 +441,20 @@
 </span><span id="L-376"><a href="#L-376"><span class="linenos">376</span></a>            <span class="nb">id</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span>
 </span><span id="L-377"><a href="#L-377"><span class="linenos">377</span></a>            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Premier livre des Maccabées&quot;</span><span class="p">,</span>
 </span><span id="L-378"><a href="#L-378"><span class="linenos">378</span></a>            <span class="n">abbrev</span><span class="o">=</span><span class="s2">&quot;1 M&quot;</span><span class="p">,</span>
-</span><span id="L-379"><a href="#L-379"><span class="linenos">379</span></a>            <span class="n">aliases</span><span class="o">=</span><span class="p">[],</span>
+</span><span id="L-379"><a href="#L-379"><span class="linenos">379</span></a>            <span class="n">aliases</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;1 Macc&quot;</span><span class="p">],</span>
 </span><span id="L-380"><a href="#L-380"><span class="linenos">380</span></a>            <span class="n">chapters</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
 </span><span id="L-381"><a href="#L-381"><span class="linenos">381</span></a>        <span class="p">),</span>
 </span><span id="L-382"><a href="#L-382"><span class="linenos">382</span></a>        <span class="n">Book</span><span class="p">(</span>
 </span><span id="L-383"><a href="#L-383"><span class="linenos">383</span></a>            <span class="nb">id</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span>
 </span><span id="L-384"><a href="#L-384"><span class="linenos">384</span></a>            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Deuxième livre des Maccabées&quot;</span><span class="p">,</span>
 </span><span id="L-385"><a href="#L-385"><span class="linenos">385</span></a>            <span class="n">abbrev</span><span class="o">=</span><span class="s2">&quot;2 M&quot;</span><span class="p">,</span>
-</span><span id="L-386"><a href="#L-386"><span class="linenos">386</span></a>            <span class="n">aliases</span><span class="o">=</span><span class="p">[],</span>
+</span><span id="L-386"><a href="#L-386"><span class="linenos">386</span></a>            <span class="n">aliases</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;2 Macc&quot;</span><span class="p">],</span>
 </span><span id="L-387"><a href="#L-387"><span class="linenos">387</span></a>            <span class="n">chapters</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
 </span><span id="L-388"><a href="#L-388"><span class="linenos">388</span></a>        <span class="p">),</span>
 </span><span id="L-389"><a href="#L-389"><span class="linenos">389</span></a>    <span class="p">],</span>
 </span><span id="L-390"><a href="#L-390"><span class="linenos">390</span></a><span class="p">)</span>
 </span><span id="L-391"><a href="#L-391"><span class="linenos">391</span></a><span class="n">DC_ORTHODOX</span> <span class="o">=</span> <span class="n">Library</span><span class="p">(</span>
-</span><span id="L-392"><a href="#L-392"><span class="linenos">392</span></a>    <span class="nb">id</span><span class="o">=</span><span class="mi">220</span><span class="p">,</span>
+</span><span id="L-392"><a href="#L-392"><span class="linenos">392</span></a>    <span class="nb">id</span><span class="o">=</span><span class="n">DCO_ID</span><span class="p">,</span>
 </span><span id="L-393"><a href="#L-393"><span class="linenos">393</span></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Deuterocanonical (Orthodox)&quot;</span><span class="p">,</span>
 </span><span id="L-394"><a href="#L-394"><span class="linenos">394</span></a>    <span class="n">abbrev</span><span class="o">=</span><span class="s2">&quot;DCO&quot;</span><span class="p">,</span>
 </span><span id="L-395"><a href="#L-395"><span class="linenos">395</span></a>    <span class="n">books</span><span class="o">=</span><span class="p">[</span>
@@ -504,7 +504,7 @@
 </span><span id="L-439"><a href="#L-439"><span class="linenos">439</span></a><span class="p">)</span>
 </span><span id="L-440"><a href="#L-440"><span class="linenos">440</span></a>
 </span><span id="L-441"><a href="#L-441"><span class="linenos">441</span></a><span class="n">NT</span> <span class="o">=</span> <span class="n">Library</span><span class="p">(</span>
-</span><span id="L-442"><a href="#L-442"><span class="linenos">442</span></a>    <span class="nb">id</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+</span><span id="L-442"><a href="#L-442"><span class="linenos">442</span></a>    <span class="nb">id</span><span class="o">=</span><span class="n">NT_ID</span><span class="p">,</span>
 </span><span id="L-443"><a href="#L-443"><span class="linenos">443</span></a>    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Nouveau Testament&quot;</span><span class="p">,</span>
 </span><span id="L-444"><a href="#L-444"><span class="linenos">444</span></a>    <span class="n">abbrev</span><span class="o">=</span><span class="s2">&quot;NT&quot;</span><span class="p">,</span>
 </span><span id="L-445"><a href="#L-445"><span class="linenos">445</span></a>    <span class="n">books</span><span class="o">=</span><span class="p">[</span>
@@ -694,7 +694,7 @@
 </span><span id="L-629"><a href="#L-629"><span class="linenos">629</span></a>            <span class="nb">id</span><span class="o">=</span><span class="mi">27</span><span class="p">,</span>
 </span><span id="L-630"><a href="#L-630"><span class="linenos">630</span></a>            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Apocalypse&quot;</span><span class="p">,</span>
 </span><span id="L-631"><a href="#L-631"><span class="linenos">631</span></a>            <span class="n">abbrev</span><span class="o">=</span><span class="s2">&quot;Ap&quot;</span><span class="p">,</span>
-</span><span id="L-632"><a href="#L-632"><span class="linenos">632</span></a>            <span class="n">aliases</span><span class="o">=</span><span class="p">[],</span> 
+</span><span id="L-632"><a href="#L-632"><span class="linenos">632</span></a>            <span class="n">aliases</span><span class="o">=</span><span class="p">[],</span>
 </span><span id="L-633"><a href="#L-633"><span class="linenos">633</span></a>            <span class="n">chapters</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span>
 </span><span id="L-634"><a href="#L-634"><span class="linenos">634</span></a>        <span class="p">),</span>
 </span><span id="L-635"><a href="#L-635"><span class="linenos">635</span></a>    <span class="p">],</span>
@@ -720,7 +720,7 @@
                     <div class="attr variable">
             <span class="name">DC</span>        =
 <input id="DC-view-value" class="view-value-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
-            <label class="view-value-button pdoc-button" for="DC-view-value"></label><span class="default_value">Library(id=210, name=&#39;Deuterocanonical&#39;, abbrev=&#39;DC&#39;, books=[Book(id=1, name=&#39;Tobie&#39;, abbrev=&#39;Tb&#39;, aliases=[], chapters=14), Book(id=2, name=&#39;Judith&#39;, abbrev=&#39;Jdt&#39;, aliases=[], chapters=16), Book(id=3, name=&#39;Esther grec&#39;, abbrev=&#39;Est gr&#39;, aliases=[], chapters=10), Book(id=4, name=&#39;Sagesse&#39;, abbrev=&#39;Sg&#39;, aliases=[], chapters=19), Book(id=5, name=&#39;Siracide&#39;, abbrev=&#39;Si&#39;, aliases=[], chapters=51), Book(id=6, name=&#39;Baruc&#39;, abbrev=&#39;Ba&#39;, aliases=[], chapters=6), Book(id=7, name=&#39;Lettre de Jérémie&#39;, abbrev=&#39;Lt-Jr&#39;, aliases=[], chapters=1), Book(id=9, name=&#34;Prière d&#39;Azarias&#34;, abbrev=&#39;Pr Azar&#39;, aliases=[], chapters=1), Book(id=10, name=&#39;Cantique des trois enfants&#39;, abbrev=&#39;CtT&#39;, aliases=[], chapters=1), Book(id=11, name=&#39;Susanne&#39;, abbrev=&#39;Sus&#39;, aliases=[], chapters=1), Book(id=12, name=&#39;Bel et le Dragon&#39;, abbrev=&#39;Bel&#39;, aliases=[], chapters=1), Book(id=13, name=&#39;Premier livre des Maccabées&#39;, abbrev=&#39;1 M&#39;, aliases=[], chapters=16), Book(id=14, name=&#39;Deuxième livre des Maccabées&#39;, abbrev=&#39;2 M&#39;, aliases=[], chapters=15)])</span>
+            <label class="view-value-button pdoc-button" for="DC-view-value"></label><span class="default_value">Library(id=210, name=&#39;Deuterocanonical&#39;, abbrev=&#39;DC&#39;, books=[Book(id=1, name=&#39;Tobie&#39;, abbrev=&#39;Tb&#39;, aliases=[], chapters=14), Book(id=2, name=&#39;Judith&#39;, abbrev=&#39;Jdt&#39;, aliases=[], chapters=16), Book(id=3, name=&#39;Esther grec&#39;, abbrev=&#39;Est gr&#39;, aliases=[], chapters=10), Book(id=4, name=&#39;Sagesse&#39;, abbrev=&#39;Sg&#39;, aliases=[], chapters=19), Book(id=5, name=&#39;Siracide&#39;, abbrev=&#39;Si&#39;, aliases=[], chapters=51), Book(id=6, name=&#39;Baruc&#39;, abbrev=&#39;Ba&#39;, aliases=[], chapters=6), Book(id=7, name=&#39;Lettre de Jérémie&#39;, abbrev=&#39;Lt-Jr&#39;, aliases=[], chapters=1), Book(id=9, name=&#34;Prière d&#39;Azarias&#34;, abbrev=&#39;Pr Azar&#39;, aliases=[], chapters=1), Book(id=10, name=&#39;Cantique des trois enfants&#39;, abbrev=&#39;CtT&#39;, aliases=[], chapters=1), Book(id=11, name=&#39;Susanne&#39;, abbrev=&#39;Sus&#39;, aliases=[], chapters=1), Book(id=12, name=&#39;Bel et le Dragon&#39;, abbrev=&#39;Bel&#39;, aliases=[], chapters=1), Book(id=13, name=&#39;Premier livre des Maccabées&#39;, abbrev=&#39;1 M&#39;, aliases=[&#39;1 Macc&#39;], chapters=16), Book(id=14, name=&#39;Deuxième livre des Maccabées&#39;, abbrev=&#39;2 M&#39;, aliases=[&#39;2 Macc&#39;], chapters=15)])</span>
 
         
     </div>
