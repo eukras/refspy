@@ -11,6 +11,7 @@ Attributes:
     nt_translation: default BibleGateway translations for New Testament
     ot_translation: default BibleGateway translations for Old Testament
     dc_translation: default BibleGateway translations for Deuterocanonicals
+    dc_notes: notes suggested to be shown with deutrocanonicals matches
 """
 
 from pydantic import BaseModel
