@@ -57,6 +57,7 @@ def test_contains():
 
 
 def test_adjoins():
+    # Not cummutative; only left to right
     vr1 = verse_range(1, 2, 3, 3, 4)
     vr2 = verse_range(1, 2, 3, 5, 6)
     cr1 = chapter_range(1, 2, 3, 4)

@@ -108,7 +108,79 @@ def test_malformed_brackets():
 
 def test_start_of_words():
     refs = __.find_references(
-        "Esxxx Gexxx Rexxx Laxxx!", include_books=True, include_nones=True
+        "Esxxx Gexxx Rexxx Laxxx!",
+        include_books=True,
+        include_nones=True,
+        # ^Esth ^Gen  ^Rev  ^Lam
     )
-    #                          Esth  Gen   Rev   Lam
-    assert len(refs) == 0  # ??
+    assert len(refs) == 0
+
+
+def test_merge_long_reference_lists():
+    """
+    Observed wrong merging in Deut when testing on Westminster confession.
+    """
+    input = (
+        "Deut 2:30; 4:15–16; 4:15–20; 5:32; 6:4; 6:6–7; 6:13 (2); "
+        + "7:3–4; 10:4; 10:20; 12:32; 13:6–12; 19:5; 23:21, 23; 24:1–4; "
+        + "29:4; 29:19; 29:29; 30:6; 30:19"
+    )
+    merge_expected = (
+        "Deut 2:30; 4:15–20; 5:32; 6:4, 6–7, 13; "
+        + "7:3–4; 10:4, 20; 12:32; 13:6–12; 19:5; 23:21, 23; 24:1–4; "
+        + "29:4, 19, 29; 30:6, 19"
+    )
+    references = [ref for _, ref in __.find_references(input) if ref is not None]
+    merged = __.merge_references(references)
+    output = __.abbrev_name(merged)
+    assert output == merge_expected
+
+
+def test_combine_long_reference_lists():
+    """
+    Observed wrong merging in Deut when testing on Westminster confession.
+    """
+    input = (
+        "Deut 2:30; 4:15–16; 4:15–20; 5:32; 6:4; 6:6–7; 6:13 (2); "
+        + "7:3–4; 10:4; 10:20; 12:32; 13:6–12; 19:5; 23:21, 23; 24:1–4; "
+        + "29:4; 29:19; 29:29; 30:6; 30:19"
+    )
+    merge_expected = (
+        "Deut 2:30; 4:15–20; 5:32; 6:4, 6–7, 13; "
+        + "7:3–4; 10:4, 20; 12:32; 13:6–12; 19:5; 23:21, 23; 24:1–4; "
+        + "29:4, 19, 29; 30:6, 19"
+    )
+    references = [ref for _, ref in __.find_references(input) if ref is not None]
+    merged = __.merge_references(references)
+    combined = __.combine_references([merged])
+    output = __.abbrev_name(combined)
+    assert output == merge_expected
+
+
+def test_adjoins_cases():
+    ref_1 = __.r("Deut 13:6-12")
+    ref_2 = __.r("Deut 19:5")
+    if ref_1 and ref_2:
+        rng_1 = ref_1.ranges[0]
+        rng_2 = ref_2.ranges[0]
+        # test Deut 13:6-12
+        assert not rng_1.is_verse()
+        assert rng_1.is_verse_range()
+        assert not rng_1.is_inter_chapter_range()
+        assert not rng_1.is_chapter()
+        assert not rng_1.is_chapter_range()
+        assert not rng_1.is_inter_chapter_range()
+        assert not rng_1.is_book()
+        assert not rng_1.is_book_range()
+        # test Deut 19:5
+        assert rng_2.is_verse()
+        assert not rng_2.is_verse_range()
+        assert not rng_2.is_inter_chapter_range()
+        assert not rng_2.is_chapter()
+        assert not rng_2.is_chapter_range()
+        assert not rng_2.is_inter_chapter_range()
+        assert not rng_2.is_book()
+        assert not rng_2.is_book_range()
+        # Test adjoins
+        assert rng_1 < rng_2
+        assert not rng_1.adjoins(rng_2)

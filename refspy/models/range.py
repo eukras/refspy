@@ -76,27 +76,63 @@ class Range(BaseModel):
         ) and any(
             [other.is_verse(), other.is_verse_range(), other.is_inter_chapter_range()]
         ):
-            return (
-                other.start.verse == self.end.verse + 1
-                or self.start.verse == other.end.verse + 1
+            return any(
+                [
+                    all(
+                        [
+                            other.start > self.start,
+                            other.start.verse == self.end.verse + 1,
+                        ]
+                    ),
+                    all(
+                        [
+                            self.start > other.start,
+                            self.start.verse == other.end.verse + 1,
+                        ]
+                    ),
+                ]
             )
         elif (
             self.same_book_as(other)
             and (self.is_chapter() or self.is_chapter_range())
             and (other.is_chapter() or other.is_chapter_range())
         ):
-            return (
-                other.start.chapter == self.end.chapter + 1
-                or self.start.chapter == other.end.chapter + 1
+            return any(
+                [
+                    all(
+                        [
+                            other.start > self.start,
+                            other.start.chapter == self.end.chapter + 1,
+                        ]
+                    ),
+                    all(
+                        [
+                            self.start > other.start,
+                            self.start.chapter == other.end.chapter + 1,
+                        ]
+                    ),
+                ]
             )
         elif (
             self.same_library_as(other)
             and (self.is_book() or self.is_book_range())
             and (other.is_book() or other.is_book_range())
         ):
-            return (
-                other.start.book == self.end.book + 1
-                or self.start.book == other.end.book + 1
+            return any(
+                [
+                    all(
+                        [
+                            other.start > self.start,
+                            other.start.book == self.end.book + 1,
+                        ]
+                    ),
+                    all(
+                        [
+                            self.start > other.start,
+                            self.start.book == other.end.book + 1,
+                        ]
+                    ),
+                ]
             )
         else:
             return False
