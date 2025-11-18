@@ -14,12 +14,16 @@ Refspy is a Python package for working with biblical references in human text.
 
 # README
 
-- [Bible Rocket](https://www.chapman.id.au/bible-rocket) -- **ONLINE DEMO** -- Find Bible References in plain text
-
 - [eukras/refspy on Github](https://github.com/eukras/refspy) | [Report Issue](https://github.com/eukras/refspy/issues) | [Contact Author](mailto:nigel@chapman.id.au)
 - [refspy on PyPI](https://pypi.org/project/refspy/) &rarr; `pip install refspy`.
 - [refspy on ReadTheDocs](https://refspy.readthedocs.io/en/latest/refspy.html) &rarr; See `docs/` dir.
 - [CHANGES.md](https://github.com/eukras/refspy/blob/master/CHANGES.md) | [TODO.md](https://github.com/eukras/refspy/blob/master/TODO.md)
+
+## Online Demonstration
+
+| [![Bible Rocket](https://github.com/eukras/refspy/raw/master/media/bible-rocket.png)](https://github.com/eukras/refspy/raw/master/media/bible-rocket.png) | [![Reference Distribution](https://github.com/eukras/refspy/raw/master/media/westminster-confession-of-faith-1646.svg)](https://github.com/eukras/refspy/raw/master/media/westminster-confession-of-faith-1646.svg) |
+
+- [Bible Rocket](https://www.chapman.id.au/bible-rocket) -- **ONLINE DEMO** -- Find Bible References in plain text
 
 ## Multi-language Demonstration
 
