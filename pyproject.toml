@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "refspy"
-version = "0.11.1"
+version = "0.11.3"
 authors = [{ name = "Nigel Chapman", email = "nigel@chapman.id.au" }]
 description = "A Python package for working with biblical references in ordinary human text."
 readme = "README.md"
@@ -24,10 +24,16 @@ license = "GPL-3.0-only"
 license-files = ["LICENSE"]
 
 [tool.setuptools]
-packages = ["refspy", 'refspy.languages', 'refspy.libraries']
-py-modules = ["refspy", 'refspy.languages', 'refspy.libraries']
-license-files = []
+packages = [
+  "refspy",
+  'refspy.languages',
+  'refspy.libraries',
+  'refspy.models',
+  'refspy.syntax',
+  'refspy.types',
+]
 
+license-files = []
 
 [project.urls]
 Homepage = "https://github.com/eukras/refspy"
