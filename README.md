@@ -21,9 +21,14 @@ Refspy is a Python package for working with biblical references in human text.
 
 ## Online Demonstration
 
-| [![Bible Rocket](https://github.com/eukras/refspy/raw/master/media/bible-rocket.png)](https://github.com/eukras/refspy/raw/master/media/bible-rocket.png) | [![Reference Distribution](https://github.com/eukras/refspy/raw/master/media/the-westminster-confession-of-faith-1646.svg)](https://github.com/eukras/refspy/raw/master/media/the-westminster-confession-of-faith-1646.svg) |
+[Bible Rocket](https://www.chapman.id.au/bible-rocket) is an online demonstration of most of the features of the `refspy`
+package. You can use to make indexes from any text.
 
-- [Bible Rocket](https://www.chapman.id.au/bible-rocket) -- **ONLINE DEMO** -- Find Bible References in plain text
+[![Bible Rocket](https://github.com/eukras/refspy/raw/master/media/bible-rocket.png)](https://github.com/eukras/refspy/raw/master/media/bible-rocket.png)
+
+It will also graph the distribution of references found.
+
+[![Reference Distribution](https://github.com/eukras/refspy/raw/master/media/the-westminster-confession-of-faith-1646.svg)](https://github.com/eukras/refspy/raw/master/media/the-westminster-confession-of-faith-1646.svg)
 
 ## Multi-language Demonstration
 
