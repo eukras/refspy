@@ -4,12 +4,15 @@
 
 - 1.0.0 will appear when stable.
 
+## 0.11.5 -- BETA -- en_US update
+
+- Added USFM book names to en_US.
+
 ## 0.11.3 -- BETA -- Changes for the Bible Rocket demo site
 
 - Add support required by demonstration app (Bible Rocket).
 - French language and European reference syntax. Variables showing available languages.
 - Move demonstration text into language files.
-- Allow context to be switched on or off when matching.
 
 ## 0.11.1 -- BETA -- MULTILINGUAL
 
