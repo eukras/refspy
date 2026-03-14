@@ -42,7 +42,7 @@ OT = Library(
             id=5,
             name="Deuteronomy",
             abbrev="Deut",
-            aliases=["De", "Dt"],
+            aliases=["Deu", "De", "Dt"],
             chapters=34,
         ),
         Book(
@@ -245,7 +245,7 @@ OT = Library(
             id=34,
             name="Nahum",
             abbrev="Nah",
-            aliases=["Na"],
+            aliases=["Nam", "Na"],
             chapters=3,
         ),
         Book(
@@ -408,7 +408,7 @@ DC_ORTHODOX = Library(
             id=3,
             name="Psalm 151",
             abbrev="Ps 151",
-            aliases=["Add Ps", "AddPs"],
+            aliases=["Ps2", "Add Ps", "AddPs"],
             chapters=1,
         ),
         Book(
@@ -619,7 +619,7 @@ NT = Library(
             id=26,
             name="Jude",
             abbrev="Jude",
-            aliases=["Jd"],
+            aliases=["Jud", "Jd"],
             chapters=1,
         ),
         Book(
