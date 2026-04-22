@@ -20,12 +20,27 @@ def test_empty_reference_raises_value_error():
         _ = reference()
 
 
-def test_reference_comparison():
+def test_less_than():
+    ch3v45 = verse_reference(1, 2, 3, 4, 5)
+    ch3v47 = verse_reference(1, 2, 3, 4, 7)
+    ch3v49 = verse_reference(1, 2, 3, 4, 9)
+    assert (ch3v45 + ch3v47) < (ch3v45 + ch3v49)
+    assert not (ch3v45 + ch3v49) < (ch3v45 + ch3v47)
+
+
+def test_minimum():
     reference_1 = reference(range(verse(1, 2, 3, 4), verse(1, 2, 3, 6)))
     reference_2 = reference(range(verse(1, 2, 3, 7), verse(1, 2, 3, 8)))
     assert reference_1 < reference_2
     assert min([reference_1, reference_2]) == reference_1
     assert max([reference_1, reference_2]) == reference_2
+
+
+def test_sorting():
+    ch3v45 = verse_reference(1, 2, 3, 4, 5)
+    ch3v47 = verse_reference(1, 2, 3, 4, 7)
+    ch3v49 = verse_reference(1, 2, 3, 4, 9)
+    assert [ch3v45, ch3v47, ch3v49] == sorted([ch3v49, ch3v47, ch3v45])
 
 
 def test_reference_addition():

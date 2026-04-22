@@ -10,7 +10,7 @@ from typing import Any, Self
 from pydantic import BaseModel, Field
 
 from refspy.types.number import Number
-from refspy.models.range import Range, combine, merge, range
+from refspy.models.range import Range, combine, merge, range as _range
 from refspy.models.verse import Verse, verse
 
 
@@ -44,29 +44,24 @@ class Reference(BaseModel):
     """
 
     def __add__(self, other: Self) -> Self:
-        """Overload the addition operator to combine reference ranges into a new object.
-
-        The most aggressive sort/merge/join settings from the two References will
-        be used in the new Reference.
-        """
+        """Overload the addition operator to combine reference ranges into a new object."""
         return self.__class__(ranges=[*self.ranges, *other.ranges])
 
     def __lt__(self, other: Self) -> bool:
         """
         A simple implementation of '<' allows sorting and min/max.
-
-        Note:
-            Consider sorting first verse ASC and last verse DESC.
         """
-        return self.ranges[0].start < other.ranges[0].start
+        common = min(len(self.ranges), len(other.ranges))
+        for i in range(0, common):
+            if self.ranges[i].start != other.ranges[i].start:
+                return self.ranges[i].start < other.ranges[i].start
+            if self.ranges[i].end != other.ranges[i].end:
+                return self.ranges[i].end < other.ranges[i].end
+        return False  # <-- all equal
 
     def equals(self, other: Self) -> bool:
         """
         Reference equality means that two references have identical ranges.
-
-        Note:
-            Consider comparing after any differences in sort/merge/join have
-            been reconciled.
 
         Note:
             We don't use __eq__, as that is already defined in BaseModel.
@@ -188,8 +183,8 @@ def reference(*args: Range, **kwargs: Any) -> Reference:
     Example:
         ```
         ref = reference(
-            range(verse(1, 2, 3, 3), verse(1, 2, 3, 4)),
-            range(verse(1, 2, 3, 6), verse(1, 2, 3, 7))
+            _range(verse(1, 2, 3, 3), verse(1, 2, 3, 4)),
+            _range(verse(1, 2, 3, 6), verse(1, 2, 3, 7))
         )
         ```
     """
@@ -202,7 +197,7 @@ def book_reference(library_id: Number, book_id: Number) -> Reference:
     values.
     """
     return reference(
-        range(
+        _range(
             verse(library_id, book_id, 1, 1),
             verse(library_id, book_id, 999, 999),
         )
@@ -217,7 +212,7 @@ def chapter_reference(
     `refspy.number.Number` values.
     """
     return reference(
-        range(
+        _range(
             verse(library_id, book_id, chapter_id, 1),
             verse(library_id, book_id, chapter_id, 999),
         )
@@ -238,7 +233,7 @@ def verse_reference(
     See `refspy.manager.Manager.bcv`
     """
     return reference(
-        range(
+        _range(
             verse(library_id, book_id, chapter_id, verse_id),
             verse(library_id, book_id, chapter_id, verse_end_id or verse_id),
         )
