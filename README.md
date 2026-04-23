@@ -5,7 +5,7 @@
 
 [![python](https://img.shields.io/badge/Python-3.11-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-![Version: 0.11.5 Beta](https://img.shields.io/badge/Version-0.11.5-purple)
+![Version: 0.11.6 Beta](https://img.shields.io/badge/Version-0.11.6-purple)
 ![Status: BETA](https://img.shields.io/badge/Status-BETA-red)
 
 Refspy is a Python package for working with Bible references in plain text.
@@ -49,7 +49,7 @@ The script [demo.py](https://github.com/eukras/refspy/blob/master/demo.py) will 
 - Collate references by library and book for iteration.
 - Test if references or ranges contain, overlap, or adjoin one another; merge overlapping references and join adjacent ones.
 - Store verses as `UNSIGNED INT(12)` for database indexing.
-- Generally follow established conventions, so SBL style in English.
+- Generally follow established conventions, so SBL style and SBL/USFM book names in English.
 
 Not implemented:
 
