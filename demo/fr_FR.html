@@ -14,7 +14,7 @@
             
             <body>
                 <p><b>REFSPY</b>. <i>A Python library for working with biblical
-                references in ordinary text.</i></p>
+                references in human-written text.</i></p>
                 <p>In the demonstration text below, references are highlighted in <span
                 class="green">green</span>, and identified in superscript<sup>Like
                 This</sup>. Book names which aren't themselves references but provide
@@ -27,7 +27,7 @@ utilisent les espaces de façon décousue, deux-points et virgule indifféremmen
 les abréviations sont marquées d'un point (ou non), et les virgules sont
 utilisées à la fois entre et dans les références. Elles sont parfois
 malformées, par exemple Mt 1, 10000 ou 1,3-2, et font parfois l'utilisation de
-numéros abrégés : Ps 119, 122-24. Il peut s'agir de références à des livres
+numéros abrégés : Ps 119, 105-12. Il peut s'agir de références à des livres
 deutérocanoniques (DC), comme Sg 7,21-30 ou 2 M 7, ou à des livres
 anagignoskomena (DCO), comme 3 Esd 4,35-40. Le titre d'un livre, par exemple
 la Seconde lettre aux Corinthiens, sert de contexte aux références suivantes :
@@ -36,7 +36,7 @@ pas à celui de 'Jean Smith' dans ces cas-là. Si la Lettre aux Romains est cit�
 (puis que l'on ajoute entre parenthèses une référence à 2Co 5, 11-21), la
 référence suivante, 12, 9-21, renverra encore à l'Épître aux Romains.
 L'utilisation des lettres pour désigner des fragments de versets, comme dans II
-Co 5, 30a-40d, n'est pas systématique, elles sont donc ignorées. Les
+Co 5, 11a-15d, n'est pas systématique, elles sont donc ignorées. Les
 abréviations de livre qui sont aussi des noms communs seront ignorés, sauf dans
 une référence, par exemple Os 4, 1, mais pas Os.</pre></blockquote>
                 <blockquote>Lorsque quelqu'un écrit une référence biblique, on peut lire <span class="green">Rm 12,1-2.9-21</span><sup>Rm 12, 1–2. 9–21</sup>, <span class="green">2
@@ -45,25 +45,25 @@ utilisent les espaces de façon décousue, deux-points et virgule indifféremmen
 les abréviations sont marquées d'un point (ou non), et les virgules sont
 utilisées à la fois entre et dans les références. Elles sont parfois
 malformées, par exemple <span class="purple">Mt 1, 10000</span> ou <span class="purple">1,3-2</span>, et font parfois l'utilisation de
-numéros abrégés : <span class="green">Ps 119, 122-24</span><sup>Ps 119, 122–124</sup>. Il peut s'agir de références à des livres
+numéros abrégés : <span class="green">Ps 119, 105-12</span><sup>Ps 119, 105–112</sup>. Il peut s'agir de références à des livres
 deutérocanoniques (DC), comme <span class="green">Sg 7,21-30</span><sup>Sg 7, 21–30</sup> ou <span class="green">2 M 7</span><sup>2 M 7</sup>, ou à des livres
 anagignoskomena (DCO), comme <span class="green">3 Esd 4,35-40</span><sup>3 Esd 4, 35–40</sup>. Le titre d'un livre, par exemple
 la <span class="yellow">Seconde lettre aux Corinthiens</span>, sert de contexte aux références suivantes :
-<span class="green">5, 11-15</span><sup>2 Co 5, 11–15</sup> ou vv. 16-21. Nous souhaitons correspondre à l'Évangile de <span class="yellow">Jean</span>, mais
+<span class="green">5, 11-15</span><sup>2 Co 5, 11–15</sup> ou <span class="green">vv. 16-21</span><sup>2 Co 5, 16–21</sup>. Nous souhaitons correspondre à l'Évangile de <span class="yellow">Jean</span>, mais
 pas à celui de 'Jean Smith' dans ces cas-là. Si la Lettre aux <span class="yellow">Romains</span> est citée
 (puis que l'on ajoute entre parenthèses une référence à <span class="green">2Co 5, 11-21</span><sup>2 Co 5, 11–21</sup>), la
 référence suivante, <span class="green">12, 9-21</span><sup>Rm 12, 9–21</sup>, renverra encore à l'Épître aux <span class="yellow">Romains</span>.
 L'utilisation des lettres pour désigner des fragments de versets, comme dans <span class="green">II
-Co 5, 30a-40d</span><sup>2 Co 5, 30–40</sup>, n'est pas systématique, elles sont donc ignorées. Les
+Co 5, 11a-15d</span><sup>2 Co 5, 11–15</sup>, n'est pas systématique, elles sont donc ignorées. Les
 abréviations de livre qui sont aussi des noms communs seront ignorés, sauf dans
 une référence, par exemple <span class="green">Os 4, 1</span><sup>Os 4, 1</sup>, mais pas Os.</blockquote>
                 <p>Refspy will sort and collate references into an index; combine
                 overlapping and adjacent references into a summary; list the
                 busiest chapters as 'hotspots'; and add links to any of these.</p>
                 <ul>
-                    <li><b>Index</b>. Ps 119, 122–124, Os 4, 1, Sg 7, 21–30, 2 M 7, 3 Esd 4, 35–40, Rm 12, 1–2. 9–21. 9–21, 2 Co 4, 16–5, 5 ; 5, 11–15. 11–21. 30–40, Phm 4–7.</li>
-                    <li><b>Summary</b>. <a href="https://www.biblegateway.com/passage/?search=Ps%20119%3A122-124&version=SG21" target="_blank">Ps 119, 122–124</a>, <a href="https://www.biblegateway.com/passage/?search=Os%204%3A1&version=SG21" target="_blank">Os 4, 1</a>, <a href="https://www.biblegateway.com/passage/?search=Sg%207%3A21-30&version=SG21" target="_blank">Sg 7, 21–30</a>, <a href="https://www.biblegateway.com/passage/?search=2%20M%207&version=SG21" target="_blank">2 M 7</a>, <a href="https://www.biblegateway.com/passage/?search=3%20Esd%204%3A35-40&version=SG21" target="_blank">3 Esd 4, 35–40</a>, <a href="https://www.biblegateway.com/passage/?search=Rm%2012%3A1-2,%209-21&version=SG21" target="_blank">Rm 12, 1–2. 9–21</a>, <a href="https://www.biblegateway.com/passage/?search=2%20Co%204%3A16-5%3A5;%205%3A11-21,%2030-40&version=SG21" target="_blank">2 Co 4, 16–5, 5 ; 5, 11–21. 30–40</a>, <a href="https://www.biblegateway.com/passage/?search=Phm%204-7&version=SG21" target="_blank">Phm 4–7</a>.</li>
-                    <li><b>Hotspots</b>. Rm 12, 2 Co 5.</li>
+                    <li><b>Index</b>. Ps 119, 105–112, Os 4, 1, Sg 7, 21–30, 2 M 7, 3 Esd 4, 35–40, Rm 12, 1–2. 9–21. 9–21, 2 Co 4, 16–5, 5 ; 5, 11–15. 11–15. 11–21. 16–21, Phm 4–7.</li>
+                    <li><b>Summary</b>. <a href="https://www.biblegateway.com/passage/?search=Ps%20119%3A105-112&version=SG21" target="_blank">Ps 119, 105–112</a>, <a href="https://www.biblegateway.com/passage/?search=Os%204%3A1&version=SG21" target="_blank">Os 4, 1</a>, <a href="https://www.biblegateway.com/passage/?search=Sg%207%3A21-30&version=SG21" target="_blank">Sg 7, 21–30</a>, <a href="https://www.biblegateway.com/passage/?search=2%20M%207&version=SG21" target="_blank">2 M 7</a>, <a href="https://www.biblegateway.com/passage/?search=3%20Esd%204%3A35-40&version=SG21" target="_blank">3 Esd 4, 35–40</a>, <a href="https://www.biblegateway.com/passage/?search=Rm%2012%3A1-2,%209-21&version=SG21" target="_blank">Rm 12, 1–2. 9–21</a>, <a href="https://www.biblegateway.com/passage/?search=2%20Co%204%3A16-5%3A5;%205%3A11-21&version=SG21" target="_blank">2 Co 4, 16–5, 5 ; 5, 11–21</a>, <a href="https://www.biblegateway.com/passage/?search=Phm%204-7&version=SG21" target="_blank">Phm 4–7</a>.</li>
+                    <li><b>Hotspots</b>. 2 Co 5, Rm 12.</li>
                 </ul>
                 <p> Because a number or a range ('1' or '2-3') could refer to either
                 verses or chapters, or other regular numbers having nothing to do with

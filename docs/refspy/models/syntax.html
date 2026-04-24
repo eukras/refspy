@@ -248,8 +248,10 @@ matching.</p>
 <li><strong>__pydantic_custom_init__:</strong>  Whether the model has a custom <code><a href="#Syntax.__init__">__init__</a></code> function.</li>
 <li><strong>__pydantic_decorators__:</strong>  Metadata containing the decorators defined on the model.
 This replaces <code>Model.__validators__</code> and <code>Model.__root_validators__</code> from Pydantic V1.</li>
-<li><strong>__pydantic_generic_metadata__:</strong>  Metadata for generic models; contains data used for a similar purpose to
-__args__, __origin__, __parameters__ in typing-module generics. May eventually be replaced by these.</li>
+<li><strong>__pydantic_generic_metadata__:</strong>  A dictionary containing metadata about generic Pydantic models.
+The <code>origin</code> and <code>args</code> items map to the [<code>__origin__</code>][genericalias.__origin__]
+and [<code>__args__</code>][genericalias.__args__] attributes of [generic aliases][types-genericalias],
+and the <code>parameter</code> item maps to the <code>__parameter__</code> attribute of generic classes.</li>
 <li><strong>__pydantic_parent_namespace__:</strong>  Parent namespace of the model, used for automatic rebuilding of models.</li>
 <li><strong>__pydantic_post_init__:</strong>  The name of the post-init method for the model, if defined.</li>
 <li><strong>__pydantic_root_model__:</strong>  Whether the model is a [<code>RootModel</code>][pydantic.root_model.RootModel].</li>

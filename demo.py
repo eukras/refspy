@@ -53,7 +53,7 @@ def generate_demo(locale: str, language_name: str, syntax_name: str):
     html_text += f"""
             <body>
                 <p><b>REFSPY</b>. <i>A Python library for working with biblical
-                references in ordinary text.</i></p>
+                references in human-written text.</i></p>
                 <p>In the demonstration text below, references are highlighted in <span
                 class="green">green</span>, and identified in superscript<sup>Like
                 This</sup>. Book names which aren't themselves references but provide
