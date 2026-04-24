@@ -4,6 +4,14 @@
 
 - 1.0.0 will appear when stable.
 
+## 0.11.7 -- BETA -- en_US update
+
+- Add collate_verse_references() to Manager.
+
+## 0.11.6 -- BETA -- en_US update
+
+- Fix sorting by range end numbers
+
 ## 0.11.5 -- BETA -- en_US update
 
 - Added USFM book names to en_US.
