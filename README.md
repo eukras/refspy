@@ -8,7 +8,7 @@
 ![Version: 0.11.7 Beta](https://img.shields.io/badge/Version-0.11.7-purple)
 ![Status: BETA](https://img.shields.io/badge/Status-BETA-red)
 
-Refspy is a Python package for working with Bible references in plain text.
+Refspy is a Python package for working with Bible references in human-written text.
 
 [![Github Stars](https://img.shields.io/github/stars/eukras/refspy)](https://img.shields.io/github/stars/eukras/refspy)
 
