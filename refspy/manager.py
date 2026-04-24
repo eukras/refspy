@@ -327,9 +327,15 @@ class Manager:
 
     def collate_book_references(self, references: list[Reference]):
         """
-        A collation groups single-book references by library and book,
-        providing Library and Book objects for iteration. Multi-book references
-        are ignored.
+        Collate references into nested library and book dictionaries for easy
+        looping.
+
+        Example:
+            ```
+            for library, book_collation in __.collate_books_references(refs):
+                for book, references in book_collation:
+                    # ...
+            ```
         """
         library_list = list()
         for library_id, books_dict in self.collate_by_book(references).items():
@@ -359,6 +365,18 @@ class Manager:
     def collate_chapter_references(
         self, references: list[Reference]
     ) -> list[tuple[Library, list[tuple[Book, list[tuple[Number, list[Reference]]]]]]]:
+        """
+        Collate references into nested library, book, and chapter dictionaries
+        for easy looping.
+
+        Example:
+            ```
+            for library, book_collation in __.collate_chapter_references(refs):
+                for book, chapter_collation in book_collation:
+                    for chapter_number, references in chapter_collation:
+                        # ...
+            ```
+        """
         library_list = list()
         for library_id, books_dict in self.collate_by_chapter(references).items():
             book_list = list()
@@ -376,8 +394,6 @@ class Manager:
         """
         A collation groups single-book references by library, book, and chapter
         IDs. Multi-book references are ignored.
-
-        TODO: Refactor code duplication with collate_by_book.
         """
         collation = dict()
         for ref in [_ for _ in references if _.count_books() == 1]:
@@ -398,6 +414,23 @@ class Manager:
             Library, list[tuple[Book, list[tuple[Number, list[tuple[str, Reference]]]]]]
         ]
     ]:
+        """
+        Collate references into nested library, book, chapter and verse-range
+        dictionaries for easy looping.
+
+        Example:
+            ```
+            for library, book_collation in __.collate_verse_references(refs):
+                for book, chapter_collation in book_collation:
+                    for chapter_number, verse_collation in chapter_collation:
+                        for verse_numbers, references in verse_collation:
+                            # ...
+            ```
+
+        Note:
+            - verse_numbers is a unique string representing the verse ranges,
+              e.g. '1, 5-6, 13'
+        """
         library_list = list()
         for library_id, books_dict in self.collate_by_verse(references).items():
             book_list = list()
@@ -416,10 +449,9 @@ class Manager:
         self, references: list[Reference]
     ) -> dict[Number, dict[Number, dict[Number, dict[str, list[Reference]]]]]:
         """
-        A collation groups single-book references by library, book, and chapter
-        IDs. Multi-book references are ignored.
-
-        TODO: Refactor code duplication with collate_by_book.
+        A collation groups single-book references by library, book, chapter
+        number, and a string reresenting the verse ranges. Multi-book
+        references are ignored.
         """
         collation = dict()
         for ref in [_ for _ in references if _.count_books() == 1]:
