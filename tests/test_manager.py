@@ -119,6 +119,18 @@ def test_collate_by_chapter():
                 assert chapter_references == REFERENCES
 
 
+def test_collate_by_verse():
+    collation = __.collate_by_verse(REFERENCES)
+    for library_id, book_collation in collation.items():
+        assert library_id == LIBRARY.id
+        for book_id, chapter_collation in book_collation.items():
+            assert book_id == BOOK.id
+            for chapter_id, verse_collation in chapter_collation.items():
+                assert chapter_id == 1
+                for _, verse_references in verse_collation.items():
+                    assert verse_references == REFERENCES
+
+
 def test_collate():
     collation = __.collate(REFERENCES)
     for library, book_collation in collation:

@@ -325,6 +325,37 @@ class Manager:
         """
         return self.collate_book_references(references)
 
+    def collate_book_references(self, references: list[Reference]):
+        """
+        A collation groups single-book references by library and book,
+        providing Library and Book objects for iteration. Multi-book references
+        are ignored.
+        """
+        library_list = list()
+        for library_id, books_dict in self.collate_by_book(references).items():
+            book_list = list()
+            for book_id, references in books_dict.items():
+                book_list.append(tuple([self.books[library_id, book_id], references]))
+            library_list.append(tuple([self.libraries[library_id], book_list]))
+        return library_list
+
+    def collate_by_book(
+        self, references: list[Reference]
+    ) -> dict[Number, dict[Number, list[Reference]]]:
+        """
+        A collation groups single-book references by library and book IDs.
+        Multi-book references are ignored.
+        """
+        collation = dict()
+        for ref in [_ for _ in references if _.count_books() == 1]:
+            v1 = ref.ranges[0].start
+            if v1.library not in collation:
+                collation[v1.library] = dict()
+            if v1.book not in collation[v1.library]:
+                collation[v1.library][v1.book] = list()
+            collation[v1.library][v1.book].append(ref)
+        return collation
+
     def collate_chapter_references(
         self, references: list[Reference]
     ) -> list[tuple[Library, list[tuple[Book, list[tuple[Number, list[Reference]]]]]]]:
@@ -360,26 +391,35 @@ class Manager:
             collation[v1.library][v1.book][v1.chapter].append(ref)
         return collation
 
-    def collate_book_references(self, references: list[Reference]):
-        """
-        A collation groups single-book references by library and book,
-        providing Library and Book objects for iteration. Multi-book references
-        are ignored.
-        """
+    def collate_verse_references(
+        self, references: list[Reference]
+    ) -> list[
+        tuple[
+            Library, list[tuple[Book, list[tuple[Number, list[tuple[str, Reference]]]]]]
+        ]
+    ]:
         library_list = list()
-        for library_id, books_dict in self.collate_by_book(references).items():
+        for library_id, books_dict in self.collate_by_verse(references).items():
             book_list = list()
-            for book_id, references in books_dict.items():
-                book_list.append(tuple([self.books[library_id, book_id], references]))
+            for book_id, chapters_dict in books_dict.items():
+                chapter_list = list()
+                for chapter_id, verses_dict in chapters_dict.items():
+                    verse_list = list()
+                    for ref_numbers, references in verses_dict.items():
+                        verse_list.append(tuple([ref_numbers, references]))
+                    chapter_list.append(tuple([chapter_id, verse_list]))
+                book_list.append(tuple([self.books[library_id, book_id], chapter_list]))
             library_list.append(tuple([self.libraries[library_id], book_list]))
         return library_list
 
-    def collate_by_book(
+    def collate_by_verse(
         self, references: list[Reference]
-    ) -> dict[Number, dict[Number, list[Reference]]]:
+    ) -> dict[Number, dict[Number, dict[Number, dict[str, list[Reference]]]]]:
         """
-        A collation groups single-book references by library and book IDs.
-        Multi-book references are ignored.
+        A collation groups single-book references by library, book, and chapter
+        IDs. Multi-book references are ignored.
+
+        TODO: Refactor code duplication with collate_by_book.
         """
         collation = dict()
         for ref in [_ for _ in references if _.count_books() == 1]:
@@ -387,8 +427,13 @@ class Manager:
             if v1.library not in collation:
                 collation[v1.library] = dict()
             if v1.book not in collation[v1.library]:
-                collation[v1.library][v1.book] = list()
-            collation[v1.library][v1.book].append(ref)
+                collation[v1.library][v1.book] = dict()
+            if v1.chapter not in collation[v1.library][v1.book]:
+                collation[v1.library][v1.book][v1.chapter] = dict()
+            ref_numbers = self.numbers(ref)
+            if ref_numbers not in collation[v1.library][v1.book][v1.chapter]:
+                collation[v1.library][v1.book][v1.chapter][ref_numbers] = list()
+            collation[v1.library][v1.book][v1.chapter][ref_numbers].append(ref)
         return collation
 
     # -----------------------------------

@@ -1,4 +1,4 @@
-"""A Python package for working with biblical references in ordinary text.
+"""A Python package for working with biblical references in human-written text.
 
 See the [README.md](https://github.com/eukras/refspy) for a more accessible
 introduction.
