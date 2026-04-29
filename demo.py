@@ -67,7 +67,7 @@ def generate_demo(locale: str, language_name: str, syntax_name: str):
                 busiest chapters as 'hotspots'; and add links to any of these.</p>
                 <ul>
                     <li><b>Index</b>. {INDEX}.</li>
-                    <li><b>Summary</b>. {SUMMARY}.</li>
+                    <li><b>Summary</b>. {SUMMARY} (with links).</li>
                     <li><b>Hotspots</b>. {HOTSPOTS}.</li>
                 </ul>
                 <p> Because a number or a range ('1' or '2-3') could refer to either

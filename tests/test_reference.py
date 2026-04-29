@@ -6,6 +6,7 @@ import pytest
 from refspy.models.reference import (
     chapter_reference,
     reference,
+    unique_references,
     verse_reference,
 )
 from refspy.models.range import range
@@ -79,3 +80,11 @@ def test_adjoins():
     ch3v67 = verse_reference(1, 2, 3, 6, 7)
     assert ch3v45.adjoins(ch3v67)
     assert ch3v67.adjoins(ch3v45)
+
+
+def test_unique_references():
+    ch3v45 = verse_reference(1, 2, 3, 4, 5)
+    ch3v45b = verse_reference(1, 2, 3, 4, 5)
+    ch3v67 = verse_reference(1, 2, 3, 6, 7)
+    ch3v67b = verse_reference(1, 2, 3, 6, 7)
+    assert [ch3v45, ch3v67b] == unique_references([ch3v45, ch3v67b, ch3v67, ch3v45b])

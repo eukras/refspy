@@ -5,12 +5,13 @@ References consist of lists of ranges and are entirely numerical objects.
 They can be set to sort, merge, and join references when added together.
 """
 
+import collections
 from typing import Any, Self
 
 from pydantic import BaseModel, Field
 
 from refspy.types.number import Number
-from refspy.models.range import Range, combine, merge, range as _range
+from refspy.models.range import Range, combine_ranges, merge_ranges, range as _range
 from refspy.models.verse import Verse, verse
 
 
@@ -42,6 +43,17 @@ class Reference(BaseModel):
     Raises:
         ValueError: If ranges is empty
     """
+
+    def tuple(self) -> tuple:
+        """For hashing and comparisons"""
+        return tuple([hash(_) for _ in self.ranges])
+
+    def __hash__(self) -> int:
+        """Unique ID for key values."""
+        return hash(self.tuple())
+
+    def __eq__(self, other) -> bool:  # <-- Should be Self; TypeError requires object
+        return self.tuple() == other.tuple()
 
     def __add__(self, other: Self) -> Self:
         """Overload the addition operator to combine reference ranges into a new object."""
@@ -166,14 +178,19 @@ class Reference(BaseModel):
 
         A merged reference is sorted, and has any overlapping ranges merged.
         """
-        return self.__class__(ranges=merge(self.ranges))
+        return self.__class__(ranges=merge_ranges(self.ranges))
 
     def combine(self) -> Self:
         """Return a combined reference.
 
         A combined reference is sorted, merged, and has any adjacent ranges combined.
         """
-        return self.__class__(ranges=combine(self.ranges))
+        return self.__class__(ranges=combine_ranges(self.ranges))
+
+
+# -----------------------------------
+# Shorthand constructor functions
+# -----------------------------------
 
 
 def reference(*args: Range, **kwargs: Any) -> Reference:
@@ -238,3 +255,71 @@ def verse_reference(
             verse(library_id, book_id, chapter_id, verse_end_id or verse_id),
         )
     )
+
+
+# -----------------------------------
+# Manipulation functions
+# -----------------------------------
+
+
+def sort_references(references: list[Reference]) -> list[Reference]:
+    """
+    Return the same references in sorted order based on their ranges.
+
+    References implement `__lt__()`, so are innately sortable.
+
+    Note:
+        - use `unique_references(sorted_references(references))` to make the
+          sorted list unique.
+    """
+    return sorted(references)
+
+
+def unique_references(references: list[Reference]) -> list[Reference]:
+    """
+    Return references in the same order, but without duplicates
+
+    References implement `__hash__()`, so can be used in sets. Sets retain
+    the order of inserted items.
+    """
+    ordered = {hash(ref): ref for ref in references}
+    return list(ordered.values())
+
+
+def split_reference(reference: Reference) -> list[Reference]:
+    """Split a single references into a list of references, one for each range it contains."""
+    references = []
+    for rng in reference.ranges:
+        references.append(Reference(ranges=[rng]))
+    return references
+
+
+def join_references(references: list[Reference]) -> Reference:
+    """Join a list of references into a single reference"""
+    ranges = []
+    for ref in references:
+        for rng in ref.ranges:
+            ranges.append(rng)
+    return reference(*ranges)
+
+
+def count_references(references: list[Reference]) -> list[tuple[Reference, int]]:
+    """
+    Return tuples [(ref, count)].
+
+    Because references implement __hash__(), this can be done with the
+    `collections.Counter`. Transform the resulting dict_items iterator into regular
+    tuples for simple typing.
+    """
+    return [(ref, i) for ref, i in collections.Counter(references).items()]
+
+    # reference_count = []
+    # for ref in reference_list:
+    #     found = False
+    #     for key, (counted_ref, count) in enumerate(reference_count):
+    #         if ref == counted_ref and not found:
+    #             reference_count[key] = (counted_ref, count + 1)
+    #             found = True
+    #     if not found:
+    #         reference_count.append((ref, 1))
+    # return reference_count

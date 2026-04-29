@@ -8,7 +8,7 @@ from refspy.manager import Manager
 from refspy.models.book import Book
 from refspy.models.library import Library
 from refspy.models.range import range
-from refspy.models.reference import reference, verse_reference
+from refspy.models.reference import join_references, reference, verse_reference
 from refspy.models.verse import verse
 
 BOOK = Book(id=2, name="Book", abbrev="Bk", aliases=["vol"], chapters=3)
@@ -28,18 +28,15 @@ def test_init():
     assert __.book_aliases["Book"] == (LIBRARY.id, BOOK.id)
 
 
-def test_make_index_references():
+def test_make_index_references_by_chapter():
     tuples = __.find_references("Book 1:2, 2:1, 3:4, 1:4-5, 7, 3:6")
-    refs = __.make_index_references([ref for _, ref in tuples if ref])
-    assert (
-        ",".join([__.template(ref) for ref in refs if ref is not None])
-        == "Bk 1:2, 4–5, 7; 2:1; 3:4, 6"
-    )
+    refs = __.make_index_references_by_chapter([ref for _, ref in tuples if ref])
+    assert __.template(join_references(refs)) == "Bk 1:2, 4–5, 7; 2:1; 3:4, 6"
 
 
 def test_make_index():
     tuples = __.find_references("Book 1:2, 2:1, 3:4, 1:4-5, 7, 3:6")
-    text = __.make_index([ref for _, ref in tuples if ref])
+    text = __.make_index(__.sort([ref for _, ref in tuples if ref]))
     assert text == "Bk 1:2, 4–5, 7; 2:1; 3:4, 6"
 
 
@@ -79,6 +76,13 @@ def test_sort_references():
     ref_3 = verse_reference(NT.id, 1, 2, 5)
     sorted_ref = __.sort_references([ref_3, ref_2, ref_1])
     assert sorted_ref.ranges == [ref_1.ranges[0], ref_2.ranges[0], ref_3.ranges[0]]
+
+
+def test_sort():
+    ref_1 = verse_reference(NT.id, 1, 2, 3)
+    ref_2 = verse_reference(NT.id, 1, 2, 4)
+    ref_3 = verse_reference(NT.id, 1, 2, 5)
+    assert __.sort([ref_3, ref_2, ref_1]) == [ref_1, ref_2, ref_3]
 
 
 def test_merge_references():

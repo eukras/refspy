@@ -10,12 +10,16 @@ from pydantic import TypeAdapter
 from refspy.models.book import Book
 from refspy.models.language import Language
 from refspy.models.library import Library
-from refspy.models.range import combine, merge, range
+from refspy.models.range import combine_ranges, merge_ranges, range
 from refspy.models.reference import (
     Reference,
     book_reference,
     chapter_reference,
+    join_references,
     reference,
+    split_reference,
+    sort_references,
+    unique_references,
     verse_reference,
 )
 from refspy.models.syntax import Syntax
@@ -95,17 +99,20 @@ class Manager:
     # Index and summary functions
     # -----------------------------------
 
-    def make_index_references(self, references: list[Reference]) -> list[Reference]:
-        """Return a sorted list of References; no combining or simplifying."""
-        index = []
-        collation = self.collate(
+    def make_index_references_by_chapter(
+        self, references: list[Reference]
+    ) -> list[Reference]:
+        """Return a sorted, combined, simplified list of references by book."""
+        collation = self.collate_chapter_references(
             sorted([ref for ref in references if ref and not ref.is_book()])
         )
+        indexes = []
         for _, book_collation in collation:
-            for _, reference_list in book_collation:
-                sorted_ref = self.sort_references(reference_list)
-                index.append(sorted_ref)
-        return index
+            for _, chapter_collation in book_collation:
+                for _, reference_list in chapter_collation:
+                    compact_ref = join_references(reference_list)
+                    indexes.append(compact_ref)
+        return indexes
 
     def make_index(
         self,
@@ -113,7 +120,7 @@ class Manager:
         pattern: str | None = None,
     ) -> str | None:
         """
-        Return a one-line list of references in order of appearance.
+        Return a one-line list of sorted references. No merging or combining.
 
         Args:
             pattern: a formatting string suitable for links, see
@@ -123,8 +130,8 @@ class Manager:
             If no template pattern is provided, reference formatting
             will default to `refspy.manager.Manager.abbrev_name()`
         """
-        if indexes := self.make_index_references(references):
-            return ", ".join([self.template(ref, pattern) for ref in indexes])
+        if indexes := self.make_index_references_by_chapter(references):
+            return self.template(join_references(indexes))
         else:
             return None
 
@@ -159,7 +166,7 @@ class Manager:
             min_references: The minimal references per chapter that qualifies as a hotspot.
         """
         if summaries := self.make_summary_references(references):
-            return ", ".join([self.template(ref, pattern) for ref in summaries])
+            return "; ".join([self.template(ref, pattern) for ref in summaries])
         else:
             return None
 
@@ -182,19 +189,19 @@ class Manager:
         self, references: list[Reference], pattern: str | None = None
     ) -> str | None:
         """
-        Return a string showing a sorted, combined, list of References.
+               Return a string showing a sorted, combined, list of References.
 
-        Args:
-            pattern: a formatting string suitable for links, see
-                `refspy.manager.Manager.template()`.
+               Args:
+                   pattern: a formatting string suitable for links, see
+                       `refspy.manager.Manager.template()`.
 
-        Note:
-            If no template pattern is provided, reference formatting
-            will default to `refspy.manager.Manager.abbrev_name()`.
+               Note:
+                   If no template pattern is provided, reference formatting
+                   will default to `refspy.manager.Manager.abbrev_name()`.
 
-        Args:
-            max_chapters: The maximum number of chapter hotspots to return.
-            min_references: The minimal references per chapter that qualifies as a hotspot.
+               Args:
+        a           max_chapters: The maximum number of chapter hotspots to return.
+                   min_references: The minimal references per chapter that qualifies as a hotspot.
         """
         if summaries := self.make_summary_references_by_chapter(references):
             return ", ".join([self.template(ref, pattern) for ref in summaries])
@@ -220,15 +227,16 @@ class Manager:
         if not references:
             return []
         totals = dict()
-        for _ in self.sort_references(references).ranges:
-            for tuple in [
-                (_.start.library, _.start.book, _.start.chapter),
-                (_.end.library, _.end.book, _.end.chapter),
-            ]:
-                if tuple in totals:
-                    totals[tuple] += 1
-                else:
-                    totals[tuple] = 1
+        for ref in sort_references(references):
+            for _ in ref.ranges:
+                for tuple in [
+                    (_.start.library, _.start.book, _.start.chapter),
+                    (_.end.library, _.end.book, _.end.chapter),
+                ]:
+                    if tuple in totals:
+                        totals[tuple] += 1
+                    else:
+                        totals[tuple] = 1
         hotspots = [
             (chapter_reference(*tuple), int(total / 2))
             for tuple, total in totals.items()
@@ -280,14 +288,46 @@ class Manager:
     # Merging functions
     # -----------------------------------
 
-    def sort_references(self, references: list[Reference]) -> Reference:
-        """For a list of references, make a single reference containing their sorted ranges."""
+    def sort(self, references: list[Reference]) -> list[Reference]:
+        """Sort a list of references by comparing its lists of ranges"""
+        return sort_references(references)
 
-        ranges = []
-        for ref in references:
-            for rng in ref.ranges:
-                ranges.append(rng)
-        return reference(*sorted(ranges))
+    def unique(self, references: list[Reference]) -> list[Reference]:
+        """Return unique entries in an already sorted list.
+
+        Note:
+            - Like `uniq` on UNIX.
+        """
+        return unique_references(references)
+
+    def split(self, reference: Reference) -> list[Reference]:
+        """Split a reference into a list, with one range per reference
+
+        TODO:
+            - Add split by book, chapter?
+        """
+        return split_reference(reference)
+
+    def join(self, references: list[Reference]) -> Reference:
+        """Join a list of references into a single reference
+
+        TODO:
+            - Add join by book, chapter?
+        """
+        return join_references(references)
+
+    def sort_references(self, references: list[Reference]) -> Reference:
+        """
+        DEPRECATED for unclear naming: will be removed before 1.0
+
+        Return a single reference containing sorted ranges from a list of
+        references.
+
+        Superceded by `join_references(sort_references(references))` or just
+        `__.join(__.sort(references))` in Manager.
+        """
+        all_ranges = [_ for ref in references for _ in ref.ranges]
+        return Reference(ranges=sorted(all_ranges))
 
     def merge_references(self, references: list[Reference]) -> Reference:
         """For a list of references, merge their ranges into a new reference.
@@ -297,7 +337,7 @@ class Manager:
         ranges = []
         for ref in references:
             ranges.extend(ref.ranges)
-        new_ref = reference(*merge(ranges))
+        new_ref = reference(*merge_ranges(ranges))
         return new_ref
 
     def combine_references(self, references: list[Reference]) -> Reference:
@@ -309,7 +349,7 @@ class Manager:
         ranges = []
         for ref in references:
             ranges.extend(ref.ranges)
-        new_ref = reference(*combine(ranges))
+        new_ref = reference(*combine_ranges(ranges))
         return new_ref
 
     # -----------------------------------
@@ -325,7 +365,9 @@ class Manager:
         """
         return self.collate_book_references(references)
 
-    def collate_book_references(self, references: list[Reference]):
+    def collate_book_references(
+        self, references: list[Reference]
+    ) -> list[tuple[Library, list[tuple[Book, list[Reference]]]]]:
         """
         Collate references into nested library and book dictionaries for easy
         looping.
@@ -446,7 +488,7 @@ class Manager:
         return library_list
 
     def collate_by_verse(
-        self, references: list[Reference]
+        self, references: list[Reference], aggregate_function=None
     ) -> dict[Number, dict[Number, dict[Number, dict[str, list[Reference]]]]]:
         """
         A collation groups single-book references by library, book, chapter

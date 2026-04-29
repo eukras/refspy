@@ -8,7 +8,7 @@ from refspy.models.range import range
 from refspy.models.reference import reference
 from refspy.models.verse import verse
 
-from tests.data import TEST_LIBRARY, TEST_LIBRARY_2
+from data import TEST_LIBRARY, TEST_LIBRARY_2
 
 books = index_books([TEST_LIBRARY, TEST_LIBRARY_2])
 book_aliases = index_book_aliases([TEST_LIBRARY, TEST_LIBRARY_2])

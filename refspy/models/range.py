@@ -14,6 +14,13 @@ class Range(BaseModel):
     def tuple(self) -> tuple[Verse, Verse]:
         return (self.start, self.end)
 
+    def __hash__(self) -> int:
+        """Unique ID for key values."""
+        return hash(self.tuple())
+
+    def __eq__(self, other) -> bool:  # <-- Should be Self; TypeError requires object
+        return self.tuple() == other.tuple()
+
     @model_validator(mode="after")
     def check_verse_order(self) -> Self:
         """Enforce verse order within the Range.
@@ -342,6 +349,11 @@ class Range(BaseModel):
         )
 
 
+# -----------------------------------
+# Shorthand constructor functions
+# -----------------------------------
+
+
 def range(start: Verse, end: Verse) -> Range:
     """A shorthand contructor for Range objects.
 
@@ -354,48 +366,6 @@ def range(start: Verse, end: Verse) -> Range:
         the same verse as the start and the end.
     """
     return Range(start=start, end=end)
-
-
-def merge(ranges: list[Range], skip_sort: bool = False) -> list[Range]:
-    """Merge overlapping ranges within a sorted list.
-
-    This performs a sort before merging unless skip_sort=True.
-    """
-    if not ranges:
-        return []
-    sorted_ranges = ranges if skip_sort else sorted(ranges)
-    new_ranges = []
-    last_range = sorted_ranges[0]
-    if sorted_ranges:
-        for this_range in sorted_ranges[1:]:
-            if last_range.overlaps(this_range):
-                last_range = last_range.merge(this_range)
-            else:
-                new_ranges.append(last_range)
-                last_range = this_range
-    new_ranges.append(last_range)
-    return new_ranges
-
-
-def combine(ranges: list[Range], skip_merge: bool = False) -> list[Range]:
-    """Join adjacent ranges within a sorted and merged list
-
-    This performs a sort and merge before combining, unless skip_merge=True.
-    """
-    if not ranges:
-        return []
-    merged_ranges = ranges if skip_merge else merge(ranges)
-    new_ranges = []
-    last_range = merged_ranges[0]
-    if merged_ranges:
-        for this_range in merged_ranges[1:]:
-            if last_range.adjoins(this_range):
-                last_range = last_range.join(this_range)
-            else:
-                new_ranges.append(last_range)
-                last_range = this_range
-    new_ranges.append(last_range)
-    return new_ranges
 
 
 def book_range(
@@ -444,3 +414,50 @@ def verse_range(
         verse(library_id, book_id, chapter_id, verse_id),
         verse(library_id, book_id, chapter_id, verse_end_id or verse_id),
     )
+
+
+# -----------------------------------
+# Manipulation functions
+# -----------------------------------
+
+
+def merge_ranges(ranges: list[Range], skip_sort: bool = False) -> list[Range]:
+    """Merge overlapping ranges within a sorted list.
+
+    This performs a sort before merging unless skip_sort=True.
+    """
+    if not ranges:
+        return []
+    sorted_ranges = ranges if skip_sort else sorted(ranges)
+    new_ranges = []
+    last_range = sorted_ranges[0]
+    if sorted_ranges:
+        for this_range in sorted_ranges[1:]:
+            if last_range.overlaps(this_range):
+                last_range = last_range.merge(this_range)
+            else:
+                new_ranges.append(last_range)
+                last_range = this_range
+    new_ranges.append(last_range)
+    return new_ranges
+
+
+def combine_ranges(ranges: list[Range], skip_merge: bool = False) -> list[Range]:
+    """Join adjacent ranges within a sorted and merged list
+
+    This performs a sort and merge before combining, unless skip_merge=True.
+    """
+    if not ranges:
+        return []
+    merged_ranges = ranges if skip_merge else merge_ranges(ranges)
+    new_ranges = []
+    last_range = merged_ranges[0]
+    if merged_ranges:
+        for this_range in merged_ranges[1:]:
+            if last_range.adjoins(this_range):
+                last_range = last_range.join(this_range)
+            else:
+                new_ranges.append(last_range)
+                last_range = this_range
+    new_ranges.append(last_range)
+    return new_ranges

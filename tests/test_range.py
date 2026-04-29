@@ -7,8 +7,8 @@ from refspy.models.range import (
     Range,
     book_range,
     chapter_range,
-    combine,
-    merge,
+    combine_ranges,
+    merge_ranges,
     range,
     verse_range,
 )
@@ -86,21 +86,21 @@ def test_merge_overlapping():
     range_1 = verse_range(1, 2, 3, 4, 6)
     range_2 = verse_range(1, 2, 3, 6, 8)
     range_3 = verse_range(1, 2, 3, 4, 8)
-    assert merge([range_2, range_1]) == [range_3]
+    assert merge_ranges([range_2, range_1]) == [range_3]
 
 
 def test_merge_overlapping_inter_chapter():
     range_1 = verse_range(1, 2, 3, 4, 18)
     range_2 = range(verse(1, 2, 3, 11), verse(1, 2, 5, 2))
     result_1 = range(verse(1, 2, 3, 4), verse(1, 2, 5, 2))
-    assert merge([range_1, range_2]) == [result_1]
+    assert merge_ranges([range_1, range_2]) == [result_1]
 
 
 def test_combine_adjacent_verses():
     range_1 = verse_range(1, 2, 3, 4, 6)
     range_2 = verse_range(1, 2, 3, 7, 8)
     range_3 = verse_range(1, 2, 3, 4, 8)
-    assert combine([range_2, range_1]) == [range_3]
+    assert combine_ranges([range_2, range_1]) == [range_3]
 
 
 def test_combine_adjacent_verses_complex():
@@ -110,27 +110,27 @@ def test_combine_adjacent_verses_complex():
     range_4 = verse_range(1, 2, 3, 2, 5)
     result_1 = verse_range(1, 2, 3, 2, 6)
     result_2 = verse_range(1, 2, 3, 9, 15)
-    assert combine([range_1, range_2, range_3, range_4]) == [result_1, result_2]
+    assert combine_ranges([range_1, range_2, range_3, range_4]) == [result_1, result_2]
 
 
 def test_combine_adjacent_verses_inter_chapter():
     range_1 = range(verse(1, 2, 3, 4), verse(1, 2, 4, 18))
     range_2 = range(verse(1, 2, 4, 11), verse(1, 2, 5, 2))
     result_1 = range(verse(1, 2, 3, 4), verse(1, 2, 5, 2))
-    assert combine([range_1, range_2]) == [result_1]
+    assert combine_ranges([range_1, range_2]) == [result_1]
 
 
 def test_combine_adjacent_chapters():
     range_1 = chapter_range(1, 2, 3)
     range_2 = chapter_range(1, 2, 4, 5)
-    combined = combine([range_2, range_1])
+    combined = combine_ranges([range_2, range_1])
     assert combined == [range(verse(1, 2, 3, 1), verse(1, 2, 5, 999))]
 
 
 def test_combine_adjacent_books():
     range_1 = book_range(1, 2, 3)
     range_2 = book_range(1, 4, 5)
-    combined = combine([range_2, range_1])
+    combined = combine_ranges([range_2, range_1])
     assert combined == [range(verse(1, 2, 1, 1), verse(1, 5, 999, 999))]
 
 

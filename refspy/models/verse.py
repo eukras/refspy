@@ -32,6 +32,13 @@ class Verse(BaseModel):
         """A sortable tuple for comparison operations."""
         return (self.library, self.book, self.chapter, self.verse)
 
+    def __hash__(self) -> int:
+        """Unique ID for key values."""
+        return hash(self.tuple())
+
+    def __eq__(self, other) -> bool:  # <-- Should be Self; TypeError requires object
+        return self.tuple() == other.tuple()
+
     def __lt__(self, other: Self) -> bool:
         """Compare verses by comparing tuples."""
         return self.tuple() < other.tuple()

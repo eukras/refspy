@@ -22,7 +22,7 @@ from refspy.models.reference import (
 from refspy.models.verse import verse
 
 from refspy.syntax.international import INTERNATIONAL
-from tests.data import TEST_LIBRARY
+from data import TEST_LIBRARY
 
 books = index_books([TEST_LIBRARY])
 book_aliases = index_book_aliases([TEST_LIBRARY])
