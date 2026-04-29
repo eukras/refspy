@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "refspy"
-version = "0.11.7"
+version = "0.11.9"
 authors = [{ name = "Nigel Chapman", email = "nigel@chapman.id.au" }]
 description = "A Python package for working with biblical references in human-written text"
 readme = "README.md"
@@ -34,6 +34,9 @@ packages = [
 ]
 
 license-files = []
+
+[dependency-groups]
+tests = ["pytest-cov>=7.1.0"]
 
 [project.urls]
 Homepage = "https://github.com/eukras/refspy"
