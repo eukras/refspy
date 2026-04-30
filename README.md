@@ -15,9 +15,9 @@ A Python package for indexing biblical references.
 # README
 
 - [eukras/refspy on Github](https://github.com/eukras/refspy) | [Report Issue](https://github.com/eukras/refspy/issues) | [Contact Author](mailto:nigel@chapman.id.au)
-- [refspy on PyPI](https://pypi.org/project/refspy/) &rarr; `pip install refspy`.
+- [refspy on PyPI](https://pypi.org/project/refspy/) &rarr; `uv add refspy`.
+- [NOTEBOOK.ipynb](https://github.com/eukras/refspy/blob/master/NOTEBOOK.ipynb) &rarr; `uv run --with=jupyter jupyter lab NOTEBOOK.ipynb`
 - [INTERNALS.md](https://github.com/eukras/refspy/blob/master/INTERNALS.md) | [refspy on ReadTheDocs](https://refspy.readthedocs.io/en/latest/refspy.html) &rarr; See `docs/` dir.
-- [CHANGES.md](https://github.com/eukras/refspy/blob/master/CHANGES.md) | [TODO.md](https://github.com/eukras/refspy/blob/master/TODO.md)
 
 ## Online Demonstration
 
@@ -92,7 +92,7 @@ __ = Manager(libraries=[OT, DC, DC_ORTHODOX, NT], language=ENGLISH)
 
 Additionally, a third argument can specify International or European syntax
 for references, that is, whether to write `Matt 5:3,7-9` or `Matt 5,3.7-9`.
-If not argument is given, the default syntax for the specified language will be
+If no argument is given, the default syntax for the specified language will be
 used.
 
 The file `refspy/setup.py` shows valid names for libraries and languages.
@@ -143,7 +143,7 @@ common words will be only be matched as part of references (So `Am 3:1` but
 not `Am`); the list of `ambiguous_aliases` for a language is supplied in the
 language file, e.g. `refspy/languages/english.py`.
 
-```
+```python
 from refspy import refspy
 __ = refspy(include_two_letter_aliases=True)
 match, ref = __.first_reference('2Ti 1')
