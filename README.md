@@ -1,14 +1,14 @@
 ![RefSpy Logo](https://github.com/eukras/refspy/raw/master/media/refspy-logo.png)
 
-[![Python package](https://github.com/eukras/refspy/actions/workflows/python-package.yml/badge.svg)](https://github.com/eukras/refspy/actions/workflows/python-package.yml)
-[![Documentation Status](https://readthedocs.org/projects/refspy/badge/?version=latest)](https://refspy.readthedocs.io/en/latest/?badge=latest)
-
+![PyPI version](https://badge.fury.io/py/refspy.svg)
 [![python](https://img.shields.io/badge/Python-3.11-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-![Version: 0.11.9 Beta](https://img.shields.io/badge/Version-0.11.9-purple)
-![Status: BETA](https://img.shields.io/badge/Status-BETA-red)
 
-Refspy is a Python package for working with Bible references in human-written text.
+[![Documentation Status](https://readthedocs.org/projects/refspy/badge/?version=latest)](https://refspy.readthedocs.io/en/latest/?badge=latest)
+![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
+![Downloads](https://static.pepy.tech/badge/refspy)
+
+A Python package for indexing biblical references.
 
 [![Github Stars](https://img.shields.io/github/stars/eukras/refspy)](https://img.shields.io/github/stars/eukras/refspy)
 
