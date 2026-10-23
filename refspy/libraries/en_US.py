@@ -528,14 +528,14 @@ NT = Library(
             id=13,
             name="1 Thessalonians",
             abbrev="1 Thess",
-            aliases=["1 Th"],
+            aliases=["1 Th", "1 Thes"],
             chapters=5,
         ),
         Book(
             id=14,
             name="2 Thessalonians",
             abbrev="2 Thess",
-            aliases=["2 Th"],
+            aliases=["2 Th", "2 Thes"],
             chapters=3,
         ),
         Book(
