@@ -4,7 +4,7 @@
 [![python](https://img.shields.io/badge/Python-3.11-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-[![Documentation Status](https://readthedocs.org/projects/refspy/badge/?version=latest)](https://refspy.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://app.readthedocs.org/projects/refspy/badge/?version=latest)](https://refspy.readthedocs.io/en/latest/?badge=latest)
 ![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)
 ![Downloads](https://static.pepy.tech/badge/refspy)
 
